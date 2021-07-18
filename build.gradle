@@ -1,0 +1,17 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenLocal()
+}
+
+dependencies {
+    implementation 'org.jetbrains:annotations:21.0.1'
+}
+
+group = 'eu.darkbot.api'
+version = '0.1-SNAPSHOT'
+description = 'DarkBotAPI'
+
+java.sourceCompatibility = JavaVersion.VERSION_1_8
