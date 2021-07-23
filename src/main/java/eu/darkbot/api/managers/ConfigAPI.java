@@ -1,5 +1,6 @@
 package eu.darkbot.api.managers;
 
+import eu.darkbot.api.API;
 import eu.darkbot.api.config.Config;
 
 /**
@@ -8,7 +9,7 @@ import eu.darkbot.api.config.Config;
  * Warning: this API is in a pretty experimental state,
  * and it may suffer significant changes once better defined
  */
-public interface ConfigAPI {
+public interface ConfigAPI extends API.Singleton {
 
     @Deprecated
     Config getConfig();
