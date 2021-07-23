@@ -80,4 +80,18 @@ public interface SafetyInfo extends Locatable {
      */
     Optional<Entity> getEntity();
 
+    /**
+     * Set a distance value to this safety, later read from {@link #getDistance}
+     *
+     * This is used as a cache to store calculated distances and avoid re-computing them
+     *
+     * @param distance how far away the hero ship is from this safety
+     */
+    void setDistance(double distance);
+
+    /**
+     * @return the last set distance value, see {@link #setDistance(double)}
+     */
+    double getDistance();
+
 }
