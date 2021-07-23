@@ -1,10 +1,10 @@
 package eu.darkbot.api.managers;
 
 import eu.darkbot.api.API;
+import eu.darkbot.api.config.util.ShipMode;
 import eu.darkbot.api.game.entities.Npc;
 import eu.darkbot.api.game.entities.Ship;
 import eu.darkbot.api.game.items.SelectableItem;
-import eu.darkbot.api.utils.HeroModeImpl;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -29,13 +29,13 @@ public interface HeroAPI extends Ship, API.Singleton {
      * A mode is the combination of a configuration and a formation
      *
      * @param mode the mode to check
-     * @return true if {@link HeroAPI} is in given {@link Mode}
+     * @return true if {@link HeroAPI} is in given {@link ShipMode}
      */
-    boolean isInMode(Mode mode);
+    boolean isInMode(ShipMode mode);
 
     /**
-     * Will check if {@link HeroAPI} is in the given {@link Mode},
-     * if it isn't, it will try to set the {@link Mode}
+     * Will check if {@link HeroAPI} is in the given {@link ShipMode},
+     * if it isn't, it will try to set the {@link ShipMode}
      *
      * Keep in mind because of in-game cool-downs it can take a while
      * to apply the mode, you should keep on calling the function each
@@ -52,7 +52,7 @@ public interface HeroAPI extends Ship, API.Singleton {
      * @param mode the flying mode to set
      * @return true if the ship is now flying in the given mode, false otherwise
      */
-    boolean setMode(Mode mode);
+    boolean setMode(ShipMode mode);
 
     /**
      * Attempts to {@link #setMode} with the user-defined mode to attack this type of NPC.
@@ -76,23 +76,6 @@ public interface HeroAPI extends Ship, API.Singleton {
      * @return true if the ship is now flying in run mode, false otherwise
      */
     boolean setRunMode();
-
-    /**
-     * Represent a config mode, that the ship can run in
-     * This is the combination of an in-game config and formation.
-     *
-     * In the future this will ideally support changing configuration & formation
-     * but currently it is expected that the results are immutable and nonchanging.
-     */
-    interface Mode {
-
-        static Mode of(Configuration configuration, SelectableItem.Formation formation) {
-            return new HeroModeImpl(configuration, formation);
-        }
-
-        Configuration getConfiguration();
-        SelectableItem.Formation getFormation();
-    }
 
     /**
      * Represents in-game {@link HeroAPI} configs.
