@@ -33,23 +33,22 @@ public interface EventBrokerAPI extends API.Singleton {
      * When this is invoked, all methods in the {@param listener}
      * annotated with {@link eu.darkbot.api.events.EventHandler}
      * will be registered to be called whenever an event
-     * of that type is sent via {@link #sendEvent(Event)}
+     * of that type is sent via {@link #sendEvent(Event)}.
      *
-     * You typically will want to call this in your {@link eu.darkbot.api.extensions.Installable#install(PluginAPI)} method.
-     * For the feature to be able to unload, you *MUST* call
-     * {@link #unregisterListener(Listener)} when done listening.
+     * The listener will only be weakly referenced, and will be eventually
+     * unregistered if there are no other strong references to it.
      *
      * @param listener the listener provided
      */
     void registerListener(Listener listener);
 
     /**
-     * Unregister all the event handler methods in the listener
+     * Unregister all the event handler methods in the listener.
      *
-     * This MUST be called when unloading a feature, otherwise
-     * it can't be GCd and WILL generate memory leaks.
-     *
-     * You must call this in your {@link eu.darkbot.api.extensions.Installable#install(PluginAPI)} method.
+     * This is not required if your listener is not referenced
+     * anywhere else and receiving events don't directly have an effect.
+     * However, if you take action on the bot when receiving events it is still
+     * advised that you manually unregister in {@link eu.darkbot.api.extensions.Installable#uninstall}.
      *
      * @param listener the listener to unregister
      */
