@@ -1,0 +1,28 @@
+plugins {
+    id 'java'
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+
+    group = project.api_group
+    version = project.api_version
+
+    java.sourceCompatibility = JavaVersion.VERSION_1_8
+}
+
+
+description = 'darkbot-common'
+
+dependencies {
+    implementation project(":darkbot-api")
+    implementation project(":darkbot-shared")
+}
+
+jar {
+    from {
+        configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}

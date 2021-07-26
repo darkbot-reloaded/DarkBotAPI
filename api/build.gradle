@@ -2,16 +2,8 @@ plugins {
     id 'java'
 }
 
-repositories {
-    mavenCentral()
-}
+description = 'darkbot-api'
 
 dependencies {
     implementation 'org.jetbrains:annotations:21.0.1'
 }
-
-group = 'eu.darkbot'
-version = '0.1-SNAPSHOT'
-description = 'darkbot-api'
-
-java.sourceCompatibility = JavaVersion.VERSION_1_8
