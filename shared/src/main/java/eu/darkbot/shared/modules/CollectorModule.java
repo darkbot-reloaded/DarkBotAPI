@@ -9,6 +9,7 @@ import eu.darkbot.api.game.entities.Ship;
 import eu.darkbot.api.game.enums.EntityEffect;
 import eu.darkbot.api.game.items.ItemFlag;
 import eu.darkbot.api.game.items.SelectableItem;
+import eu.darkbot.api.game.other.GameMap;
 import eu.darkbot.api.game.other.Location;
 import eu.darkbot.api.managers.BotAPI;
 import eu.darkbot.api.managers.ConfigAPI;
@@ -122,9 +123,9 @@ public class CollectorModule implements Module {
     }
 
     protected boolean checkMap() {
-        if (!portals.isEmpty() && config.GENERAL.WORKING_MAP != star.getCurrentMap().getId()) {
-            this.bot.setModule(pluginAPI.requireInstance(MapModule.class))
-                    .setTarget(star.getOrCreateMapById(config.GENERAL.WORKING_MAP));
+        GameMap map;
+        if (!portals.isEmpty() && (map = config.getConfig().getGeneral().getWorkingMap()) != star.getCurrentMap()) {
+            this.bot.setModule(pluginAPI.requireInstance(MapModule.class)).setTarget(map);
             return false;
         }
 
@@ -180,14 +181,14 @@ public class CollectorModule implements Module {
     }
 
     protected void checkDangerous() {
-        if (config.COLLECT.STAY_AWAY_FROM_ENEMIES) {
+        if (config.getConfig().getCollect().getStayAwayFromEnemies()) {
             Location dangerous = findClosestEnemyAndAddToDangerousList();
             if (dangerous != null) stayAwayFromLocation(dangerous);
         }
     }
 
     public void checkInvisibility() {
-        if (config.COLLECT.AUTO_CLOACK
+        if (config.getConfig().getCollect().getAutoCloak()
                 && !hero.isInvisible()
                 && System.currentTimeMillis() - invisibleUntil > 60000) {
 
@@ -218,7 +219,7 @@ public class CollectorModule implements Module {
                 .filter(s -> s.getEntityInfo().isEnemy() && !s.isInvisible() && s.distanceTo(hero) < DISTANCE_FROM_DANGEROUS)
                 .peek(s -> {
                     if (!s.isBlacklisted() && s.isAttacking(hero))
-                        s.setBlacklisted(config.GENERAL.RUNNING.REMEMBER_ENEMIES_FOR * 1000L);
+                        s.setBlacklisted(config.getConfig().getGeneral().getRunning().getEnemyRemember().toMillis());
                 })
                 .map(Ship::getLocationInfo)
                 .min(Comparator.comparingDouble(location -> location.distanceTo(hero)))
@@ -231,7 +232,7 @@ public class CollectorModule implements Module {
     }
 
     protected boolean isContested(Box box) {
-        if (!config.COLLECT.IGNORE_CONTESTED_BOXES) return false;
+        if (!config.getConfig().getCollect().getIgnoreContestedBoxes()) return false;
 
         double heroTimeTo = hero.timeTo(box);
         return ships.stream()

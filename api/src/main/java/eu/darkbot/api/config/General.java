@@ -3,10 +3,16 @@ package eu.darkbot.api.config;
 import eu.darkbot.api.config.util.PercentRange;
 import eu.darkbot.api.config.util.ShipMode;
 import eu.darkbot.api.game.items.SelectableItem;
+import eu.darkbot.api.game.other.GameMap;
 
 import java.time.Duration;
 
 public interface General {
+
+    /**
+     * @return the user configured working map
+     */
+    GameMap getWorkingMap();
 
     /**
      * @return configuration for how to repair and use safeties
