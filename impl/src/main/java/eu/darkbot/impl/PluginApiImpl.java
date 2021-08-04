@@ -1,8 +1,9 @@
-package eu.darkbot.shared;
+package eu.darkbot.impl;
 
 import eu.darkbot.api.API;
 import eu.darkbot.api.PluginAPI;
 import eu.darkbot.api.utils.Inject;
+import eu.darkbot.impl.decorators.ClassDecorator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,6 +20,7 @@ public class PluginApiImpl implements PluginAPI {
     protected final Set<Singleton> singletons = new HashSet<>();
     protected final Set<Singleton> weakSingletons = Collections.newSetFromMap(new WeakHashMap<>());
     protected final Set<Class<?>> implClasses = new HashSet<>();
+    protected final Set<ClassDecorator<?>> decorators = new HashSet<>();
 
     public PluginApiImpl() {
         singletons.add(this);
@@ -30,6 +32,10 @@ public class PluginApiImpl implements PluginAPI {
      */
     public void addInstance(Singleton... singletons) {
         Collections.addAll(this.singletons, singletons);
+    }
+
+    public void addDecorator(ClassDecorator<?>... decorators) {
+        Collections.addAll(this.decorators, decorators);
     }
 
     /**
@@ -84,6 +90,7 @@ public class PluginApiImpl implements PluginAPI {
 
         Constructor<?> constructor = getBestConstructor(clazz);
 
+        T value;
         try {
             // Not doing this in a stream in an attempt to keep stack traces as clear as possible
             Object[] params = new Object[constructor.getParameterCount()];
@@ -92,10 +99,12 @@ public class PluginApiImpl implements PluginAPI {
                 params[i] = getOrCreate(types[i]);
             }
 
-            return (T) constructor.newInstance(params);
+            value = (T) constructor.newInstance(params);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException("Exception calling constructor for API: " + clazz.getName(), e);
         }
+        decorators.forEach(d -> d.tryLoad(value));
+        return value;
     }
 
     private <T> T getOrCreate(Class<T> clazz) {

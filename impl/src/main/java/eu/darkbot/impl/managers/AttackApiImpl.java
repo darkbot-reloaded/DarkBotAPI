@@ -1,4 +1,4 @@
-package eu.darkbot.shared.managers;
+package eu.darkbot.impl.managers;
 
 //import com.github.manolo8.darkbot.Main;
 //import com.github.manolo8.darkbot.core.objects.facades.SettingsProxy;

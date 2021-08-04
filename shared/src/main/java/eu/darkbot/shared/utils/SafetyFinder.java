@@ -1,4 +1,4 @@
-package eu.darkbot.shared.modules.utils;
+package eu.darkbot.shared.utils;
 
 import eu.darkbot.api.config.General;
 import eu.darkbot.api.config.SafetyInfo;
@@ -13,7 +13,6 @@ import eu.darkbot.api.game.other.Location;
 import eu.darkbot.api.managers.AttackAPI;
 import eu.darkbot.api.managers.ConfigAPI;
 import eu.darkbot.api.managers.EntitiesAPI;
-import eu.darkbot.api.managers.EventBrokerAPI;
 import eu.darkbot.api.managers.HeroAPI;
 import eu.darkbot.api.managers.HeroItemsAPI;
 import eu.darkbot.api.managers.MovementAPI;
@@ -27,7 +26,6 @@ import java.util.stream.Collectors;
 
 public class SafetyFinder implements Listener {
 
-    private final EventBrokerAPI eventBroker;
     private final HeroAPI hero;
     private final AttackAPI attacker;
     private final HeroItemsAPI items;
@@ -70,8 +68,7 @@ public class SafetyFinder implements Listener {
     private enum JumpState {CURRENT_MAP, JUMPING, JUMPED, RETURNING, RETURNED}
     private GameMap prevMap;
 
-    public SafetyFinder(EventBrokerAPI eventBroker,
-                        HeroAPI hero,
+    public SafetyFinder(HeroAPI hero,
                         AttackAPI attacker,
                         HeroItemsAPI items,
                         MovementAPI movement,
@@ -80,7 +77,6 @@ public class SafetyFinder implements Listener {
                         EntitiesAPI entities,
                         MapTraveler mapTraveler,
                         PortalJumper portalJumper) {
-        this.eventBroker = eventBroker;
         this.hero = hero;
         this.attacker = attacker;
         this.items = items;
@@ -95,13 +91,6 @@ public class SafetyFinder implements Listener {
 
         this.mapTraveler = mapTraveler;
         this.jumper = portalJumper;
-
-        this.eventBroker.registerListener(this);
-    }
-
-    public void uninstall() {
-        mapTraveler.uninstall();
-        eventBroker.unregisterListener(this);
     }
 
     @EventHandler

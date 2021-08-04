@@ -1,4 +1,4 @@
-package eu.darkbot.shared.modules.utils;
+package eu.darkbot.shared.utils;
 
 import eu.darkbot.api.PluginAPI;
 import eu.darkbot.api.events.EventHandler;
@@ -15,7 +15,7 @@ import eu.darkbot.api.managers.StarSystemAPI;
 
 import java.util.Collection;
 
-public class MapTraveler implements Listener, Installable {
+public class MapTraveler implements Listener {
     protected final EventBrokerAPI eventBroker;
 
     protected final PetAPI pet;
@@ -48,16 +48,6 @@ public class MapTraveler implements Listener, Installable {
         this.jumper = jumper;
         this.portals = entities.getPortals();
         this.eventBroker = eventBroker;
-    }
-
-    @Override
-    public void install(PluginAPI pluginAPI) {
-        eventBroker.registerListener(this);
-    }
-
-    @Override
-    public void uninstall() {
-        eventBroker.unregisterListener(this);
     }
 
     public void setTarget(GameMap target) {

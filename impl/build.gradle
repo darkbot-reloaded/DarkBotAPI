@@ -1,0 +1,11 @@
+plugins {
+    id 'java'
+}
+
+description = 'darkbot-impl'
+
+dependencies {
+    implementation 'org.jetbrains:annotations:21.0.1'
+    implementation project(":darkbot-api")
+    implementation project(":darkbot-shared")
+}

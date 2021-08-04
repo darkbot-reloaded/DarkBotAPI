@@ -2,6 +2,8 @@ rootProject.name = 'darkbot-common'
 
 include ':darkbot-api'
 include ':darkbot-shared'
+include ':darkbot-impl'
 
 project(':darkbot-api').projectDir = "$rootDir/api" as File
 project(':darkbot-shared').projectDir = "$rootDir/shared" as File
+project(':darkbot-impl').projectDir = "$rootDir/impl" as File

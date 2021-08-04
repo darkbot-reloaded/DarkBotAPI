@@ -1,33 +1,21 @@
 package eu.darkbot.shared.modules;
 
-import eu.darkbot.api.API;
-import eu.darkbot.api.PluginAPI;
-import eu.darkbot.api.extensions.Installable;
 import eu.darkbot.api.game.other.GameMap;
+import eu.darkbot.api.managers.BotAPI;
 import eu.darkbot.api.managers.I18nAPI;
-import eu.darkbot.shared.modules.utils.MapTraveler;
+import eu.darkbot.shared.utils.MapTraveler;
 
-public class MapModule extends TemporalModule implements Installable, API {
+public class MapModule extends TemporalModule {
 
-    private I18nAPI i18n;
-    protected MapTraveler traveler;
+    protected final MapTraveler traveler;
+    protected final I18nAPI i18n;
 
-    public MapModule(PluginAPI api,
+    public MapModule(BotAPI bot,
                      MapTraveler mapTraveler,
                      I18nAPI i18n) {
-        super(api);
+        super(bot);
         this.traveler = mapTraveler;
         this.i18n = i18n;
-    }
-
-    @Override
-    public void install(PluginAPI pluginAPI) {
-        traveler.install(pluginAPI);
-    }
-
-    @Override
-    public void uninstall() {
-        traveler.uninstall();
     }
 
     public void setTarget(GameMap target) {

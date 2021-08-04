@@ -1,4 +1,4 @@
-package eu.darkbot.shared.modules.utils;
+package eu.darkbot.shared.utils;
 
 import eu.darkbot.api.game.entities.Portal;
 import eu.darkbot.api.game.other.GameMap;

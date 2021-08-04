@@ -20,7 +20,7 @@ import eu.darkbot.api.managers.MovementAPI;
 import eu.darkbot.api.managers.PetAPI;
 import eu.darkbot.api.managers.StarSystemAPI;
 import eu.darkbot.api.managers.StatsAPI;
-import eu.darkbot.shared.modules.utils.SafetyFinder;
+import eu.darkbot.shared.utils.SafetyFinder;
 
 import java.util.Collection;
 import java.util.Comparator;
