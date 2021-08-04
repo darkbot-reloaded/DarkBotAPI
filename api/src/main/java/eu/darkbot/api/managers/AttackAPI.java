@@ -63,7 +63,7 @@ public interface AttackAPI extends API.Singleton {
      *  - If the user configured chasing NPCs with smaller radius, this applies that too
      *
      * @param radius The desired radius to circle the target by the module
-     * @return the {@param radius} but modified to fit the needs of the attacker
+     * @return the input radius, but modified to fit the needs of the attacker
      */
     double modifyRadius(double radius);
 

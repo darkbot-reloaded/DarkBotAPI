@@ -42,7 +42,7 @@ public interface LocationInfo extends Location {
 
     /**
      * If this location info has been initialized to a memory address.
-     * If false the x & y coordinates will likely point to 0,0
+     * If false the x &amp; y coordinates will likely point to 0,0
      * @return true if this location info has been initialized, false otherwise
      */
     boolean isInitialized();

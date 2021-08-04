@@ -27,7 +27,7 @@ public enum ItemFlag {
      */
     NOT_SELECTED(item -> !item.isSelected(), ItemUseResult.ALREADY_SELECTED),
     /**
-     * Item need to have positive quantity, >0
+     * Item need to have positive quantity, &gt;0
      */
     POSITIVE_QUANTITY(item -> item.getQuantity() > 0, ItemUseResult.INSUFFICIENT_QUANTITY);
 

@@ -28,6 +28,8 @@ public interface Locatable {
 
 
     /**
+     * @param ox x coordinate of the other location
+     * @param oy y coordinate of the other location
      * @return the distance between current {@link Location} and other.
      */
     default double distanceTo(double ox, double oy) {
@@ -41,6 +43,8 @@ public interface Locatable {
     }
 
     /**
+     * @param ox x coordinate of the other location
+     * @param oy y coordinate of the other location
      * @return angle to other location as radians.
      */
     default double angleTo(double ox, double oy) {

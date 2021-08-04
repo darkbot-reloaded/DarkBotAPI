@@ -19,7 +19,7 @@ import java.util.Optional;
 public interface HeroItemsAPI extends API.Singleton {
     /**
      * @param itemCategory the category to get items from
-     * @return a {@link Collection<Item>} with all the items inside the given {@link ItemCategory}
+     * @return a Collection with all the {@link Item}s inside the given {@link ItemCategory}
      */
     Collection<? extends Item> getItems(@NotNull ItemCategory itemCategory);
 
@@ -28,7 +28,7 @@ public interface HeroItemsAPI extends API.Singleton {
      *
      * @param selectableItem item to get representation of
      * @param itemFlags      optional flags which this method must respect
-     * @return {@link Item} representation of given {@link SelectableItem} if exists & matches given flags, otherwise {@link Optional#empty()}
+     * @return {@link Item} representation of given {@link SelectableItem} if exists &amp; matches given flags, otherwise {@link Optional#empty()}
      */
     Optional<Item> getItem(@NotNull SelectableItem selectableItem, ItemFlag... itemFlags);
 
@@ -36,7 +36,7 @@ public interface HeroItemsAPI extends API.Singleton {
      * Will try to use given {@link SelectableItem} with optional additional {@link ItemFlag}s.
      * <p>
      * By default this method uses {@link ItemFlag#AVAILABLE},
-     * {@link ItemFlag#READY} & {@link ItemFlag#USABLE} flags which cannot be omitted.
+     * {@link ItemFlag#READY} &amp; {@link ItemFlag#USABLE} flags which cannot be omitted.
      * <p>
      * You can pass own flag set which be checked with defaults together.
      * </p>

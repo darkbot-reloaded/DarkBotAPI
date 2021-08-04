@@ -21,6 +21,7 @@ public interface Movable extends Entity {
     double getAngle();
 
     /**
+     * @param other the other locatable to test against
      * @return true if this entity is visually aiming at another by checking the angle
      * @see #getAngle()
      */
@@ -34,6 +35,7 @@ public interface Movable extends Entity {
     /**
      * Calculates needed time to travel given distance.
      *
+     * @param distance the distance to travel
      * @return time in milliseconds needed to travel given distance
      */
     default long timeTo(double distance) {

@@ -3,7 +3,7 @@ package eu.darkbot.api.game.other;
 import eu.darkbot.api.game.entities.Entity;
 
 /**
- * An entity that can be locked & attacked
+ * An entity that can be locked &amp; attacked
  */
 public interface Attackable extends Entity {
 

@@ -1,7 +1,7 @@
 package eu.darkbot.api.game.entities;
 
 /**
- * In-game station area, includes home bases like x-1 & x-8, but also things like 5-2 or quest givers in x-4 & x-5 maps.
+ * In-game station area, includes home bases like x-1 &amp; x-8, but also things like 5-2 or quest givers in x-4 &amp; x-5 maps.
  *
  * @see Headquarter
  * @see Hangar
@@ -14,37 +14,37 @@ package eu.darkbot.api.game.entities;
 public interface Station extends Entity {
 
     /**
-     * Center headquarters, in x-1 & x-8 maps
+     * Center headquarters, in x-1 &amp; x-8 maps
      */
     interface Headquarter extends Station {
     }
 
     /**
-     * Hangar area to change equipment, in x-1 & x-8 maps
+     * Hangar area to change equipment, in x-1 &amp; x-8 maps
      */
     interface Hangar extends Station {
     }
 
     /**
-     * Repair spot of the ship after reviving, in x-1 & x-8 maps
+     * Repair spot of the ship after reviving, in x-1 &amp; x-8 maps
      */
     interface Repair extends Station {
     }
 
     /**
-     * Small turrets surrounding home bases, in x-1 & x-8 maps
+     * Small turrets surrounding home bases, in x-1 &amp; x-8 maps
      */
     interface Turret extends Station {
     }
 
     /**
-     * Refinery area where ores can be sold, in x-1, x-8 & 5-2 maps
+     * Refinery area where ores can be sold, in x-1, x-8 &amp; 5-2 maps
      */
     interface Refinery extends Station {
     }
 
     /**
-     * Quest giver areas where you can get quests, in x-1, x-4, x-5, x-8 & BL-x maps.
+     * Quest giver areas where you can get quests, in x-1, x-4, x-5, x-8 &amp; BL-x maps.
      */
     interface QuestGiver extends Station {
     }

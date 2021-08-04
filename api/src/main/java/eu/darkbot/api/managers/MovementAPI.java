@@ -45,7 +45,7 @@ public interface MovementAPI extends API.Singleton {
     /**
      * Set the location to move towards.
      * This function will initiate pathfinding to search a route, then follow the route.
-     * The route can be cancelled & cleared with {@link #stop(boolean)}.
+     * The route can be cancelled &amp; cleared with {@link #stop(boolean)}.
      */
     void moveTo(double x, double y);
 
@@ -82,7 +82,7 @@ public interface MovementAPI extends API.Singleton {
     /**
      * Calculate the distance to the closest valid point to a location
      * If {@link #canMove} is true, the distance will be 0, as the closest valid point is itself.
-     * However if false, the closest valid location will be searched (moving out of barriers & inside map),
+     * However if false, the closest valid location will be searched (moving out of barriers &amp; inside map),
      * and the distance to that location will be returned.
      *
      * Example use cases:
@@ -99,7 +99,7 @@ public interface MovementAPI extends API.Singleton {
 
     /**
      * Calculates distance between two points on the map,
-     * including path-finding around obstacles & avoided zones.
+     * including path-finding around obstacles &amp; avoided zones.
      */
     double getDistanceBetween(double x, double y, double ox, double oy);
 

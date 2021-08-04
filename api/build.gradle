@@ -2,6 +2,10 @@ plugins {
     id 'java'
 }
 
+java {
+    withJavadocJar()
+}
+
 description = 'darkbot-api'
 
 dependencies {

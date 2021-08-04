@@ -37,7 +37,7 @@ public interface BoosterAPI extends API.Singleton {
          *         Keep in mind that the time running out doesn't necessarily mean
          *         the amount drops down to 0.
          *         Example: amount could be 15% (combination of 10% + 5%) and remaining time be 10s.
-         *           After the 10 seconds, it could be that amount is 10% & remaining time is hours.
+         *           After the 10 seconds, it could be that amount is 10% &amp; remaining time is hours.
          */
         double getRemainingTime();
 

@@ -20,6 +20,7 @@ description = 'darkbot-common'
 dependencies {
     implementation project(":darkbot-api")
     implementation project(":darkbot-shared")
+    implementation project(":darkbot-impl")
 }
 
 jar {

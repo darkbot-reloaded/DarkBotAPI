@@ -17,7 +17,7 @@ package eu.darkbot.api.extensions;
  * concurrency issues by doing atomic operations on data that is owned and
  * modified or mutated by the main thread.
  *
- * If you're mixing main & background thread logic, consider implementing both {@link Behavior}
+ * If you're mixing main &amp; background thread logic, consider implementing both {@link Behavior}
  * and {@link Task}, and doing the main thread logic in one method and the background
  * logic in the other, and handle all synchronization in the feature directly.
  */
