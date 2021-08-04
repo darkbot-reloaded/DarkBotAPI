@@ -11,11 +11,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.WeakHashMap;
 
 @SuppressWarnings("unchecked")
 public class PluginApiImpl implements PluginAPI {
 
     protected final Set<Singleton> singletons = new HashSet<>();
+    protected final Set<Singleton> weakSingletons = Collections.newSetFromMap(new WeakHashMap<>());
     protected final Set<Class<?>> implClasses = new HashSet<>();
 
     public PluginApiImpl() {
@@ -40,12 +42,13 @@ public class PluginApiImpl implements PluginAPI {
     }
 
     private <T extends Singleton> T getOrCreateSingleton(Class<T> clazz) throws UnsupportedOperationException {
-        for (Singleton implementation : singletons) {
+        Set<Singleton> workingSet = clazz.getClassLoader() == getClass().getClassLoader() ? singletons : weakSingletons;
+        for (Singleton implementation : workingSet) {
             if (clazz.isInstance(implementation))
                 return clazz.cast(implementation);
         }
         T impl = createNewInstance(clazz);
-        singletons.add(impl);
+        workingSet.add(impl);
         return impl;
     }
 
