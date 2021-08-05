@@ -1,9 +1,15 @@
 rootProject.name = 'darkbot-common'
 
-include ':darkbot-api'
-include ':darkbot-shared'
-include ':darkbot-impl'
+include (':darkbot-util', ':darkbot-api', ':darkbot-shared', ':darkbot-impl')
 
+project(':darkbot-util').projectDir = "$rootDir/util" as File
 project(':darkbot-api').projectDir = "$rootDir/api" as File
 project(':darkbot-shared').projectDir = "$rootDir/shared" as File
 project(':darkbot-impl').projectDir = "$rootDir/impl" as File
+
+
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+    }
+}
