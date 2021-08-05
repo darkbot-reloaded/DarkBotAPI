@@ -16,7 +16,7 @@ public interface Config {
     /**
      * @return map with all the known player infos with the id as key
      */
-    Map<Integer, PlayerInfo> getPlayerInfos();
+    Map<Integer, ? extends PlayerInfo> getPlayerInfos();
 
     /**
      * @return general configuration section with generic base configurations

@@ -3,6 +3,7 @@ package eu.darkbot.api.config.util;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.Instant;
+import java.util.Collection;
 
 /**
  * Information saved about other players, most importantly the tags
@@ -29,7 +30,7 @@ public interface PlayerInfo {
     /**
      * A handler for the tags assigned to a player
      */
-    interface PlayerTags extends Iterable<PlayerTag> {
+    interface PlayerTags {
 
         /**
          * Add a tag to the player, indefinitely
@@ -65,6 +66,11 @@ public interface PlayerInfo {
          * @return true if any update occurred, false if the player didn't have this tag already
          */
         boolean remove(PlayerTag tag);
+
+        /**
+         * @return a collection with all the tags for this player
+         */
+        Collection<? extends PlayerTag> get();
 
     }
 }
