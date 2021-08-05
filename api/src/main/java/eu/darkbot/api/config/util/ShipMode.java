@@ -7,7 +7,7 @@ import eu.darkbot.api.managers.HeroAPI;
  * Represent a config mode, that the ship can run in
  * This is the combination of an in-game config and formation.
  *
- * In the future this will ideally support changing configuration & formation
+ * In the future this will ideally support changing configuration &amp; formation
  * but currently it is expected that the results are immutable and non-changing.
  */
 public interface ShipMode {

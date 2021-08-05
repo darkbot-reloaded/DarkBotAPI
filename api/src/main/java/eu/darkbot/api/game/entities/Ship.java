@@ -52,11 +52,13 @@ public interface Ship extends Attacker, Movable {
     SelectableItem.Formation getFormation();
 
     /**
+     * @param formationId formation to check
      * @return if the ship is flying the given formation by id.
      */
     boolean isInFormation(int formationId);
 
     /**
+     * @param formation formation to check
      * @return if the ship is flying the given formation.
      */
     default boolean isInFormation(@NotNull SelectableItem.Formation formation) {

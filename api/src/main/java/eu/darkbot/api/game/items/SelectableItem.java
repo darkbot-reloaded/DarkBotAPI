@@ -707,7 +707,7 @@ public interface SelectableItem {
         }
 
         /**
-         * @return Shield regeneration per second in percentage. 5% -> 0.005
+         * @return Shield regeneration per second in percentage. 5% = 0.005
          */
         public double getShieldRegen() {
             return sps;

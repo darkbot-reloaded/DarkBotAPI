@@ -54,7 +54,7 @@ public interface Area {
     }
 
     /**
-     * @return true if Area contains point of x & y.
+     * @return true if Area contains point of x &amp; y.
      */
     boolean containsPoint(double x, double y);
 

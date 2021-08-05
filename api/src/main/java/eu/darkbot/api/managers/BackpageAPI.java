@@ -29,19 +29,19 @@ public interface BackpageAPI extends API.Singleton {
     Instant getLastRequestTime();
 
     /**
-     * Returns connection with current {@link #getInstanceURI()} & path, with the sessionID cookie.
+     * Returns connection with current {@link #getInstanceURI()} &amp; path, with the sessionID cookie.
      *
-     * @param path URL path & query parameters to append to {@link #getInstanceURI()}
+     * @param path URL path &amp; query parameters to append to {@link #getInstanceURI()}
      */
     HttpURLConnection getConnection(String path) throws Exception;
 
     /**
-     * Returns connection with current {@link #getInstanceURI()} & path, with the sessionID cookie.
+     * Returns connection with current {@link #getInstanceURI()} &amp; path, with the sessionID cookie.
      *
      *
-     * @param path URL path & query parameters to append to {@link #getInstanceURI()}
+     * @param path URL path &amp; query parameters to append to {@link #getInstanceURI()}
      * @param minWait Minimum time to wait since the last request in milliseconds.
-     *                If the last request was over {@param minWait} ms ago, behavior
+     *                If the last request was over minWait ms ago, behavior
      *                is identical to {@link #getConnection(String)}, otherwise it will
      *                first sleep until enough time has passed.
      */

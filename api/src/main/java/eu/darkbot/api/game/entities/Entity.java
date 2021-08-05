@@ -92,7 +92,8 @@ public interface Entity extends Locatable {
     void setMetadata(String key, Object value);
 
     /**
-     * Returns value associated with key or {@code null} if key doesnt exists.
+     * @param key the key to search for
+     * @return value for the key or {@code null} if key doesnt exists.
      */
     @Nullable Object getMetadata(String key);
 }

@@ -5,7 +5,7 @@ import eu.darkbot.api.events.Event;
 import eu.darkbot.api.game.entities.Portal;
 import eu.darkbot.api.game.other.Area;
 import eu.darkbot.api.game.other.GameMap;
-import eu.darkbot.api.utils.ArrayUtils;
+import eu.darkbot.util.ArrayUtils;
 
 import java.util.Collection;
 import java.util.List;

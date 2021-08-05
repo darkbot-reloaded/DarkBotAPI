@@ -53,7 +53,7 @@ public interface WindowAPI extends API.Singleton {
     }
 
     /**
-     * Moves mouse to x & y coordinates of game window
+     * Moves mouse to x &amp; y coordinates of game window
      */
     void mouseMove(int x, int y);
 
@@ -80,7 +80,7 @@ public interface WindowAPI extends API.Singleton {
     }
 
     /**
-     * Simulates mouse click at x & y coordinates
+     * Simulates mouse click at x &amp; y coordinates
      */
     void mouseClick(int x, int y);
 

@@ -41,7 +41,7 @@ public enum ItemUseResult {
      */
     ALREADY_SELECTED,
     /**
-     * Item have insufficient quantity, non-positive, <= 0
+     * Item have insufficient quantity, non-positive, &lt;= 0
      * Only if {@link ItemFlag#POSITIVE_QUANTITY} flag was used
      *
      * @see ItemFlag#POSITIVE_QUANTITY

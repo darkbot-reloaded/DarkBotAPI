@@ -9,7 +9,7 @@ package eu.darkbot.api.extensions;
  * Some of the responsibilities of the module are:
  *  - Ship movement
  *  - Selecting and attacking targets
- *  - Setting hero modes (in-game config & formation)
+ *  - Setting hero modes (in-game config &amp; formation)
  *
  * Other side-tasks like activating abilities can be ran on either
  * {@link Behavior}s or the module, but if you want it to be possible

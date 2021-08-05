@@ -29,7 +29,7 @@ public interface EventBrokerAPI extends API.Singleton {
     /**
      * Register all the event handler methods in the listener.
      *
-     * When this is invoked, all methods in the {@param listener}
+     * When this is invoked, all methods in the listener
      * annotated with {@link eu.darkbot.api.events.EventHandler}
      * will be registered to be called whenever an event
      * of that type is sent via {@link #sendEvent(Event)}.

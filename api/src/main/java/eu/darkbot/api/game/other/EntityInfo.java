@@ -5,7 +5,7 @@ import eu.darkbot.api.managers.HeroAPI;
 public interface EntityInfo {
 
     /**
-     * Returns true if ship is considered as enemy for {@link HeroAPI}.
+     * @return true if ship is considered as enemy for {@link HeroAPI}.
      * <p>
      * Is <b>not</b> in ally clan, group?
      * Is from other faction or enemy clan.

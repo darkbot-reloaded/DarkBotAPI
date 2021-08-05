@@ -1,4 +1,4 @@
-package eu.darkbot.impl.util;
+package eu.darkbot.util;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

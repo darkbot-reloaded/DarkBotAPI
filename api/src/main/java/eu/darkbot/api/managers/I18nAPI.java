@@ -29,7 +29,7 @@ public interface I18nAPI extends API.Singleton {
      * Get the translation for a specific translation key, or fallback to a default string
      * @param key translation key to search for, if null, fallback string will be used
      * @param fallback fallback string, returned in case no translation was found
-     * @return the translated message if available, {@param fallback} otherwise
+     * @return the translated message if available, fallback otherwise
      */
     default String getOrDefault(@Nullable String key, @Nullable String fallback) {
         return getOrDefault(key, fallback, EMPTY);
@@ -38,9 +38,9 @@ public interface I18nAPI extends API.Singleton {
     /**
      * Get the translation for a specific translation key, or fallback to a default string
      * @param key translation key to search for, if null, fallback string will be used
-     * @param fallback fallback string, used as translation text and filled with {@param arguments} if no text is found
+     * @param fallback fallback string, used as translation text and filled with arguments if no text is found
      * @param arguments the arguments to put in the translated text (or in fallback if no translation is found)
-     * @return the translated message if available, {@param fallback} otherwise
+     * @return the translated message if available, fallback otherwise
      */
     String getOrDefault(@Nullable String key, @Nullable String fallback, @NotNull Object... arguments);
 

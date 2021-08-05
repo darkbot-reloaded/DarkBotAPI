@@ -1,9 +1,0 @@
-plugins {
-    id 'java'
-}
-
-description = 'darkbot-api'
-
-dependencies {
-    implementation 'org.jetbrains:annotations:21.0.1'
-}

@@ -26,8 +26,7 @@ public interface GameMap {
     String getShortName();
 
     /**
-     * Is map a PvP zone.
-     * For example 4-x maps.
+     * @return if the map is a PvP zone, eg: 4-x maps.
      */
     boolean isPvp();
 

@@ -1,4 +1,4 @@
-package eu.darkbot.api.utils;
+package eu.darkbot.util;
 
 import java.util.Arrays;
 import java.util.Collection;

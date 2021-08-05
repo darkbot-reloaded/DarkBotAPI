@@ -27,7 +27,7 @@ public interface BotAPI extends API.Singleton {
 
     /**
      * Sets the currently running module in the bot.
-     * Keep in mind that any pause & restart will wipe this module and re-set the user defined module.
+     * Keep in mind that any pause &amp; restart will wipe this module and re-set the user defined module.
      *
      * This is mainly useful to install {@link eu.darkbot.api.extensions.TemporalModule}s that
      * will take over the control of the bot for a small amount of time before delegating back
