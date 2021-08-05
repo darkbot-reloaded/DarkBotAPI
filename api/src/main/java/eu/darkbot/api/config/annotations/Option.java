@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 /**
  * Defines this field as an option inside a config
  */
-@Target({ElementType.FIELD, ElementType.TYPE})
+@Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Option {
     /**
@@ -19,4 +19,11 @@ public @interface Option {
      * @return The translation key to use for this setting
      */
     String value() default "";
+
+    /**
+     * Fields marked with ignore will not be part of the visible configuration for the user
+     */
+    @Target({ElementType.FIELD})
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface Ignore {}
 }
