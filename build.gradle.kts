@@ -3,7 +3,7 @@ plugins {
     `maven-publish`
 }
 
-allprojects {
+subprojects {
     group = findProperty("api_group") as String
     version = findProperty("api_version") as String
 
@@ -15,8 +15,9 @@ allprojects {
     }
 }
 
-
+group = findProperty("api_group") as String
 description = "darkbot-common"
+version = findProperty("api_version") as String
 
 dependencies {
     implementation(project(":darkbot-api"))
