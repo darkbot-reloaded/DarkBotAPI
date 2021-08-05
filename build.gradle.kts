@@ -10,8 +10,19 @@ subprojects {
     apply(plugin = "java")
     java {
         sourceCompatibility = JavaVersion.VERSION_1_8
-        withJavadocJar()
         withSourcesJar()
+        withJavadocJar()
+    }
+
+    apply(plugin = "maven-publish")
+    publishing {
+        publications {
+            create<MavenPublication>("maven") {
+                artifact(tasks.jar)
+                artifact(tasks["sourcesJar"])
+                artifact(tasks["javadocJar"])
+            }
+        }
     }
 }
 
