@@ -10,6 +10,12 @@ import java.net.URL;
 public interface PluginInfo {
 
     /**
+     * Used as both an identifier and the base for features & resources
+     * @return the plugin base package where code & resources are located
+     */
+    String getBasePackage();
+
+    /**
      * @return The name of the plugin
      */
     String getName();
@@ -53,4 +59,5 @@ public interface PluginInfo {
      *         conjunction with {@link #getUpdateURL} to automatically update plugins.
      */
     URL getDownloadURL();
+
 }

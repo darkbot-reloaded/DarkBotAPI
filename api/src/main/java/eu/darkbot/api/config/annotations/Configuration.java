@@ -20,8 +20,8 @@ public @interface Configuration {
     /**
      * If all fields are options by default.
      *
-     * Fields can be marked with {@link Option} to opt-in to being configurable options
-     * Fields can be marked with {@link Option.Ignore} to opt-out and be ignored
+     * Fields can be marked with {@link Option} to opt in to being configurable options
+     * Fields can be marked with {@link Option.Ignore} to opt out and be ignored
      *
      * @return true if by default all fields should be options, false otherwise
      */

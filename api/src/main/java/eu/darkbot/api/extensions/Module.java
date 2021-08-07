@@ -6,7 +6,7 @@ package eu.darkbot.api.extensions;
  * Only one Module may run at the time in the bot, so it is crucial that
  * the module will take proper control over all the required bot functions.
  *
- * Some of the responsibilities of the module are:
+ * Some responsibilities of the module are:
  *  - Ship movement
  *  - Selecting and attacking targets
  *  - Setting hero modes (in-game config &amp; formation)

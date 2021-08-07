@@ -13,11 +13,11 @@ public @interface Tag {
 
     enum Default {
         /**
-         * Show a "unset" or equivalent if the tag is null
+         * Show an "unset" or equivalent if the tag is null
          */
         UNSET,
         /**
-         * Show a "everyone" or equivalent if the tag is null
+         * Show an "everyone" or equivalent if the tag is null
          */
         ALL,
         /**
