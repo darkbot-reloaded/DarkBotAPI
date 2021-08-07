@@ -10,8 +10,8 @@ import java.net.URL;
 public interface PluginInfo {
 
     /**
-     * Used as both an identifier and the base for features & resources
-     * @return the plugin base package where code & resources are located
+     * Used as both an identifier and the base for features &amp; resources
+     * @return the plugin base package where code &amp; resources are located
      */
     String getBasePackage();
 
