@@ -50,6 +50,11 @@ public interface Item extends SelectableItem {
      */
     double totalCooldown();
 
+    /**
+     * @return last successful use attempt time of {@link Item} in milliseconds, 0 = no attempts
+     */
+    double lastUseTime();
+
     @Override
     default ItemCategory getCategory() {
         return null; // Category is unknown

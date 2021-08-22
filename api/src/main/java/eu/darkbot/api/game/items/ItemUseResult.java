@@ -6,6 +6,9 @@ import java.util.function.Consumer;
 
 /**
  * The result after attempting to use an in-game item, usually via {@link HeroItemsAPI#useItem(SelectableItem, ItemFlag...)}
+ *
+ * @see HeroItemsAPI#useItem(SelectableItem, ItemFlag...)
+ * @see HeroItemsAPI#useItem(SelectableItem, double, ItemFlag...)
  */
 public enum ItemUseResult {
     /**
@@ -24,6 +27,13 @@ public enum ItemUseResult {
      * @see ItemFlag#READY
      */
     NOT_READY,
+    /**
+     * Item was recently successfully used.
+     * The item was used already in given wait time, so wasn't used now.
+     *
+     * @see HeroItemsAPI#useItem(SelectableItem, double, ItemFlag...)
+     */
+    RECENTLY_USED,
     /**
      * Item isn't available in-game.
      */
