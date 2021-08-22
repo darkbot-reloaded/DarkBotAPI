@@ -19,8 +19,8 @@ import java.util.Collection;
 /**
  * API providing lists of the different types of entities in the map.
  *
- * This is arguably the most useful useful API in the whole bot, as it provides
- * the means to get information about all entities (ships, npcs, etc) the map.
+ * This is arguably the most useful API in the whole bot, as it provides
+ * the means to get information about all entities (ships, npcs, etc.) the map.
  *
  * The instances provided in all of the methods are automatically updated by the
  * bot during runtime, and are unmodifiable collections.

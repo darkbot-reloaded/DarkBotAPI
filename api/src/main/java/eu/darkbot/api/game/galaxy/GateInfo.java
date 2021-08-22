@@ -1,17 +1,26 @@
 package eu.darkbot.api.game.galaxy;
 
+import org.jetbrains.annotations.Nullable;
+
 public interface GateInfo {
 
-    boolean isFinished();
+    default boolean isFinished() {
+        return getCurrent() != null && getCurrent().equals(getTotal());
+    }
 
-    String getState();
+    default boolean shouldStopSpinning() {
+        return getLivesLeft() != null && getLivesLeft() > 0 && isFinished();
+    }
 
-    int getTotal();
-    int getCurrent();
-    int getId();
-    int getPrepared();
-    int getTotalWave();
-    int getCurrentWave();
-    int getLivesLeft();
-    int getLifePrice();
+    @Nullable String getState();
+
+    @Nullable Integer getTotal();
+    @Nullable Integer getCurrent();
+    @Nullable Integer getId();
+    @Nullable Integer getPrepared();
+    @Nullable Integer getTotalWave();
+    @Nullable Integer getCurrentWave();
+    @Nullable Integer getLivesLeft();
+    @Nullable Integer getLifePrice();
+    Integer getMultiplier();
 }

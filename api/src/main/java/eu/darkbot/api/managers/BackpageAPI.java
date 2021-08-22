@@ -2,6 +2,7 @@ package eu.darkbot.api.managers;
 
 import eu.darkbot.api.API;
 import eu.darkbot.api.extensions.Task;
+import eu.darkbot.util.TimeUtils;
 
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -46,17 +47,13 @@ public interface BackpageAPI extends API.Singleton {
      *                first sleep until enough time has passed.
      */
     default HttpURLConnection getConnection(String path, int minWait) throws Exception {
-        long sleep = getLastRequestTime().toEpochMilli() + minWait - System.currentTimeMillis();
-        if (sleep > 0) {
-            try {
-                Thread.sleep(sleep);
-            } catch (InterruptedException ignore) {}
-        }
+        TimeUtils.sleepThread(getLastRequestTime().toEpochMilli() + minWait - System.currentTimeMillis());
+
         return getConnection(path);
     }
 
     /**
-     * Random string representing the reload token of the loaded page
+     * Random string representing the reload-token of the loaded page
      *
      * @param body which will be searched for reload token
      * @return reload token or {@link Optional#empty()} if wasn't found
