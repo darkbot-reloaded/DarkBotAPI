@@ -46,4 +46,21 @@ public interface HeroItemsAPI extends API.Singleton {
      * @return use result of the selectableItem
      */
     ItemUseResult useItem(@NotNull SelectableItem selectableItem, ItemFlag... itemFlags);
+
+    /**
+     * Will try to use given {@link SelectableItem} with optional additional {@link ItemFlag}s
+     * and has not been used within specified minWait time.
+     * <p>
+     * By default this method uses {@link ItemFlag#AVAILABLE},
+     * {@link ItemFlag#READY} &amp; {@link ItemFlag#USABLE} flags which cannot be omitted.
+     * <p>
+     * You can pass own flag set which be checked with defaults together.
+     * </p>
+     *
+     * @param selectableItem item to be used
+     * @param minWait        minimum wait time(ms) between last successful use attempt
+     * @param itemFlags      optional flags which this method must respect
+     * @return use result of the selectableItem
+     */
+    ItemUseResult useItem(@NotNull SelectableItem selectableItem, double minWait, ItemFlag... itemFlags);
 }

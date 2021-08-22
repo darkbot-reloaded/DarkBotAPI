@@ -1,7 +1,7 @@
 description = "darkbot-impl"
 
 dependencies {
-    compileOnly("org.jetbrains:annotations:21.0.1")
+    compileOnly("org.jetbrains:annotations:22.0.0")
     implementation(project(":darkbot-util"))
     implementation(project(":darkbot-api"))
     implementation(project(":darkbot-shared"))
