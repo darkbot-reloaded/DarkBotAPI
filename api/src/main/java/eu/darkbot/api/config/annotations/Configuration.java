@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 /**
  * Annotation to be used as the header in configuration classes
  */
-@Target({ElementType.TYPE})
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Configuration {
 
