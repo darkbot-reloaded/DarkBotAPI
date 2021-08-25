@@ -52,14 +52,14 @@ public enum GalaxyGate {
         return mapSymbol;
     }
 
-    public boolean isInGate(StarSystemAPI starSystem) {
-        return starSystem.getCurrentMap().getName().contains(mapSymbol);
+    public boolean isInGate(GameMap map) {
+        return map != null && map.getName().contains(mapSymbol);
     }
 
     public Set<GameMap> getMaps(StarSystemAPI starSystem) {
         return starSystem.getMaps().stream()
                 .filter(GameMap::isGG)
-                .filter(gameMap -> gameMap.getName().contains(mapSymbol))
+                .filter(this::isInGate)
                 .collect(Collectors.toSet());
     }
 }
