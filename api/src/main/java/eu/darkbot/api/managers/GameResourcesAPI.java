@@ -8,8 +8,6 @@ import java.util.Optional;
 
 /**
  * API providing in-game resources, like translation keys
- *
- *
  */
 public interface GameResourcesAPI extends API.Singleton {
 
