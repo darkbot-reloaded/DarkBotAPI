@@ -1,4 +1,4 @@
-package eu.darkbot.api.config;
+package eu.darkbot.api.config.types;
 
 import eu.darkbot.api.game.entities.Box;
 

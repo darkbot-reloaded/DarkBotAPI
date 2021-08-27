@@ -1,4 +1,4 @@
-package eu.darkbot.api.config;
+package eu.darkbot.api.config.legacy;
 
 public interface Collect {
 

@@ -1,14 +1,12 @@
 package eu.darkbot.api.config.annotations;
 
-import eu.darkbot.api.config.util.PlayerTag;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Fine-tuning {@link PlayerTag} configuration fields
+ * Fine-tuning {@link eu.darkbot.api.config.types.PlayerTag} configuration fields
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

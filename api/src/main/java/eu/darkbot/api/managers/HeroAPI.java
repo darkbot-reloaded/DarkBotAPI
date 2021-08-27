@@ -1,7 +1,7 @@
 package eu.darkbot.api.managers;
 
 import eu.darkbot.api.API;
-import eu.darkbot.api.config.util.ShipMode;
+import eu.darkbot.api.config.types.ShipMode;
 import eu.darkbot.api.game.entities.Npc;
 import eu.darkbot.api.game.entities.Ship;
 import eu.darkbot.api.game.items.SelectableItem;

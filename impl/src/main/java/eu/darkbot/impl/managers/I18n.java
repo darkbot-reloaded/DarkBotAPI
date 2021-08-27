@@ -105,8 +105,8 @@ public class I18n implements I18nAPI, Listener {
         }
 
         private URL getLangFile(Locale locale, String base, ClassLoader loader) {
-            URL res = loader.getResource(base.replace(".", "/") +
-                    "/lang/strings_" + locale.toLanguageTag() + ".properties");
+            if (!base.isEmpty()) base = base.replace(".", "/") + "/";
+            URL res = loader.getResource(base + "lang/strings_" + locale.toLanguageTag() + ".properties");
 
             if (res == null) System.out.println("Couldn't find translation file for " + locale + " in " + base);
             return res;

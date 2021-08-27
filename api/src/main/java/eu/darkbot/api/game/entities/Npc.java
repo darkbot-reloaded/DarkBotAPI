@@ -1,6 +1,6 @@
 package eu.darkbot.api.game.entities;
 
-import eu.darkbot.api.config.NpcInfo;
+import eu.darkbot.api.config.types.NpcInfo;
 
 /**
  * In-game non-player-controlled entity, aka aliens

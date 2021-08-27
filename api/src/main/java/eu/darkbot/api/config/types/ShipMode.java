@@ -1,4 +1,4 @@
-package eu.darkbot.api.config.util;
+package eu.darkbot.api.config.types;
 
 import eu.darkbot.api.game.items.SelectableItem;
 import eu.darkbot.api.managers.HeroAPI;

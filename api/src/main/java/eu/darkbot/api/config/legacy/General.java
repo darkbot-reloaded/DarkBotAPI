@@ -1,7 +1,7 @@
-package eu.darkbot.api.config;
+package eu.darkbot.api.config.legacy;
 
-import eu.darkbot.api.config.util.PercentRange;
-import eu.darkbot.api.config.util.ShipMode;
+import eu.darkbot.api.config.types.PercentRange;
+import eu.darkbot.api.config.types.ShipMode;
 import eu.darkbot.api.game.items.SelectableItem;
 import eu.darkbot.api.game.other.GameMap;
 

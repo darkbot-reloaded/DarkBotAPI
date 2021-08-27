@@ -1,4 +1,4 @@
-package eu.darkbot.api.config.util;
+package eu.darkbot.api.config.types;
 
 /**
  * Represents a range between a min and a max percentage.

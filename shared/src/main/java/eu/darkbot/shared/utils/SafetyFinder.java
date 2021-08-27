@@ -1,7 +1,7 @@
 package eu.darkbot.shared.utils;
 
-import eu.darkbot.api.config.General;
-import eu.darkbot.api.config.SafetyInfo;
+import eu.darkbot.api.config.legacy.General;
+import eu.darkbot.api.config.types.SafetyInfo;
 import eu.darkbot.api.events.EventHandler;
 import eu.darkbot.api.events.Listener;
 import eu.darkbot.api.game.entities.BattleStation;

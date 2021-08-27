@@ -1,7 +1,11 @@
 package eu.darkbot.api.managers;
 
 import eu.darkbot.api.API;
-import eu.darkbot.api.config.Config;
+import eu.darkbot.api.config.ConfigSetting;
+import eu.darkbot.api.config.legacy.Config;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Set;
 
 /**
  * API providing access to the bot configuration
@@ -15,20 +19,33 @@ public interface ConfigAPI extends API.Singleton {
     Config getConfig();
 
     /**
-     * Get the current configuration in a specific path
+     * Get the configuration for a specific path
      *
      * @param path configuration tree path, each segment is separated by a dot
      * @param <T> the type of the config node
-     * @return the configuration value on this path, or null if non existant
+     * @return the configuration on this path, null if not found
      */
-    <T> T getConfig(String path);
+    @Nullable <T> ConfigSetting<T> getConfig(String path);
+
+    /**
+     * Get the current value of the configuration in a specific path
+     *
+     * @param path configuration tree path, each segment is separated by a dot
+     * @param <T> the type of the config node
+     * @return the configuration value on this path, null if not found
+     * @throws ClassCastException if the type T does not properly match the type of this setting
+     */
+    default @Nullable <T> T getConfigValue(String path) {
+        ConfigSetting<T> config = getConfig(path);
+        return config != null ? config.getValue() : null;
+    }
 
     /**
      * Returns all child nodes that stem from the provided path
      *
      * @param path configuration tree path, each segment is separated by a dot
-     * @return list of child nodes available, null for leaf nodes
+     * @return set of child nodes available, null for leaf nodes
      */
-    String[] getChildren(String path);
+    Set<String> getChildren(String path);
 
 }

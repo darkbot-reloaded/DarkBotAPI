@@ -1,4 +1,4 @@
-package eu.darkbot.api.config.util;
+package eu.darkbot.api.config.types;
 
 import java.awt.*;
 

@@ -1,6 +1,7 @@
-package eu.darkbot.api.config;
+package eu.darkbot.api.config.legacy;
 
-import eu.darkbot.api.config.util.PlayerInfo;
+import eu.darkbot.api.config.types.PlayerInfo;
+import eu.darkbot.api.config.types.SafetyInfo;
 import eu.darkbot.api.game.other.GameMap;
 
 import java.util.Collection;

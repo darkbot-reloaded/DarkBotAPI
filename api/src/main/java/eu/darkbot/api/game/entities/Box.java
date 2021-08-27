@@ -1,6 +1,6 @@
 package eu.darkbot.api.game.entities;
 
-import eu.darkbot.api.config.BoxInfo;
+import eu.darkbot.api.config.types.BoxInfo;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.Instant;
