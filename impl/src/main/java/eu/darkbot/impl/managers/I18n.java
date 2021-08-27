@@ -1,5 +1,6 @@
 package eu.darkbot.impl.managers;
 
+import eu.darkbot.api.PluginAPI;
 import eu.darkbot.api.events.EventHandler;
 import eu.darkbot.api.events.Listener;
 import eu.darkbot.api.extensions.PluginInfo;
@@ -19,14 +20,18 @@ import java.util.Properties;
 
 public class I18n implements I18nAPI, Listener {
 
-    private final ExtensionsAPI extensions;
+    private final PluginAPI pluginAPI;
+    private ExtensionsAPI extensions;
 
     private final PropertyContainer props = new PropertyContainer(null);
     private final Map<PluginInfo, PropertyContainer> pluginProps = new HashMap<>();
     private Locale locale;
 
-    public I18n(ExtensionsAPI extensions) {
-        this.extensions = extensions;
+    public I18n(PluginAPI pluginAPI) {
+        // Due to I18n being such an integral part, we cannot afford a direct dependency here.
+        // If we include extensions api here, it forces extensionsAPI not to rely on i18n on initialization.
+        // The solution is for i18n to lazy-load the dependency when needed later on.
+        this.pluginAPI = pluginAPI;
     }
 
     public void setLocale(Locale locale) {
@@ -53,6 +58,8 @@ public class I18n implements I18nAPI, Listener {
                 pluginProps.clear();
                 break;
             case AFTER_LOAD_COMPLETE:
+                if (extensions == null)
+                    this.extensions = pluginAPI.requireAPI(ExtensionsAPI.class);
                 extensions.getPluginInfos().stream()
                         .filter(pi -> pi.getBasePackage() != null)
                         .forEach(pi -> pluginProps.put(pi, new PropertyContainer(props)));
