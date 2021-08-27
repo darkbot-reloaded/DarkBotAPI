@@ -32,8 +32,8 @@ public class DefaultHandler<T> implements ValueHandler<T> {
             if (parentObj != null) ReflectionUtils.set(field, parentObj, setting.getValue());
         }
 
-        if (setting instanceof ConfigSetting.Parent) {
-            ConfigSetting.Parent<T> current = (ConfigSetting.Parent<T>) setting;
+        if (setting instanceof ConfigSettingImpl.Parent) {
+            ConfigSettingImpl.Parent<T> current = (ConfigSettingImpl.Parent<T>) setting;
             current.getChildren().forEach(this::updateChild);
         }
     }

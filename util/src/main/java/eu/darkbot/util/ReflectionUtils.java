@@ -27,9 +27,9 @@ public class ReflectionUtils {
         PRIMITIVE_TO_WRAPPER = Collections.unmodifiableMap(primitiveToWrapper);
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> Class<T> wrapped(Class<T> type) {
         if (!type.isPrimitive()) return type;
-        //noinspection unchecked
         return (Class<T>) PRIMITIVE_TO_WRAPPER.get(type);
     }
 
