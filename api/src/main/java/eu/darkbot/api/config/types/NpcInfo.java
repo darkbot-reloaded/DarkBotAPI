@@ -35,7 +35,7 @@ public interface NpcInfo {
      * @param flag The flag to check
      * @return If the user has selected this flag or not
      */
-    boolean hasExtraFlag(ExtraFlag flag);
+    boolean hasExtraFlag(Enum<?> flag);
 
     /**
      * This will modify the configuration of the user, be extremely
@@ -44,20 +44,6 @@ public interface NpcInfo {
      * @param flag The flag to set
      * @param active if the flag should be set to active or inactive
      */
-    void setExtraFlag(ExtraFlag flag, boolean active);
+    void setExtraFlag(Enum<?> flag, boolean active);
 
-    interface ExtraFlag {
-        String getName();
-        String getShortName();
-        String getDescription();
-
-        default String getKey() {
-            return null;
-        }
-
-        default String getId() {
-            return getClass().getCanonicalName() +
-                    (getClass().isEnum() ? ((Enum<?>) this).name() : getName());
-        }
-    }
 }
