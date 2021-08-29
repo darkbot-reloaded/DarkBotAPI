@@ -36,13 +36,15 @@ public interface Attackable extends Entity {
 
         /**
          * Owned by {@link eu.darkbot.api.managers.HeroAPI}.
+         * Known as red circle around the target.
          */
-        RED,
+        OWNED,
 
         /**
          * Owned by someone else.
+         * Known as gray circle around the target.
          */
-        GRAY_LIGHT,
+        NOT_OWNED,
 
         /**
          * Citadel's draw fire ability.
