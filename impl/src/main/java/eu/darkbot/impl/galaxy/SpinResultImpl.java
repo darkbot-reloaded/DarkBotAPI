@@ -8,6 +8,7 @@ import org.w3c.dom.Element;
 
 import java.time.Instant;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class SpinResultImpl implements SpinResult {
@@ -24,23 +25,19 @@ public class SpinResultImpl implements SpinResult {
     SpinResultImpl(GalaxyInfoImpl galaxyInfo) {
         this.galaxyInfo = galaxyInfo;
 
-        Map<SelectableItem.Laser, SpinInfo> ammoResult = new HashMap<>();
-
-        for (ItemType item : ItemType.values()) {
-            SelectableItem.Laser laser = item.laser;
-            if (laser != null) ammoResult.put(laser, getSpinInfo(item));
-        }
-
-        this.ammoResult = Collections.unmodifiableMap(ammoResult);
+        this.ammoResult = Collections.unmodifiableMap(
+                Arrays.stream(ItemType.values())
+                        .filter(itemType -> itemType.laser != null)
+                        .collect(Collectors.toMap(itemType -> itemType.laser, this::getSpinInfo)));
     }
 
-    void update(Stream<Element> itemsStream, GalaxyGate gate) {
+    void update(Stream<Element> itemStream, GalaxyGate gate) {
         this.gate = gate;
         this.itemsResult.values().forEach(SpinInfoImpl::reset);
 
         this.date = null;
 
-        itemsStream.forEach(itemElement -> {
+        itemStream.forEach(itemElement -> {
             Optional.ofNullable(XmlUtils.attrToInt(itemElement, "gate_id"))
                     .map(GalaxyGate::of)
                     .map(galaxyGate -> (GateInfoImpl) galaxyInfo.getGateInfo(galaxyGate))

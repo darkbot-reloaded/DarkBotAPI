@@ -14,9 +14,7 @@ import java.util.stream.Stream;
 
 public class GalaxyInfoImpl implements eu.darkbot.api.game.galaxy.GalaxyInfo {
     private final SpinResultImpl spinResult = new SpinResultImpl(this);
-
     private final Map<GalaxyGate, GateInfo> gates = new HashMap<>();
-    private final Map<SpinResultImpl.ItemType, SpinResultImpl.SpinInfoImpl> itemCache = new HashMap<>();
 
     private int money, samples, energyCost, spinSalePercentage;
     private boolean spinOnSale, galaxyGateDay, bonusRewardsDay;
