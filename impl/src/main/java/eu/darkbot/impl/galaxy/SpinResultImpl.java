@@ -48,7 +48,7 @@ public class SpinResultImpl implements SpinResult {
             else if (itemType.equals("multiplier") && amount != null)
                 multipliers += amount;
 
-            if (itemId != null) itemType += itemId;
+            if (itemId != null) itemType += "-" + itemId;
             if (amount != null && spinsUsed != null)
                 getCache(ItemType.of(itemType)).set(amount, spinsUsed);
         });
