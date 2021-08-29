@@ -49,7 +49,7 @@ public class GalaxySpinner implements GalaxySpinnerAPI {
         if (spinAmount > 4) params += "&spinamount=" + spinAmount;
 
         return Boolean.TRUE.equals(handleRequest(params, -1, minWait))
-                ? Optional.ofNullable(galaxyInfo.spinResult) : Optional.empty();
+                ? Optional.of(galaxyInfo.getSpinResult()) : Optional.empty();
     }
 
     @Override
