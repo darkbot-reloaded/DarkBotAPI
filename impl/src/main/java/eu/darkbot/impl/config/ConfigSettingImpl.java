@@ -81,7 +81,7 @@ public class ConfigSettingImpl<T> implements ConfigSetting<T> {
         return handler;
     }
 
-    public <H extends ValueHandler<? extends T>> @Nullable H getHandler(Class<H> clazz) {
+    public <H> @Nullable H getHandler(Class<H> clazz) {
         if (clazz.isInstance(handler)) return clazz.cast(handler);
         return null;
     }

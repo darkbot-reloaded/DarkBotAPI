@@ -57,11 +57,11 @@ public interface ConfigSetting<T> {
     ValueHandler<T> getHandler();
 
     /**
-     * @param clazz Class of the expected handler type
-     * @param <H> Expected value handler type
-     * @return value handler as an instance of H if present, null if type doesn't match
+     * @param clazz Expected type of the handler
+     * @param <H> type the handler must be assignable to
+     * @return if the handler is an instance of H, the handler as a type of H, otherwise null
      */
-    <H extends ValueHandler<? extends T>> @Nullable H getHandler(Class<H> clazz);
+    @Nullable <H> H getHandler(Class<H> clazz);
 
     /**
      * Config settings that are not leaf nodes of the tree, will implement the parent interface,
