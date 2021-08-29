@@ -7,17 +7,14 @@ import eu.darkbot.util.XmlUtils;
 import org.w3c.dom.Element;
 
 import java.time.Instant;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class SpinResultImpl implements SpinResult {
     private final GalaxyInfoImpl galaxyInfo;
 
     private final Map<ItemType, SpinInfoImpl> itemsResult = new EnumMap<>(ItemType.class);
-    private final Map<SelectableItem.Laser, SpinInfo> ammoResult = new HashMap<>();
+    private final Map<SelectableItem.Laser, SpinInfo> ammoResult;
 
     private int parts, multipliers;
 
@@ -27,10 +24,14 @@ public class SpinResultImpl implements SpinResult {
     SpinResultImpl(GalaxyInfoImpl galaxyInfo) {
         this.galaxyInfo = galaxyInfo;
 
+        Map<SelectableItem.Laser, SpinInfo> ammoResult = new HashMap<>();
+
         for (ItemType item : ItemType.values()) {
             SelectableItem.Laser laser = item.laser;
             if (laser != null) ammoResult.put(laser, getSpinInfo(item));
         }
+
+        this.ammoResult = Collections.unmodifiableMap(ammoResult);
     }
 
     void update(Stream<Element> itemsStream, GalaxyGate gate) {
