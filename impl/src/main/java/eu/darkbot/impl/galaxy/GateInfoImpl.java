@@ -126,7 +126,7 @@ public class GateInfoImpl implements GateInfo {
                 countdown = temp;
 
             String lootId = e.getAttribute("lootId");
-            if (lootId != null) this.lootId = lootId;
+            if (!lootId.isEmpty()) this.lootId = lootId;
         }
 
         @Override

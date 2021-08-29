@@ -36,6 +36,8 @@ public class SpinResultImpl implements SpinResult {
         this.itemsResult.values().forEach(SpinInfoImpl::reset);
 
         this.date = null;
+        this.parts = 0;
+        this.multipliers = 0;
 
         itemStream.forEach(itemElement -> {
             Optional.ofNullable(XmlUtils.attrToInt(itemElement, "gate_id"))
@@ -51,12 +53,12 @@ public class SpinResultImpl implements SpinResult {
             Integer amount = XmlUtils.attrToInt(itemElement, "amount");
             Integer spinsUsed = XmlUtils.attrToInt(itemElement, "spins");
 
-            if (itemType.equals("part") && itemElement.getAttribute("duplicate") == null)
+            if (itemType.equals("part") && itemElement.getAttribute("duplicate").isEmpty())
                 parts++;
             else if (itemType.equals("multiplier") && amount != null)
                 multipliers += amount;
 
-            if (itemId != null) itemType += "-" + itemId;
+            if (!itemId.isEmpty()) itemType += "-" + itemId;
             if (amount != null && spinsUsed != null)
                 getSpinInfo(ItemType.of(itemType)).set(amount, spinsUsed);
         });
