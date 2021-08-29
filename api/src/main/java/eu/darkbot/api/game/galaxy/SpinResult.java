@@ -16,14 +16,26 @@ public interface SpinResult {
      */
     GalaxyGate getGalaxyGate();
 
+    /**
+     * @return amount of parts obtained for GalaxyGate
+     * @see #getGalaxyGate()
+     */
+    int getParts();
+
+    /**
+     * Multipliers obtained via spin.
+     * Amount of multipliers obtained equals amount of duplicate parts obtained.
+     *
+     * @return amount of multipliers obtained
+     */
+    int getMultipliers();
+
     SpinInfo getMines();
-    SpinInfo getParts();
     SpinInfo getRockets();
     SpinInfo getXenomit();
     SpinInfo getNanoHull();
     SpinInfo getLogFiles();
     SpinInfo getVouchers();
-    SpinInfo getMultipliers();
 
     Map<SelectableItem.Laser, SpinInfo> getAmmo();
 
