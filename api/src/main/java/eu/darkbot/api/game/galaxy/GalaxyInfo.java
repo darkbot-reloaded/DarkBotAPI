@@ -1,7 +1,5 @@
 package eu.darkbot.api.game.galaxy;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.util.Map;
 
 public interface GalaxyInfo {
@@ -15,10 +13,7 @@ public interface GalaxyInfo {
     boolean isGalaxyGateDay();
     boolean isBonusRewardsDay();
 
-    Map<GalaxyGate, GateInfo> getGateInfos();
+    Map<GalaxyGate, ? extends GateInfo> getGateInfos();
 
-    @Nullable
-    default GateInfo getGateInfo(GalaxyGate galaxyGate) {
-        return getGateInfos().get(galaxyGate);
-    }
+    GateInfo getGateInfo(GalaxyGate galaxyGate);
 }

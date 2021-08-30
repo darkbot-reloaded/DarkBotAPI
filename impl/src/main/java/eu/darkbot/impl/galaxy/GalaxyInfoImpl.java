@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 
 public class GalaxyInfoImpl implements eu.darkbot.api.game.galaxy.GalaxyInfo {
     private final SpinResultImpl spinResult = new SpinResultImpl(this);
-    private final Map<GalaxyGate, GateInfo> gates = new HashMap<>();
+    private final Map<GalaxyGate, GateInfoImpl> gates = new HashMap<>();
 
     private int money, samples, energyCost, spinSalePercentage;
     private boolean spinOnSale, galaxyGateDay, bonusRewardsDay;
@@ -54,7 +54,7 @@ public class GalaxyInfoImpl implements eu.darkbot.api.game.galaxy.GalaxyInfo {
 
         if (XmlUtils.hasChildElements(rootElement, "setup")) {
             Optional.ofNullable(XmlUtils.attrToInt(XmlUtils.getChildElement(rootElement, "setup"), "gate_id"))
-                    .map(i -> (GateInfoImpl) getGateInfo(GalaxyGate.of(i)))
+                    .map(i -> getGateInfo(GalaxyGate.of(i)))
                     .ifPresent(GateInfoImpl::onGatePrepare);
         }
     }
@@ -76,16 +76,14 @@ public class GalaxyInfoImpl implements eu.darkbot.api.game.galaxy.GalaxyInfo {
         XmlUtils.streamOf(gates)
                 .forEach(gate -> Optional.ofNullable(XmlUtils.attrToInt(gate, "id"))
                         .map(GalaxyGate::of)
-                        .ifPresent(galaxyGate ->
-                                ((GateInfoImpl) this.gates.computeIfAbsent(galaxyGate, k -> new GateInfoImpl())).update(gate)));
+                        .ifPresent(galaxyGate -> getGateInfo(galaxyGate).update(gate)));
     }
 
     private void updateMultipliers(Element e) {
         XmlUtils.streamOf(e.getElementsByTagName("multiplier"))
                 .forEach(multiplier -> Optional.ofNullable(multiplier.getAttribute("mode"))
                         .map(GalaxyGate::of)
-                        .ifPresent(galaxyGate -> ((GateInfoImpl) this.gates.computeIfAbsent(galaxyGate, k -> new GateInfoImpl()))
-                                .setMultiplier(XmlUtils.attrToInt(multiplier, "value"))));
+                        .ifPresent(galaxyGate -> getGateInfo(galaxyGate).setMultiplier(XmlUtils.attrToInt(multiplier, "value"))));
     }
 
     @Override
@@ -124,7 +122,12 @@ public class GalaxyInfoImpl implements eu.darkbot.api.game.galaxy.GalaxyInfo {
     }
 
     @Override
-    public Map<GalaxyGate, GateInfo> getGateInfos() {
+    public Map<GalaxyGate, ? extends GateInfo> getGateInfos() {
         return gates;
+    }
+
+    @Override
+    public GateInfoImpl getGateInfo(GalaxyGate gate) {
+        return gates.computeIfAbsent(gate, g -> new GateInfoImpl());
     }
 }
