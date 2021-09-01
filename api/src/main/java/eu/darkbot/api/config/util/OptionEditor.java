@@ -23,6 +23,28 @@ public interface OptionEditor<T> {
     T getEditorValue();
 
     /**
+     * Tells the editor to stop editing and accept any partially edited
+     * value as the value of the editor.  The editor returns false if
+     * editing was not stopped; this is useful for editors that validate
+     * and can not accept invalid entries.
+     *
+     * @return  true if editing was stopped; false otherwise
+     *
+     * @see CellEditor#stopCellEditing()
+     */
+    default boolean stopCellEditing() {
+        return true;
+    }
+
+    /**
+     * Tells the editor to cancel editing and not accept any partially
+     * edited value.
+     *
+     * @see CellEditor#cancelCellEditing()
+     */
+    default void cancelCellEditing() {}
+
+    /**
      * If the editor changes size during edition, it is recommended
      * to override the method to specify the bounds it will grow to,
      * so that the space is reserved.
