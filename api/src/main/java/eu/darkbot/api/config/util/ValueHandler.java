@@ -1,6 +1,7 @@
 package eu.darkbot.api.config.util;
 
 import eu.darkbot.api.config.ConfigSetting;
+import org.jetbrains.annotations.Nullable;
 
 public interface ValueHandler<T> {
 
@@ -31,5 +32,15 @@ public interface ValueHandler<T> {
      * @param setting The config setting this belongs to
      */
     void updateChildren(ConfigSetting<T> setting);
+
+    /**
+     * Get metadata from the value handler
+     * @param key the key used for this data
+     * @param <V> the datatype for the data
+     * @return the metadata value for the key if present, null otherwise
+     */
+    default <V> @Nullable V getMetadata(String key) {
+        return null;
+    }
 
 }

@@ -1,14 +1,18 @@
 package eu.darkbot.impl.config;
 
 import eu.darkbot.api.config.ConfigSetting;
+import eu.darkbot.api.config.annotations.Editor;
 import eu.darkbot.api.config.util.ValueHandler;
 import eu.darkbot.util.ReflectionUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DefaultHandler<T> implements ValueHandler<T> {
 
+    protected final Map<String, Object> metadata = new HashMap<>();
     protected final @Nullable Field field;
 
     public DefaultHandler() {
@@ -17,6 +21,12 @@ public class DefaultHandler<T> implements ValueHandler<T> {
 
     public DefaultHandler(@Nullable Field field) {
         this.field = field;
+        if (field != null) {
+            this.metadata.put("field", field);
+            Editor editor = field.getAnnotation(Editor.class);
+            if (editor != null)
+                this.metadata.put("editor", editor.value());
+        }
     }
 
     @Override
@@ -53,6 +63,20 @@ public class DefaultHandler<T> implements ValueHandler<T> {
 
     private <C> void updateChild(String key, ConfigSetting<C> child) {
         child.getHandler().updateChildren(child);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <V> @Nullable V getMetadata(String key) {
+        return (V) metadata.get(key);
+    }
+
+    @Override
+    public String toString() {
+        return "DefaultHandler{" +
+                "metadata=" + metadata +
+                ", field=" + field +
+                '}';
     }
 
 }
