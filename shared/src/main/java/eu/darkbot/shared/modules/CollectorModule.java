@@ -124,7 +124,7 @@ public class CollectorModule implements Module {
 
     protected boolean checkMap() {
         GameMap map;
-        if (!portals.isEmpty() && (map = config.getConfig().getGeneral().getWorkingMap()) != star.getCurrentMap()) {
+        if (!portals.isEmpty() && (map = config.getLegacy().getGeneral().getWorkingMap()) != star.getCurrentMap()) {
             this.bot.setModule(pluginAPI.requireInstance(MapModule.class)).setTarget(map);
             return false;
         }
@@ -181,14 +181,14 @@ public class CollectorModule implements Module {
     }
 
     protected void checkDangerous() {
-        if (config.getConfig().getCollect().getStayAwayFromEnemies()) {
+        if (config.getLegacy().getCollect().getStayAwayFromEnemies()) {
             Location dangerous = findClosestEnemyAndAddToDangerousList();
             if (dangerous != null) stayAwayFromLocation(dangerous);
         }
     }
 
     public void checkInvisibility() {
-        if (config.getConfig().getCollect().getAutoCloak()
+        if (config.getLegacy().getCollect().getAutoCloak()
                 && !hero.isInvisible()
                 && System.currentTimeMillis() - invisibleUntil > 60000) {
 
@@ -219,7 +219,7 @@ public class CollectorModule implements Module {
                 .filter(s -> s.getEntityInfo().isEnemy() && !s.isInvisible() && s.distanceTo(hero) < DISTANCE_FROM_DANGEROUS)
                 .peek(s -> {
                     if (!s.isBlacklisted() && s.isAttacking(hero))
-                        s.setBlacklisted(config.getConfig().getGeneral().getRunning().getEnemyRemember().toMillis());
+                        s.setBlacklisted(config.getLegacy().getGeneral().getRunning().getEnemyRemember().toMillis());
                 })
                 .map(Ship::getLocationInfo)
                 .min(Comparator.comparingDouble(location -> location.distanceTo(hero)))
@@ -232,7 +232,7 @@ public class CollectorModule implements Module {
     }
 
     protected boolean isContested(Box box) {
-        if (!config.getConfig().getCollect().getIgnoreContestedBoxes()) return false;
+        if (!config.getLegacy().getCollect().getIgnoreContestedBoxes()) return false;
 
         double heroTimeTo = hero.timeTo(box);
         return ships.stream()

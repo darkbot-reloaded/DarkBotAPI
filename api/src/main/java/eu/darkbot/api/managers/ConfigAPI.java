@@ -3,8 +3,10 @@ package eu.darkbot.api.managers;
 import eu.darkbot.api.API;
 import eu.darkbot.api.config.ConfigSetting;
 import eu.darkbot.api.config.legacy.Config;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -13,7 +15,7 @@ import java.util.Set;
 public interface ConfigAPI extends API.Singleton {
 
     @Deprecated
-    default Config getConfig() {
+    default Config getLegacy() {
         ConfigSetting<Config> cfg = getConfigRoot();
         return cfg.getValue();
     }
@@ -36,6 +38,29 @@ public interface ConfigAPI extends API.Singleton {
     }
 
     /**
+     * Get the configuration for a specific path
+     *
+     * @param path configuration tree path, each segment is separated by a dot
+     * @param <T> the type of the config node
+     * @return the configuration on this path, null if not found
+     * @throws IllegalArgumentException if the config path doesn't exist
+     */
+    default <T> @NotNull ConfigSetting<T> requireConfig(String path) {
+        return requireConfig(getConfigRoot(), path);
+    }
+
+    /**
+     * Get the configuration for a specific path
+     *
+     * @param path configuration tree path, each segment is separated by a dot
+     * @param <T> the type of the config node
+     * @return optional with the configuration on this path, empty optional if the path doesn't exist
+     */
+    default <T> Optional<ConfigSetting<T>> optionalConfig(String path) {
+        return optionalConfig(getConfigRoot(), path);
+    }
+
+    /**
      * Get the current value of the configuration in a specific path
      *
      * @param path configuration tree path, each segment is separated by a dot
@@ -51,21 +76,38 @@ public interface ConfigAPI extends API.Singleton {
      * Returns all child nodes that stem from the provided path
      *
      * @param path configuration tree path, each segment is separated by a dot
-     * @return set of child nodes available, null for leaf nodes
+     * @return set of child nodes available, null for leaf or not found nodes
      */
     default Set<String> getChildren(String path) {
         return getChildren(getConfigRoot(), path);
     }
 
     /**
-     * Get the configuration for a specific path, for a specific config
+     * Get the configuration for a specific path in a specific config
      *
      * @param root configuration root to search on
      * @param path configuration tree path, each segment is separated by a dot
      * @param <T> the type of the config node
      * @return the configuration on this path, null if not found
      */
-    default <T> ConfigSetting<T> getConfig(ConfigSetting<?> root, String path) {
+    default <T> @Nullable ConfigSetting<T> getConfig(ConfigSetting<?> root, String path) {
+        try {
+            return requireConfig(root, path);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Get the configuration for a specific path in a specific config
+     *
+     * @param root configuration root to search on
+     * @param path configuration tree path, each segment is separated by a dot
+     * @param <T> the type of the config node
+     * @return the configuration on this path, null if not found
+     * @throws IllegalArgumentException if the config path doesn't exist
+     */
+    default <T> @NotNull ConfigSetting<T> requireConfig(ConfigSetting<?> root, String path) {
         String[] paths = path.isEmpty() ? new String[]{} : path.split("\\.");
         for (String s : paths) {
             if (root instanceof ConfigSetting.Parent)
@@ -77,6 +119,18 @@ public interface ConfigAPI extends API.Singleton {
                 throw new IllegalArgumentException("Configuration not found: " + s + " in " + path);
         }
         return (ConfigSetting<T>) root;
+    }
+
+    /**
+     * Get the configuration for a specific path in a specific config
+     *
+     * @param root configuration root to search on
+     * @param path configuration tree path, each segment is separated by a dot
+     * @param <T> the type of the config node
+     * @return optional with the configuration on this path, empty optional if the path doesn't exist
+     */
+    default <T> Optional<ConfigSetting<T>> optionalConfig(ConfigSetting<?> root, String path) {
+        return Optional.ofNullable(getConfig(root, path));
     }
 
     /**

@@ -84,8 +84,8 @@ public class SafetyFinder implements Listener {
         this.starSystem = starSystem;
 
         this.config = config;
-        this.SAFETY = config.getConfig().getGeneral().getSafety();
-        this.RUNNING = config.getConfig().getGeneral().getRunning();
+        this.SAFETY = config.getLegacy().getGeneral().getSafety();
+        this.RUNNING = config.getLegacy().getGeneral().getRunning();
 
         this.ships = entities.getShips();
 
@@ -218,7 +218,7 @@ public class SafetyFinder implements Listener {
     }
 
     private SafetyInfo getSafety() {
-        List<SafetyInfo> safeties = config.getConfig()
+        List<SafetyInfo> safeties = config.getLegacy()
                 .getSafeties(starSystem.getCurrentMap())
                 .stream()
                 .filter(s -> s.getEntity().map(Entity::isValid).orElse(false))
