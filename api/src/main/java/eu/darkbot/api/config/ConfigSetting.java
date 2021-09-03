@@ -47,9 +47,16 @@ public interface ConfigSetting<T> {
     void setValue(T value);
 
     /**
-     * @param listener append a listener that will be called whenever the value is updated
+     * Append a listener that will be called whenever the value is updated
+     * @param listener listener to be appended
      */
     void addListener(Consumer<T> listener);
+
+    /**
+     * Remove a listener previously added
+     * @param listener listener to remove
+     */
+    void removeListener(Consumer<T> listener);
 
     /**
      * @return the value handler for this config setting

@@ -77,6 +77,10 @@ public class ConfigSettingImpl<T> implements ConfigSetting<T> {
             this.listeners.add(listener);
     }
 
+    public void removeListener(Consumer<T> listener) {
+        this.listeners.remove(listener);
+    }
+
     public ValueHandler<T> getHandler() {
         return handler;
     }

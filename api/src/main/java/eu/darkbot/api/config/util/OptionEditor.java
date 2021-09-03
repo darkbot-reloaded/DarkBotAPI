@@ -1,5 +1,6 @@
 package eu.darkbot.api.config.util;
 
+import eu.darkbot.api.config.ConfigSetting;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -13,9 +14,8 @@ public interface OptionEditor<T> {
      * and set up the editor for the new setting.
      *
      * @param setting the setting to be edited
-     * @param handler the value handler for the setting
      */
-    JComponent getEditorComponent(T setting, ValueHandler<T> handler);
+    JComponent getEditorComponent(ConfigSetting<T> setting);
 
     /**
      * @return current value in the editor
