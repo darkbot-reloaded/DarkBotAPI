@@ -6,7 +6,7 @@ import org.w3c.dom.Element;
 
 import java.util.Optional;
 
-public class GateInfoImpl implements GateInfo {
+class GateInfoImpl implements GateInfo {
     private int total;
     private int current;
     private int totalWave;
