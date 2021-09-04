@@ -1,11 +1,12 @@
 package eu.darkbot.api.managers;
 
+import eu.darkbot.api.API;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Provides authentication for the current user of the bot.
  */
-public interface AuthAPI {
+public interface AuthAPI extends API.Singleton {
     /**
      * Sets up initial auth. Some environments (like servers) may have
      * less user friction by not requiring discord authentication.
