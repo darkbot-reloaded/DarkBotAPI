@@ -1,6 +1,7 @@
 package eu.darkbot.api.managers;
 
 import eu.darkbot.api.API;
+import eu.darkbot.api.extensions.Behavior;
 import eu.darkbot.api.extensions.Module;
 import eu.darkbot.api.utils.Version;
 import org.jetbrains.annotations.Nullable;
@@ -19,6 +20,20 @@ public interface BotAPI extends API.Singleton {
      * @return avg time of tick in ms.
      */
     double getTickTime();
+
+    /**
+     * @return the bot is running, isn't stopped.
+     */
+    boolean isRunning();
+
+    /**
+     * You can play/stop the bot.
+     * On stopped the {@link Module#onTickStopped()}, {@link Behavior#onStoppedBehavior()} will be ticked.
+     * {@link Module#onTickModule()}, {@link Behavior#onTickBehavior()} otherwise.
+     *
+     * @param running should bot be running
+     */
+    void setRunning(boolean running);
 
     /**
      * @return current used {@link Module}
@@ -41,5 +56,4 @@ public interface BotAPI extends API.Singleton {
      * @return The same module that was passed in, useful to chain methods.
      */
     <M extends Module> M setModule(@Nullable M module);
-
 }

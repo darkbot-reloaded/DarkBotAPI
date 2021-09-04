@@ -4,7 +4,6 @@ import eu.darkbot.api.API;
 import eu.darkbot.api.config.types.ShipMode;
 import eu.darkbot.api.game.entities.Npc;
 import eu.darkbot.api.game.entities.Ship;
-import eu.darkbot.api.game.items.SelectableItem;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -17,11 +16,6 @@ public interface HeroAPI extends Ship, API.Singleton {
      * @return current used {@link Configuration}
      */
     Configuration getConfiguration();
-
-    /**
-     * @return currently used {@link Configuration}
-     */
-    SelectableItem.Formation getFormation();
 
     /**
      * Will check if {@link HeroAPI} is in given {@code mode}.

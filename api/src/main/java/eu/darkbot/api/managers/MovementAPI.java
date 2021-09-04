@@ -28,6 +28,13 @@ public interface MovementAPI extends API.Singleton {
      */
     boolean isMoving();
 
+    /*
+    TODO
+     * @return hero was moved in given time(ms)
+
+    boolean isMoving(long inTime);
+     */
+
     /**
      * @return true if hero is out of map
      */
@@ -55,6 +62,21 @@ public interface MovementAPI extends API.Singleton {
     default void moveTo(@NotNull Locatable destination) {
         moveTo(destination.getX(), destination.getY());
     }
+
+    /*
+    TODO
+     * Will try to set destination directly were only barriers will be reconsidered in pathfinding.
+     * Radiation, mines, avoid zones, etc. will not be included into pathfinding
+     *
+     * @param x the x coordinate
+     * @param y the y coordinate
+
+    void directMoveTo(double x, double y);
+
+    default void directMoveTo(@NotNull Locatable destination) {
+        directMoveTo(destination.getX(), destination.getY());
+    }
+     */
 
     /**
      * Set the destination to a random position on the map.
