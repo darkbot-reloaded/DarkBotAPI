@@ -12,7 +12,7 @@ public interface AuthAPI {
     /**
      * Returns if the user has been validly authenticated with discord
      *
-     * @return true if auth was performed & valid, false otherwise.
+     * @return true if auth was performed &amp; valid, false otherwise.
      */
     boolean isAuthenticated();
 
@@ -25,7 +25,7 @@ public interface AuthAPI {
 
     /**
      * If the user didn't authenticate beforehand, it will prompt the user to authenticate.
-     * Will prompt the user to join the discord & donate if he hasn't done so yet.
+     * Will prompt the user to join the discord &amp; donate if he hasn't done so yet.
      *
      * @return true if the user is a donor in the official darkbot discord server, false otherwise.
      */
