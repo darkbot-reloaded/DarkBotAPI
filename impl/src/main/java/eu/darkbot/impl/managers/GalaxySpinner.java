@@ -12,7 +12,6 @@ import org.w3c.dom.Document;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.BufferedInputStream;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.util.Optional;
 
@@ -22,6 +21,7 @@ public class GalaxySpinner implements GalaxySpinnerAPI {
     private final HeroAPI hero;
     private final BackpageAPI backpage;
     private final GalaxyInfoImpl galaxyInfo;
+
     private long lastUpdate;
 
     public GalaxySpinner(HeroAPI hero, BackpageAPI backpage) {
@@ -83,13 +83,11 @@ public class GalaxySpinner implements GalaxySpinnerAPI {
         }
     }
 
-    private Document getDocument(HttpURLConnection connection) throws Exception {
-        try (InputStream is = connection.getInputStream();
-             BufferedInputStream bis = new BufferedInputStream(is)) {
+    private Document getDocument(HttpURLConnection conn) throws Exception {
+        try (BufferedInputStream bis = new BufferedInputStream(conn.getInputStream())) {
             bis.mark(1024);
 
-            int length = bis.read(BUFFER);
-            String start = new String(BUFFER, 0, length);
+            String start = new String(BUFFER, 0, bis.read(BUFFER));
             if (start.equals("materializer locked")) return null;
 
             bis.reset();

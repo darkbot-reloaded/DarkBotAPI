@@ -11,7 +11,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class SpinResultImpl implements SpinResult {
+class SpinResultImpl implements SpinResult {
     private final GalaxyInfoImpl galaxyInfo;
 
     private final Map<ItemType, SpinInfoImpl> itemsResult = new EnumMap<>(ItemType.class);
@@ -42,7 +42,7 @@ public class SpinResultImpl implements SpinResult {
         itemStream.forEach(itemElement -> {
             Optional.ofNullable(XmlUtils.attrToInt(itemElement, "gate_id"))
                     .map(GalaxyGate::of)
-                    .map(galaxyGate -> (GateInfoImpl) galaxyInfo.getGateInfo(galaxyGate))
+                    .map(galaxyInfo::getGateInfo)
                     .ifPresent(gateInfo -> gateInfo.update(itemElement));
 
             if (date == null)
@@ -123,7 +123,7 @@ public class SpinResultImpl implements SpinResult {
         return ammoResult;
     }
 
-    public enum ItemType {
+    private enum ItemType {
         MINES("rocket-11"),
         ROCKETS("rocket-3"),
         ORES("ore-4"),
@@ -156,15 +156,15 @@ public class SpinResultImpl implements SpinResult {
         }
     }
 
-    public static class SpinInfoImpl implements SpinInfo {
+    private static class SpinInfoImpl implements SpinInfo {
         private int obtained, spinsUsed;
 
-        void set(int obtained, int spinsUsed) {
+        private void set(int obtained, int spinsUsed) {
             this.obtained += obtained;
             this.spinsUsed += spinsUsed;
         }
 
-        void reset() {
+        private void reset() {
             this.obtained = 0;
             this.spinsUsed = 0;
         }
