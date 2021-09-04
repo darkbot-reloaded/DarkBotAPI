@@ -6,7 +6,7 @@ import eu.darkbot.api.utils.Version;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Bot's management API
+ * Provides access bot management, like changing the module or toggling on &amp; off the bot.
  */
 public interface BotAPI extends API.Singleton {
 

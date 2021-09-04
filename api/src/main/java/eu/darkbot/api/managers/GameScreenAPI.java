@@ -7,11 +7,12 @@ import eu.darkbot.api.game.other.Gui;
 import java.util.Collection;
 
 /**
- * API providing general view and controls of the in-game window
- *
- * Generally this whole API should be avoided in favor of specific APIs
- * that provide higher-order functions that don't rely on a specific
- * implementation of some things here, like GUIs, view areas or FPS.
+ * Provides general view and controls of the in-game window.
+ * E.g: guis, memory usage, focusing chat or toggling category bar
+ * <br>
+ * Should be avoided in favor of specific APIs providing higher-order
+ * functions, that don't rely on a specific implementation of some
+ * things here, like GUIs, view areas or FPS.
  */
 public interface GameScreenAPI extends API.Singleton {
 

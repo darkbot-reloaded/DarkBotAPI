@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * API providing access to the bot configuration
+ * Provides access to the bot user-managed configuration.
  */
 public interface ConfigAPI extends API.Singleton {
 

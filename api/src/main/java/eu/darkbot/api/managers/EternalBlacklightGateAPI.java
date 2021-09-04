@@ -5,7 +5,7 @@ import eu.darkbot.api.API;
 import java.util.List;
 
 /**
- * API providing data for the eternal blacklight galaxy gate in-game
+ * Provides access to data for the eternal blacklight galaxy gate in-game.
  *
  * TODO: include methods to accept the boosters
  * TODO: add a generic interface for both eternal gate APIs extended by both

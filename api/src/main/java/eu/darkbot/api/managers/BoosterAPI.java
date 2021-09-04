@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * API for boosters (seeing which boosters are currently active, how much time they have, etc.)
+ * Provides access to in-game booster data (eg: active boosters or time remaining).
  */
 public interface BoosterAPI extends API.Singleton {
     /**
@@ -17,61 +17,71 @@ public interface BoosterAPI extends API.Singleton {
     List<? extends Booster> getBoosters();
 
     /**
-     * Booster representation of a type of boost and the amount of boost given.
-     *
+     * In-game booster representation, includes type of boost, amount &amp; remaining time.
+     * <br>
      * Keep in mind one booster may have many sub-boosters, some may last longer
      * and some may last shorter.
-     *
+     * <br>
      * The sub-boosters are not exposed in the API, instead the Booster is responsible
      * for representing the whole booster, amount will be the sum of all boosters and
      * remaining time will be the shortest of the sub-boosters.
      */
     interface Booster {
         /**
-         * @return the amount of boost in percentage, +10% = 0.1
+         * Amount of boost in percentage, +10% = 0.1
+         * @return current amount of boost
          */
         double getAmount();
 
         /**
-         * @return time in which the current booster will expire in seconds.
-         *         Keep in mind that the time running out doesn't necessarily mean
-         *         the amount drops down to 0.
-         *         Example: amount could be 15% (combination of 10% + 5%) and remaining time be 10s.
-         *           After the 10 seconds, it could be that amount is 10% &amp; remaining time is hours.
+         * Remaining time until the booster expires, in seconds.
+         * <br>
+         * Keep in mind that the time running out doesn't necessarily mean {@link #getAmount} drops to 0.
+         * <br>
+         * Example: amount could be 15% (combination of 10% + 5%) and remaining time be 10s.
+         * <br>    After the 10 seconds, it could be that amount is 10% &amp; remaining time is hours.
+         *
+         * @return time until current booster expires, in seconds.
          */
         double getRemainingTime();
 
         /**
-         * @return The in-game name of this specific booster
+         * In-game displayed name for this booster type
+         * @return in-game name
          */
         String getName();
 
         /**
-         * @return A small name (typically about 3 chars) for this type of booster.
+         * Short name, typically about 3 characters, for this booster type
+         * @return small name for this booster type
+         * @see Type#getSmall(String)
          */
         default String getSmall() {
             return getType().getSmall(getCategory());
         }
 
         /**
-         * @return A color usually associated by users to this type of booster
+         * Color typically used for this booster type
+         * @return color for this booster type
+         * @see Type#getColor()
          */
         default Color getColor() {
             return getType().getColor();
         }
 
         /**
-         * @return The type of booster this is
-         * @see Type
+         * Type of booster this is categorized as
+         * @return type of booster
          */
         default Type getType() {
             return Type.of(getCategory());
         }
 
         /**
-         * The string version of the category, prefer using {@link #getType()} instead
+         * The string version of booster category, prefer using {@link #getType()} instead
          *
          * @return The string version of category type of this booster
+         * @see #getType()
          */
         String getCategory();
     }

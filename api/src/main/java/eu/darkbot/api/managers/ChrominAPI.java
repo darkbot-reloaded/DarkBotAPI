@@ -3,7 +3,7 @@ package eu.darkbot.api.managers;
 import eu.darkbot.api.API;
 
 /**
- * API providing data for the chromin rush event in-game
+ * Provides data for the chroming rush event in-game.
  */
 public interface ChrominAPI extends API.Singleton {
 

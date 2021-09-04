@@ -3,10 +3,12 @@ package eu.darkbot.api.managers;
 import eu.darkbot.api.API;
 
 /**
- * This interface provides API to read/write native memory
+ * Provides access to read/write native memory
  * <p>
  * Those calls should be generally safe,
  * every access violation error is handled by native code
+ *
+ * @deprecated Plugins should not rely on modifying memory to access functions, and should use other APIs instead.
  */
 @Deprecated
 public interface MemoryAPI extends API.Singleton {

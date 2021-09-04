@@ -5,12 +5,24 @@ import eu.darkbot.api.extensions.PluginInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Provides access to bot built-in translations, as well as plugin translations.
+ *
+ * Access to bot base translations is available in methods without a namespace parameter:
+ * <br>
+ * {@link #get(String)}, {@link #get(String, Object...)},
+ * {@link #getOrDefault(String, String)} or {@link #getOrDefault(String, String, Object...)},
+ * Access to plugin translations is available in methods with a namespace parameter:
+ * <br>
+ * {@link #get(PluginInfo, String)}, {@link #get(PluginInfo, String, Object...)},
+ * {@link #getOrDefault(PluginInfo, String, String)}, {@link #getOrDefault(PluginInfo, String, String, Object...)}
+ */
 public interface I18nAPI extends API.Singleton {
 
     Object[] EMPTY = new Object[0];
 
     /**
-     * Get the translation for a specific translation key
+     * Get the translation for a specific bot translation key
      * @param key translation key to search for
      * @return The translated text if available, a placeholder text otherwise
      */
@@ -19,7 +31,7 @@ public interface I18nAPI extends API.Singleton {
     }
 
     /**
-     * Get the translation for a specific translation key with arguments
+     * Get the translation for a specific plugin translation key
      * @param namespace the plugin namespace to search
      * @param key translation key to search for
      * @return The translated text if available, a placeholder text otherwise
@@ -29,7 +41,7 @@ public interface I18nAPI extends API.Singleton {
     }
 
     /**
-     * Get the translation for a specific translation key with arguments
+     * Get the translation for a specific bot translation key with arguments
      * @param key translation key to search for
      * @param arguments the arguments to put in the translated text
      * @return The translated text if available, a placeholder text otherwise
@@ -39,7 +51,7 @@ public interface I18nAPI extends API.Singleton {
     }
 
     /**
-     * Get the translation for a specific translation key with arguments
+     * Get the translation for a specific plugin translation key with arguments
      * @param namespace the plugin namespace to search
      * @param key translation key to search for
      * @param arguments the arguments to put in the translated text
@@ -48,7 +60,7 @@ public interface I18nAPI extends API.Singleton {
     String get(@Nullable PluginInfo namespace, @NotNull String key, @NotNull Object... arguments);
 
     /**
-     * Get the translation for a specific translation key, or fallback to a default string
+     * Get the translation for a specific bot translation key, or fallback to a default string
      * @param key translation key to search for, if null, fallback string will be used
      * @param fallback fallback string, returned in case no translation was found
      * @return the translated message if available, fallback otherwise
@@ -58,7 +70,7 @@ public interface I18nAPI extends API.Singleton {
     }
 
     /**
-     * Get the translation for a specific translation key, or fallback to a default string
+     * Get the translation for a specific plugin translation key, or fallback to a default string
      * @param namespace the plugin namespace to search
      * @param key translation key to search for, if null, fallback string will be used
      * @param fallback fallback string, used as translation text and filled with arguments if no text is found
@@ -69,7 +81,7 @@ public interface I18nAPI extends API.Singleton {
     }
 
     /**
-     * Get the translation for a specific translation key, or fallback to a default string
+     * Get the translation for a specific bot translation key, or fallback to a default string
      * @param key translation key to search for, if null, fallback string will be used
      * @param fallback fallback string, used as translation text and filled with arguments if no text is found
      * @param arguments the arguments to put in the translated text (or in fallback if no translation is found)
@@ -80,7 +92,7 @@ public interface I18nAPI extends API.Singleton {
     }
 
     /**
-     * Get the translation for a specific translation key, or fallback to a default string
+     * Get the translation for a specific bot translation key, or fallback to a default string
      * @param namespace the plugin namespace to search
      * @param key translation key to search for, if null, fallback string will be used
      * @param fallback fallback string, used as translation text and filled with arguments if no text is found

@@ -3,7 +3,7 @@ package eu.darkbot.api.managers;
 import eu.darkbot.api.API;
 
 /**
- * API to get info about hero statistics, running time, current/earned money etc.
+ * Provides access to base statistics, like ping, level, running time, current/earned money etc.
  */
 public interface StatsAPI extends API.Singleton {
 

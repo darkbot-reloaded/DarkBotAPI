@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * API to add, manage, retrieve maps.
+ * Provides access to game maps, map sizes, and pathfinding between them.
  */
 public interface StarSystemAPI extends API.Singleton {
     List<String> HOME_MAPS         = ArrayUtils.asImmutableList("1-1", "2-1", "3-1");

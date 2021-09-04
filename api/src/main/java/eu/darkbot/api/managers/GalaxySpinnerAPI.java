@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 /**
- * API to build, place &amp; update Galaxy Gates infos.
+ * Provides access to retrieve Galaxy Gate info, as well as build &amp; place them.
  */
 public interface GalaxySpinnerAPI extends API.Singleton {
     /**

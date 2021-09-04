@@ -11,7 +11,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 /**
- * API to manage hero's pet.
+ * Provides access to manage hero's pet, like enabling/disabling, setting a pet gear, or checking a cooldown.
+ * <br>
  * Pet is automatically repaired if {@link #isEnabled()} returns true,
  * user enabled Pet in settings, and the bot is running.
  */

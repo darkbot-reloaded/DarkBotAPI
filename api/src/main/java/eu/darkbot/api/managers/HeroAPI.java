@@ -8,8 +8,8 @@ import eu.darkbot.api.game.items.SelectableItem;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * This {@link API} represent hero entity,
- * from here you can manage your ship.
+ * Represents the in-game hero (your ship), provides methods to manage
+ * hero mode (attacking, running) &amp; change formations or configuration.
  */
 public interface HeroAPI extends Ship, API.Singleton {
 

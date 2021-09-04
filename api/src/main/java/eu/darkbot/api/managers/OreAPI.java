@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Locale;
 
 /**
- * API for ore related things such as selling ores or getting ore amount.
+ * Provides access to introspect &amp; interact with ores, like checking current amount or selling.
  */
 public interface OreAPI extends API.Singleton {
 

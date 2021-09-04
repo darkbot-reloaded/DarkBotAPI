@@ -4,6 +4,9 @@ import eu.darkbot.api.API;
 import eu.darkbot.api.game.other.Attackable;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Provides a way to lock &amp; attack other entities.
+ */
 public interface AttackAPI extends API.Singleton {
 
     /**

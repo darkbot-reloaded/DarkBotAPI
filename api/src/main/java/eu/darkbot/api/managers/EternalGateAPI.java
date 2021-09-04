@@ -5,7 +5,7 @@ import eu.darkbot.api.API;
 import java.util.List;
 
 /**
- * API providing data for the eternal gate event in-game
+ * Provides data for the eternal gate in-game event.
  *
  * This API is very similar to the one provided in {@link EternalBlacklightGateAPI},
  * the main difference being the gate itself.

@@ -26,7 +26,7 @@ public interface ChatAPI extends API.Singleton {
     }
 
     /**
-     * Messages for {@link ChatAPI}
+     * Chat message representation for {@link ChatAPI}
      */
     interface Message {
         /**

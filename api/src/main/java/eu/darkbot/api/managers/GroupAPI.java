@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**
- * API for group
+ * Provides access to inspect and manage the in-game group (formerly known as outfit).
  */
 public interface GroupAPI extends API.Singleton {
     /**

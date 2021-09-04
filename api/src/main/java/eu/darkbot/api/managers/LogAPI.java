@@ -4,8 +4,8 @@ import eu.darkbot.api.API;
 import eu.darkbot.api.events.Event;
 
 /**
- * API for reading in-game log messages
- * Log messages must be read via the {@link LogMessageEvent} with a Listener.
+ * Provides access to read in-game log messages, you may read them
+ * via the {@link LogMessageEvent} with a {@link eu.darkbot.api.events.Listener}.
  *
  * @see EventBrokerAPI
  */

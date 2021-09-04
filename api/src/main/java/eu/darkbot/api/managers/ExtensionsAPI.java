@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 /**
- * API providing a way to inspect what features or plugins are loaded.
+ * Provides a way to inspect &amp; interact with plugins &amp; features loaded on the bot.
  *
  * Generally this API shouldn't be of much use except when requiring one
  * feature to have a dependency on another.

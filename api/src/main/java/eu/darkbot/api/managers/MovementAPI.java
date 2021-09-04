@@ -6,6 +6,9 @@ import eu.darkbot.api.game.other.Locatable;
 import eu.darkbot.api.game.other.Location;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Provides access to hero movement, allows seeing where we are and define where to go.
+ */
 public interface MovementAPI extends API.Singleton {
 
     /**

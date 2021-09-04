@@ -4,7 +4,9 @@ import eu.darkbot.api.API;
 import eu.darkbot.api.game.other.Point;
 
 /**
- * Utility to manage game window
+ * Provides access to the in-game window, like reloading or sending keyboard or mouse events.
+ *
+ * Plugins should not rely on sending click events, and should use other APIs like {@link HeroItemsAPI} instead.
  */
 public interface WindowAPI extends API.Singleton {
 

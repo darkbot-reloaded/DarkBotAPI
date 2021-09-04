@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 /**
- * API to manage in-game items, from ammo, to rockets, abilities or even fireworks.
+ * Provides access to introspect &amp; use in-game items, from ammo, to rockets, abilities or even fireworks.
  *
  * @see SelectableItem
  */

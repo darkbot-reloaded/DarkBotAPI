@@ -10,8 +10,9 @@ import java.time.Instant;
 import java.util.Optional;
 
 /**
- * API to manage, connect to backpage of the game.
- * {@link BackpageAPI} should be called only from {@link Task} thread.
+ * Provides access to connect &amp; manage the backpage of the game.
+ * Should only be called from background thread, used in {@link Task}s.
+ *
  * @see Task
  */
 public interface BackpageAPI extends API.Singleton {

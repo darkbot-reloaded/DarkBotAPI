@@ -6,6 +6,9 @@ import org.jetbrains.annotations.Nullable;
 import java.time.Instant;
 import java.util.Collection;
 
+/**
+ * Provides access to repair options, checking amount of deaths, or get what destroyed you.
+ */
 public interface RepairAPI extends API.Singleton {
 
     /**
