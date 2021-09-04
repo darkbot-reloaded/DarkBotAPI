@@ -2,6 +2,9 @@ package eu.darkbot.api.managers;
 
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Provides authentication for the current user of the bot.
+ */
 public interface AuthAPI {
     /**
      * Sets up initial auth. Some environments (like servers) may have

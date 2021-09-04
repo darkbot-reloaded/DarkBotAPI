@@ -8,10 +8,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * API to read &amp; interact with in-game chat.
+ * Provides access to read &amp; interact with in-game chat.
  *
- * Currently only reading chat messages is supported, via
- * listening to the {@link MessageSentEvent} event using a {@link eu.darkbot.api.events.Listener}
+ * Currently, only reading chat messages is supported, via listening to
+ * {@link MessageSentEvent} event using a {@link eu.darkbot.api.events.Listener}
  *
  * @see Message
  * @see MessageSentEvent
