@@ -15,7 +15,7 @@ public interface Location extends Locatable, Point {
     }
 
     /**
-     * Will create new instance of {@link Location} around the center point based on angle & radius.
+     * Will create new instance of {@link Location} around the center point based on angle &amp; radius.
      *
      * @param center point around where new location will be calculated
      * @param angle radians angle
@@ -56,7 +56,7 @@ public interface Location extends Locatable, Point {
     }
 
     /**
-     * Will set to location around center point based on angle & radius.
+     * Will set to location around center point based on angle &amp; radius.
      *
      * @param center point around where new location will be calculated
      * @param angle radians angle

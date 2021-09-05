@@ -17,7 +17,7 @@ public interface Locatable {
     }
 
     /**
-     * Will create new instance of {@link Locatable} around the center point based on angle & radius.
+     * Will create new instance of {@link Locatable} around the center point based on angle &amp; radius.
      *
      * @param center point around where new location will be calculated
      * @param angle radians angle
