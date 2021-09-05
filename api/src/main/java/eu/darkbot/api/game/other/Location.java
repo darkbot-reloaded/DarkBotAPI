@@ -14,7 +14,15 @@ public interface Location extends Locatable, Point {
         return new LocationImpl(x, y);
     }
 
-    static Location of(Locatable center, double angle, double radius) {
+    /**
+     * Will create new instance of {@link Location} around the center point based on angle &amp; radius.
+     *
+     * @param center point around where new location will be calculated
+     * @param angle radians angle
+     * @param radius distance from the center location
+     * @return new {@link Location} around the center point
+     */
+    static Location of(@NotNull Locatable center, double angle, double radius) {
         return Location.of(center.getX() - Math.cos(angle) * radius,
                            center.getY() - Math.sin(angle) * radius);
     }
@@ -45,6 +53,19 @@ public interface Location extends Locatable, Point {
 
     default Location plus(@NotNull Locatable other) {
         return plus(other.getX(), other.getY());
+    }
+
+    /**
+     * Will set to location around center point based on angle &amp; radius.
+     *
+     * @param center point around where new location will be calculated
+     * @param angle radians angle
+     * @param radius distance from the center location
+     * @return this {@link Location} with new coordinates
+     */
+    default Location toAngle(@NotNull Locatable center, double angle, double radius) {
+        return setTo(center.getX() - Math.cos(angle) * radius,
+                center.getY() - Math.sin(angle) * radius);
     }
 
     class LocationImpl implements Location {

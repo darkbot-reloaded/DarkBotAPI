@@ -26,25 +26,25 @@ import java.util.stream.Collectors;
 
 public class SafetyFinder implements Listener {
 
-    private final HeroAPI hero;
-    private final AttackAPI attacker;
-    private final HeroItemsAPI items;
-    private final MovementAPI movement;
-    private final StarSystemAPI starSystem;
+    protected final HeroAPI hero;
+    protected final AttackAPI attacker;
+    protected final HeroItemsAPI items;
+    protected final MovementAPI movement;
+    protected final StarSystemAPI starSystem;
 
-    private final ConfigAPI config;
-    private final General.Safety SAFETY;
-    private final General.Running RUNNING;
-    private final Collection<? extends Ship> ships;
+    protected final ConfigAPI config;
+    protected final General.Safety SAFETY;
+    protected final General.Running RUNNING;
+    protected final Collection<? extends Ship> ships;
 
-    private final MapTraveler mapTraveler;
-    private final PortalJumper jumper;
+    protected final MapTraveler mapTraveler;
+    protected final PortalJumper jumper;
 
-    private SafetyInfo safety;
-    private Escaping escape = Escaping.NONE;
-    private boolean refreshing;
-    private long escapingSince = -1;
-    private long lastTick;
+    protected SafetyInfo safety;
+    protected Escaping escape = Escaping.NONE;
+    protected boolean refreshing;
+    protected long escapingSince = -1;
+    protected long lastTick;
 
     public enum Escaping {
         ENEMY, SIGHT, REPAIR, REFRESH, WAITING, NONE;
@@ -64,9 +64,9 @@ public class SafetyFinder implements Listener {
         }
     }
 
-    private JumpState jumpState = JumpState.CURRENT_MAP;
-    private enum JumpState {CURRENT_MAP, JUMPING, JUMPED, RETURNING, RETURNED}
-    private GameMap prevMap;
+    protected JumpState jumpState = JumpState.CURRENT_MAP;
+    protected enum JumpState {CURRENT_MAP, JUMPING, JUMPED, RETURNING, RETURNED}
+    protected GameMap prevMap;
 
     public SafetyFinder(HeroAPI hero,
                         AttackAPI attacker,
@@ -94,7 +94,7 @@ public class SafetyFinder implements Listener {
     }
 
     @EventHandler
-    private void onMapChange(StarSystemAPI.MapChangeEvent event) {
+    protected void onMapChange(StarSystemAPI.MapChangeEvent event) {
         if (safety != null && safety.getType() == SafetyInfo.Type.PORTAL) {
             if (event.getNext() == prevMap) jumpState = JumpState.RETURNED;
             else if (jumpState == JumpState.JUMPING) jumpState = JumpState.JUMPED;
@@ -188,7 +188,7 @@ public class SafetyFinder implements Listener {
         return false;
     }
 
-    private void activeTick() {
+    protected void activeTick() {
         Escaping oldEscape = escape;
         escape = getEscape();
         if (escape == Escaping.NONE || escape == Escaping.WAITING) return;
@@ -205,7 +205,7 @@ public class SafetyFinder implements Listener {
         if (oldEscape != escape && escape == Escaping.ENEMY) castDefensiveAbility();
     }
 
-    private Escaping getEscape() {
+    protected Escaping getEscape() {
         if (escape == Escaping.ENEMY || isUnderAttack()) return Escaping.ENEMY;
         if (escape == Escaping.WAITING) return Escaping.WAITING;
         if ((escape == Escaping.SIGHT && !RUNNING.getStopRunning()) || hasEnemy()) return Escaping.SIGHT;
@@ -217,7 +217,7 @@ public class SafetyFinder implements Listener {
         return refreshing ? Escaping.REFRESH : Escaping.NONE;
     }
 
-    private SafetyInfo getSafety() {
+    protected SafetyInfo getSafety() {
         List<SafetyInfo> safeties = config.getLegacy()
                 .getSafeties(starSystem.getCurrentMap())
                 .stream()
@@ -244,7 +244,7 @@ public class SafetyFinder implements Listener {
                 .orElse(best);
     }
 
-    private void moveToSafety() {
+    protected void moveToSafety() {
         if ((jumpState != JumpState.CURRENT_MAP && jumpState != JumpState.JUMPING)
                 || movement.getDestination().distanceTo(safety) < safety.getRadius()
                 || !safety.getEntity().map(Entity::isValid).orElse(false)) return;
@@ -253,13 +253,13 @@ public class SafetyFinder implements Listener {
         movement.moveTo(Location.of(safety, angle, -safety.getRadius() * (0.3 + (0.60 * Math.random())))); // 30%-90% radius
     }
 
-    private void castDefensiveAbility() {
+    protected void castDefensiveAbility() {
         if (movement.getDistanceBetween(hero, movement.getDestination()) >= RUNNING.getShipAbilityMinDistance()) {
             items.useItem(RUNNING.getShipAbility());
         }
     }
 
-    private boolean doneRepairing() {
+    protected boolean doneRepairing() {
         if (!hero.isInMode(SAFETY.getRepairMode())
                 && (hero.getHealth().hpIncreasedIn(1000) || hero.getHealth().hpPercent() == 1)
                 && (hero.getHealth().shieldDecreasedIn(1000) || hero.getHealth().shieldPercent() == 0)) hero.setMode(SAFETY.getRepairMode());
@@ -267,22 +267,22 @@ public class SafetyFinder implements Listener {
                 hero.setMode(SAFETY.getRepairMode()) && this.hero.getHealth().hpPercent() >= SAFETY.getRepairHealthRange().getMax();
     }
 
-    private boolean isUnderAttack() {
+    protected boolean isUnderAttack() {
         if (!RUNNING.getRunFromEnemies() && !RUNNING.getRunInSight()) return false;
         return ships.stream().anyMatch(s -> s.getEntityInfo().isEnemy() && isAttackingOrBlacklisted(s));
     }
 
-    private boolean hasEnemy() {
+    protected boolean hasEnemy() {
         if (!RUNNING.getRunFromEnemies() && !RUNNING.getRunInSight()) return false;
         return ships.stream().anyMatch(this::runFrom);
     }
 
-    private boolean runFrom(Ship ship) {
+    protected boolean runFrom(Ship ship) {
         return ship.getEntityInfo().isEnemy() && (isAttackingOrBlacklisted(ship) ||
                 (RUNNING.getRunInSight() && ship.distanceTo(hero) < RUNNING.getMaxSightDistance()));
     }
 
-    private boolean isAttackingOrBlacklisted(Ship ship) {
+    protected boolean isAttackingOrBlacklisted(Ship ship) {
         if (ship.isAttacking(hero)) ship.setBlacklisted(RUNNING.getEnemyRemember().toMillis());
         return ship.isBlacklisted();
     }

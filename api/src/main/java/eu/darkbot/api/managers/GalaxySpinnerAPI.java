@@ -5,6 +5,7 @@ import eu.darkbot.api.game.galaxy.GalaxyGate;
 import eu.darkbot.api.game.galaxy.GalaxyInfo;
 import eu.darkbot.api.game.galaxy.GateInfo;
 import eu.darkbot.api.game.galaxy.SpinResult;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -16,7 +17,7 @@ public interface GalaxySpinnerAPI extends API.Singleton {
     /**
      * @return the {@link GalaxyInfo} with all infos about current state of spinner
      */
-    GalaxyInfo getGalaxyInfo();
+    @NotNull GalaxyInfo getGalaxyInfo();
 
     /**
      * @param expiryTime only update if within
@@ -33,7 +34,7 @@ public interface GalaxySpinnerAPI extends API.Singleton {
      * @param minWait    Minimum time(ms) to wait since any last backpage request
      * @return non-empty optional of {@link SpinResult} if request was filled successfully
      */
-    default Optional<SpinResult> spinGate(GalaxyGate gate, int useMultiAt, int spinAmount, int minWait) {
+    default Optional<SpinResult> spinGate(@NotNull GalaxyGate gate, int useMultiAt, int spinAmount, int minWait) {
         GateInfo gateInfo = getGalaxyInfo().getGateInfo(gate);
         boolean useMulti = gateInfo != null && gateInfo.getMultiplier() >= useMultiAt;
 
@@ -49,7 +50,7 @@ public interface GalaxySpinnerAPI extends API.Singleton {
      * @param minWait    Minimum time(ms) to wait since any last backpage request
      * @return non-empty optional of {@link SpinResult} if request was filled successfully
      */
-    Optional<SpinResult> spinGate(GalaxyGate gate, boolean multiplier, int spinAmount, int minWait);
+    Optional<SpinResult> spinGate(@NotNull GalaxyGate gate, boolean multiplier, int spinAmount, int minWait);
 
     /**
      * Place the gate on your x-1 map
@@ -59,12 +60,12 @@ public interface GalaxySpinnerAPI extends API.Singleton {
      * @return if the request was filled successfully
      * @see GateInfo#canBePlaced()
      */
-    boolean placeGate(GalaxyGate gate, int minWait);
+    boolean placeGate(@NotNull GalaxyGate gate, int minWait);
 
     /**
      * @param gate    The gate to buy life
      * @param minWait Minimum time(ms) to wait since any last backpage request
      * @return if the request was filled successfully
      */
-    boolean buyLife(GalaxyGate gate, int minWait);
+    boolean buyLife(@NotNull GalaxyGate gate, int minWait);
 }

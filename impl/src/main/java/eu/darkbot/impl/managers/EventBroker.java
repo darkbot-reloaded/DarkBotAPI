@@ -4,6 +4,7 @@ import eu.darkbot.api.events.Event;
 import eu.darkbot.api.events.EventHandler;
 import eu.darkbot.api.events.Listener;
 import eu.darkbot.api.managers.EventBrokerAPI;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -17,17 +18,17 @@ public class EventBroker implements EventBrokerAPI {
     private final WeakHashMap<Listener, EventDispatcher> dispatchers = new WeakHashMap<>();
 
     @Override
-    public void sendEvent(Event event) {
+    public void sendEvent(@NotNull Event event) {
         dispatchers.forEach((l, d) -> d.handle(l, event));
     }
 
     @Override
-    public void registerListener(Listener listener) {
+    public void registerListener(@NotNull Listener listener) {
         dispatchers.put(listener, new EventDispatcher(listener.getClass()));
     }
 
     @Override
-    public void unregisterListener(Listener listener) {
+    public void unregisterListener(@NotNull Listener listener) {
         dispatchers.remove(listener);
     }
 

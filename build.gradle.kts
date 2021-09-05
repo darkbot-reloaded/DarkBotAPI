@@ -24,6 +24,10 @@ subprojects {
             }
         }
     }
+
+    dependencies {
+        compileOnly("org.jetbrains:annotations:22.0.0")
+    }
 }
 
 group = findProperty("api_group") as String

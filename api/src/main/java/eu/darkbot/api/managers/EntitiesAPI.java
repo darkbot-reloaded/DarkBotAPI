@@ -13,6 +13,7 @@ import eu.darkbot.api.game.entities.Portal;
 import eu.darkbot.api.game.entities.Ship;
 import eu.darkbot.api.game.entities.Station;
 import eu.darkbot.api.game.other.Obstacle;
+import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.Collection;
 
@@ -31,18 +32,21 @@ public interface EntitiesAPI extends API.Singleton {
      * @return All npcs visible in the map
      * @see Npc
      */
+    @UnmodifiableView
     Collection<? extends Npc> getNpcs();
 
     /**
      * @return All other player pets visible on the map
      * @see Pet
      */
+    @UnmodifiableView
     Collection<? extends Pet> getPets();
 
     /**
      * @return All other players visible on the map
      * @see Ship
      */
+    @UnmodifiableView
     Collection<? extends Ship> getPlayers();
 
     /**
@@ -51,6 +55,7 @@ public interface EntitiesAPI extends API.Singleton {
      * @see Ship
      * @see Pet
      */
+    @UnmodifiableView
     Collection<? extends Ship> getShips();
 
     /**
@@ -58,24 +63,28 @@ public interface EntitiesAPI extends API.Singleton {
      * @see Box
      * @see Ore
      */
+    @UnmodifiableView
     Collection<? extends Box> getBoxes();
 
     /**
      * @return All mines visible on the map
      * @see Mine
      */
+    @UnmodifiableView
     Collection<? extends Mine> getMines();
 
     /**
      * @return All portals available on the map.
      * @see Portal
      */
+    @UnmodifiableView
     Collection<? extends Portal> getPortals();
 
     /**
      * @return All home base stations, quest giver, and other demilitarized zones
      * @see Station for all the different types of bases
      */
+    @UnmodifiableView
     Collection<? extends Station> getStations();
 
     /**
@@ -83,12 +92,14 @@ public interface EntitiesAPI extends API.Singleton {
      * @see BattleStation
      * @see BattleStation.Module
      */
+    @UnmodifiableView
     Collection<? extends BattleStation> getBattleStations();
 
     /**
      * @return All entities that are detected by the bot, but not yet categorized into any other collection.
      *         Keep in mind whatever is in unknown now may always be properly categorized at a later date.
      */
+    @UnmodifiableView
     Collection<? extends Entity> getUnknown();
 
     /**
@@ -100,6 +111,7 @@ public interface EntitiesAPI extends API.Singleton {
      * @return All entities implementing the {@link Obstacle} interface.
      * @see Obstacle
      */
+    @UnmodifiableView
     Collection<? extends Obstacle> getObstacles();
 
     /**
@@ -110,6 +122,7 @@ public interface EntitiesAPI extends API.Singleton {
      *
      * @return A new collection with ALL of the entities provided by all the methods in this API, including unknown.
      */
+    @UnmodifiableView
     Collection<? extends Entity> getAll();
 
     /**

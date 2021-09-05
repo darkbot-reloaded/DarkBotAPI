@@ -5,6 +5,7 @@ import eu.darkbot.api.events.Event;
 import eu.darkbot.api.extensions.FeatureInfo;
 import eu.darkbot.api.extensions.PluginInfo;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -26,13 +27,13 @@ public interface ExtensionsAPI extends API.Singleton {
      * @param feature class to get instance of
      * @return instance of given feature
      */
-    <T> Optional<T> getFeature(Class<T> feature);
+    <T> Optional<T> getFeature(@NotNull Class<T> feature);
 
     /**
      * @param feature class to get {@link FeatureInfo} of
      * @return {@link FeatureInfo} of given feature.
      */
-    <T> FeatureInfo<T> getFeatureInfo(Class<T> feature);
+    @Nullable <T> FeatureInfo<T> getFeatureInfo(@NotNull Class<T> feature);
 
     /**
      * Get what class loader has been used to load the plugin
@@ -40,7 +41,7 @@ public interface ExtensionsAPI extends API.Singleton {
      *
      * @return the class loader used to load this plugin
      */
-    ClassLoader getClassLoader(PluginInfo plugin);
+    ClassLoader getClassLoader(@NotNull PluginInfo plugin);
 
     /**
      * Plugin reloading stage
