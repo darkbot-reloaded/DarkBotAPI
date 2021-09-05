@@ -17,6 +17,19 @@ public interface Locatable {
     }
 
     /**
+     * Will create new instance of {@link Locatable} around the center point based on angle & radius.
+     *
+     * @param center point around where new location will be calculated
+     * @param angle radians angle
+     * @param radius distance from the center location
+     * @return new {@link Locatable} around the center point
+     */
+    static Locatable of(@NotNull Locatable center, double angle, double radius) {
+        return Locatable.of(center.getX() - Math.cos(angle) * radius,
+                center.getY() - Math.sin(angle) * radius);
+    }
+
+    /**
      * @return y coordinate of the {@link Locatable}
      */
     double getX();

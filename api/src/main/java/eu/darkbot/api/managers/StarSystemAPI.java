@@ -6,6 +6,7 @@ import eu.darkbot.api.game.entities.Portal;
 import eu.darkbot.api.game.other.Area;
 import eu.darkbot.api.game.other.GameMap;
 import eu.darkbot.util.ArrayUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.List;
@@ -59,7 +60,7 @@ public interface StarSystemAPI extends API.Singleton {
      * @return {@link GameMap} with given {@code mapName}
      * @throws MapNotFoundException if map was not found
      */
-    GameMap getByName(String mapName) throws MapNotFoundException;
+    GameMap getByName(@NotNull String mapName) throws MapNotFoundException;
 
     /**
      * Pathfinding thru maps towards a goal, this returns the portal
@@ -67,7 +68,7 @@ public interface StarSystemAPI extends API.Singleton {
      *
      * @return best {@link Portal} that will get you closer to {@code targetMap}
      */
-    Portal findNext(GameMap targetMap);
+    Portal findNext(@NotNull GameMap targetMap);
 
     class MapNotFoundException extends Exception {
         public MapNotFoundException(int mapId) {

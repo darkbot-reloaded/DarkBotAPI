@@ -25,7 +25,7 @@ public interface Movable extends Entity {
      * @return true if this entity is visually aiming at another by checking the angle
      * @see #getAngle()
      */
-    boolean isAiming(Locatable other);
+    boolean isAiming(@NotNull Locatable other);
 
     /**
      * @return The current traveling destination of the entity if any, otherwise {@link Optional#empty()}.

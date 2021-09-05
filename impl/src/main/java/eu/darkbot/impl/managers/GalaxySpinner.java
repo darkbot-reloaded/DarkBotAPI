@@ -7,6 +7,7 @@ import eu.darkbot.api.managers.BackpageAPI;
 import eu.darkbot.api.managers.GalaxySpinnerAPI;
 import eu.darkbot.api.managers.HeroAPI;
 import eu.darkbot.impl.galaxy.GalaxyInfoImpl;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
 
@@ -31,7 +32,7 @@ public class GalaxySpinner implements GalaxySpinnerAPI {
     }
 
     @Override
-    public GalaxyInfo getGalaxyInfo() {
+    public @NotNull GalaxyInfo getGalaxyInfo() {
         return galaxyInfo;
     }
 
@@ -41,7 +42,7 @@ public class GalaxySpinner implements GalaxySpinnerAPI {
     }
 
     @Override
-    public Optional<SpinResult> spinGate(GalaxyGate gate, boolean multiplier, int spinAmount, int minWait) {
+    public Optional<SpinResult> spinGate(@NotNull GalaxyGate gate, boolean multiplier, int spinAmount, int minWait) {
         String params = getParam("multiEnergy") + gate.getParam();
 
         if (getGalaxyInfo().getFreeEnergy() > 0) params += "&sample=1";
@@ -53,12 +54,12 @@ public class GalaxySpinner implements GalaxySpinnerAPI {
     }
 
     @Override
-    public boolean placeGate(GalaxyGate gate, int minWait) {
+    public boolean placeGate(@NotNull GalaxyGate gate, int minWait) {
         return Boolean.TRUE.equals(handleRequest(getParam("setupGate") + gate.getIdParam(), -1, minWait));
     }
 
     @Override
-    public boolean buyLife(GalaxyGate gate, int minWait) {
+    public boolean buyLife(@NotNull GalaxyGate gate, int minWait) {
         return Boolean.TRUE.equals(handleRequest(getParam("buyLife") + gate.getIdParam(), -1, minWait));
     }
 

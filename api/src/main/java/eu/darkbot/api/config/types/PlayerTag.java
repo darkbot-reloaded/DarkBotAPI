@@ -1,5 +1,7 @@
 package eu.darkbot.api.config.types;
 
+import org.jetbrains.annotations.Contract;
+
 import java.awt.*;
 
 /**
@@ -25,6 +27,7 @@ public interface PlayerTag {
      * @param info the player info to check
      * @return true if the player has the tag, false otherwise
      */
+    @Contract("null -> false")
     default boolean hasTag(PlayerInfo info) {
         return info != null && info.getTags().contains(this);
     }

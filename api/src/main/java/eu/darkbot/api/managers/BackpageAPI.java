@@ -3,6 +3,7 @@ package eu.darkbot.api.managers;
 import eu.darkbot.api.API;
 import eu.darkbot.api.extensions.Task;
 import eu.darkbot.util.TimeUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -35,7 +36,7 @@ public interface BackpageAPI extends API.Singleton {
      *
      * @param path URL path &amp; query parameters to append to {@link #getInstanceURI()}
      */
-    HttpURLConnection getConnection(String path) throws Exception;
+    HttpURLConnection getConnection(@NotNull String path) throws Exception;
 
     /**
      * Returns connection with current {@link #getInstanceURI()} &amp; path, with the sessionID cookie.
@@ -47,7 +48,7 @@ public interface BackpageAPI extends API.Singleton {
      *                is identical to {@link #getConnection(String)}, otherwise it will
      *                first sleep until enough time has passed.
      */
-    default HttpURLConnection getConnection(String path, int minWait) throws Exception {
+    default HttpURLConnection getConnection(@NotNull String path, int minWait) throws Exception {
         TimeUtils.sleepThread(getLastRequestTime().toEpochMilli() + minWait - System.currentTimeMillis());
 
         return getConnection(path);
@@ -59,5 +60,5 @@ public interface BackpageAPI extends API.Singleton {
      * @param body which will be searched for reload token
      * @return reload token or {@link Optional#empty()} if wasn't found
      */
-    Optional<String> findReloadToken(String body);
+    Optional<String> findReloadToken(@NotNull String body);
 }

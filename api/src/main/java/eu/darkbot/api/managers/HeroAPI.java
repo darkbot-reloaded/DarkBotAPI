@@ -4,6 +4,7 @@ import eu.darkbot.api.API;
 import eu.darkbot.api.config.types.ShipMode;
 import eu.darkbot.api.game.entities.Npc;
 import eu.darkbot.api.game.entities.Ship;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -25,7 +26,7 @@ public interface HeroAPI extends Ship, API.Singleton {
      * @param mode the mode to check
      * @return true if {@link HeroAPI} is in given {@link ShipMode}
      */
-    boolean isInMode(ShipMode mode);
+    boolean isInMode(@NotNull ShipMode mode);
 
     /**
      * Will check if {@link HeroAPI} is in the given {@link ShipMode},
@@ -46,7 +47,7 @@ public interface HeroAPI extends Ship, API.Singleton {
      * @param mode the flying mode to set
      * @return true if the ship is now flying in the given mode, false otherwise
      */
-    boolean setMode(ShipMode mode);
+    boolean setMode(@NotNull ShipMode mode);
 
     /**
      * Attempts to {@link #setMode} with the user-defined mode to attack this type of NPC.

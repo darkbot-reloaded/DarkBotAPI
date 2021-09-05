@@ -89,11 +89,11 @@ public interface Entity extends Locatable {
      * @param key   your unique key
      * @param value to be put with your key
      */
-    void setMetadata(String key, Object value);
+    void setMetadata(@NotNull String key, Object value);
 
     /**
      * @param key the key to search for
      * @return value for the key or {@code null} if key doesnt exists.
      */
-    @Nullable Object getMetadata(String key);
+    @Nullable Object getMetadata(@NotNull String key);
 }

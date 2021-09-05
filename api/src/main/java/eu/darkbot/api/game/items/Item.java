@@ -51,7 +51,7 @@ public interface Item extends SelectableItem {
     double totalCooldown();
 
     /**
-     * @return last successful use attempt time of {@link Item} in milliseconds, 0 = no attempts
+     * @return last successful use attempt time of {@link Item} in milliseconds from epoch, 0 = no attempts
      */
     double lastUseTime();
 

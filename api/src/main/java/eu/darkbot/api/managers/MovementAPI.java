@@ -102,7 +102,7 @@ public interface MovementAPI extends API.Singleton {
      *
      * @param portal to jump through
      */
-    void jumpPortal(Portal portal);
+    void jumpPortal(@NotNull Portal portal);
 
     /**
      * Calculate the distance to the closest valid point to a location
