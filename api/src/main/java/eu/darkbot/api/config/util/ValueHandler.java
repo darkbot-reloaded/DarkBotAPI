@@ -3,6 +3,8 @@ package eu.darkbot.api.config.util;
 import eu.darkbot.api.config.ConfigSetting;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Supplier;
+
 public interface ValueHandler<T> {
 
     /**
@@ -40,6 +42,17 @@ public interface ValueHandler<T> {
      * @return the metadata value for the key if present, null otherwise
      */
     default <V> @Nullable V getMetadata(String key) {
+        return null;
+    }
+
+    /**
+     * Get metadata from the value handler, or create it if it doesn't exist
+     * @param key the key used for this data
+     * @param builder the builder to generate the type of metadata
+     * @param <V> the datatype for the data
+     * @return the metadata value for the key if present, null otherwise
+     */
+    default <V> @Nullable V getOrCreateMetadata(String key, Supplier<V> builder) {
         return null;
     }
 

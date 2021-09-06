@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class DefaultHandler<T> implements ValueHandler<T> {
 
@@ -69,6 +70,12 @@ public class DefaultHandler<T> implements ValueHandler<T> {
     @Override
     public <V> @Nullable V getMetadata(String key) {
         return (V) metadata.get(key);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <V> @Nullable V getOrCreateMetadata(String key, Supplier<V> builder) {
+        return (V) metadata.computeIfAbsent(key, k -> builder.get());
     }
 
     @Override
