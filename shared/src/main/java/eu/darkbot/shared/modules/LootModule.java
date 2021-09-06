@@ -28,7 +28,7 @@ public class LootModule implements Module {
     private final PluginAPI pluginApi;
     private final SafetyFinder safety;
     private final MovementAPI movement;
-    private final AttackAPI<Npc> attack;
+    private final AttackAPI attack;
     private final StarSystemAPI starSystem;
 
     private final Collection<? extends Npc> npcs;
@@ -41,6 +41,8 @@ public class LootModule implements Module {
     private final ConfigSetting<Boolean> runConfigInCircle;
     private final ConfigSetting<Boolean> onlyKillPrefered;
 
+    protected Npc target;
+    
     protected boolean backwards = false;
     protected long refreshing;
 
@@ -52,7 +54,7 @@ public class LootModule implements Module {
                       SafetyFinder safety,
                       MovementAPI movement,
                       EntitiesAPI entities,
-                      AttackAPI<Npc> attack,
+                      AttackAPI attack,
                       StarSystemAPI starSystem) {
         this.bot = bot;
         this.pet = pet;
@@ -118,13 +120,11 @@ public class LootModule implements Module {
     }
 
     protected boolean findTarget() {
-        attack.setTarget(closestNpc(hero));
+        attack.setTarget(target = closestNpc(hero));
         return attack.hasTarget();
     }
 
     protected void ignoreInvalidTarget() {
-        Npc target = attack.getTarget();
-
         double closestDist = movement.getClosestDistance(target);
         if (hero.getTarget() != target) {
             if (closestDist > 600) {
@@ -147,7 +147,6 @@ public class LootModule implements Module {
     }
 
     protected void moveToAnSafePosition() {
-        Npc target = attack.getTarget();
         Location direction = movement.getDestination();
         Location targetLoc = target.getLocationInfo().destinationInTime(400);
 
@@ -204,7 +203,7 @@ public class LootModule implements Module {
 
     protected double score(Locatable loc) {
         return (movement.canMove(loc) ? 0 : -1000) - npcs.stream() // Consider barrier as bad as 1000 radius units.
-                .filter(n -> attack.getTarget() != n)
+                .filter(n -> target != n)
                 .mapToDouble(n -> Math.max(0, n.getInfo().getRadius() - n.distanceTo(loc)))
                 .sum();
     }
@@ -212,10 +211,10 @@ public class LootModule implements Module {
     protected void setConfig(Locatable direction) {
         if (!attack.hasTarget()) hero.setRoamMode();
         else if (runConfigInCircle.getValue()
-                && attack.getTarget().getHealth().hpPercent() < 0.25
-                && hero.distanceTo(direction) > attack.getTarget().getInfo().getRadius() * 2) hero.setRunMode();
-        else if (hero.distanceTo(direction) > attack.getTarget().getInfo().getRadius() * 3) hero.setRoamMode();
-        else hero.setAttackMode(attack.getTarget());
+                && target.getHealth().hpPercent() < 0.25
+                && hero.distanceTo(direction) > target.getInfo().getRadius() * 2) hero.setRunMode();
+        else if (hero.distanceTo(direction) > target.getInfo().getRadius() * 3) hero.setRoamMode();
+        else hero.setAttackMode(target);
     }
 
     protected boolean isAttackedByOthers(Npc npc) {
@@ -230,15 +229,15 @@ public class LootModule implements Module {
 
     protected Npc closestNpc(Locatable location) {
         int extraPriority = attack.hasTarget() &&
-                (hero.getTarget() == attack.getTarget() || hero.distanceTo(attack.getTarget()) < 600)
-                ? 20 - (int) (attack.getTarget().getHealth().hpPercent() * 10) : 0;
+                (hero.getTarget() == target || hero.distanceTo(target) < 600)
+                ? 20 - (int) (target.getHealth().hpPercent() * 10) : 0;
 
         return this.npcs.stream()
-                .filter(n -> (n == attack.getTarget() && hero.isAttacking(attack.getTarget())) ||
+                .filter(n -> (n == target && hero.isAttacking(target)) ||
                         ((!onlyKillPrefered.getValue() || movement.isInPreferredZone(n))
                                 && shouldKill(n)
                                 && movement.getClosestDistance(n) < 500))
-                .min(Comparator.<Npc>comparingInt(n -> n.getInfo().getPriority() - (n == attack.getTarget() ? extraPriority : 0))
+                .min(Comparator.<Npc>comparingInt(n -> n.getInfo().getPriority() - (n == target ? extraPriority : 0))
                         .thenComparing(n -> n.getHealth().hpPercent())
                         .thenComparing(n -> n.distanceTo(location))).orElse(null);
     }

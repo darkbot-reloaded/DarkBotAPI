@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Provides a way to lock &amp; attack other entities.
  */
-public interface AttackAPI<T extends Attackable> extends API.Singleton {
+public interface AttackAPI extends API.Singleton {
 
     /**
      * @return true if target is non-null
@@ -20,8 +20,15 @@ public interface AttackAPI<T extends Attackable> extends API.Singleton {
     /**
      * @return currently set target entity
      */
-    @Nullable T getTarget();
+    @Nullable Attackable getTarget();
 
+    /**
+     * @return result of {@link #getTarget()} method cast to given type if possible, null otherwise
+     */
+    @Nullable default <T extends Attackable> T getTargetAs(Class<T> type) {
+        Attackable target = getTarget();
+        return type.isInstance(target) ? type.cast(target) : null;
+    }
     /**
      * @param attackable The entity to attack, null to set none
      */
