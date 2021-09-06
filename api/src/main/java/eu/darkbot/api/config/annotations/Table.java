@@ -1,6 +1,7 @@
 package eu.darkbot.api.config.annotations;
 
 import eu.darkbot.api.config.ConfigSetting;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.TableModel;
@@ -41,7 +42,7 @@ public @interface Table {
      *
      * @return list of custom control builder classes
      */
-    Class<? extends ControlBuilder>[] customControls() default {};
+    Class<? extends ControlBuilder<?>>[] customControls() default {};
 
     /**
      * Provide your own custom model for the table, if none is provided a
@@ -51,14 +52,25 @@ public @interface Table {
      */
     Class<? extends TableModel> customModel() default TableModel.class;
 
+    /**
+     * Decorators that do final touch-ups to the table.
+     * You may use this to register custom table editors, modify table or wrapper size, etc.
+     */
+    Class<? extends Decorator<?>>[] decorator() default {};
+
+
     enum Control {
-        SEARCH,
-        ADD,
-        REMOVE,
-        CUSTOM
+        SEARCH, ADD, REMOVE, CUSTOM
     }
 
     interface ControlBuilder<T> {
         JComponent create(JTable table, ConfigSetting<Map<String, T>> setting);
+    }
+
+    interface Decorator<T> {
+        void handle(JTable table,
+                    JScrollPane scrollPane,
+                    @Nullable JPanel wrapper,
+                    ConfigSetting<Map<String, T>> setting);
     }
 }

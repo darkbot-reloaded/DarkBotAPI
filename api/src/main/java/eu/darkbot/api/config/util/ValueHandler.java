@@ -41,9 +41,7 @@ public interface ValueHandler<T> {
      * @param <V> the datatype for the data
      * @return the metadata value for the key if present, null otherwise
      */
-    default <V> @Nullable V getMetadata(String key) {
-        return null;
-    }
+    <V> @Nullable V getMetadata(String key);
 
     /**
      * Get metadata from the value handler, or create it if it doesn't exist
@@ -52,8 +50,6 @@ public interface ValueHandler<T> {
      * @param <V> the datatype for the data
      * @return the metadata value for the key if present, null otherwise
      */
-    default <V> @Nullable V getOrCreateMetadata(String key, Supplier<V> builder) {
-        return null;
-    }
+    <V> V getOrCreateMetadata(String key, Supplier<V> builder);
 
 }
