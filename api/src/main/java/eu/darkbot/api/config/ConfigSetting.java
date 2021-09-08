@@ -1,6 +1,7 @@
 package eu.darkbot.api.config;
 
 import eu.darkbot.api.config.util.ValueHandler;
+import eu.darkbot.api.extensions.PluginInfo;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -15,6 +16,16 @@ public interface ConfigSetting<T> {
      * @return parent configuration setting
      */
     @Nullable Parent<?> getParent();
+
+    /**
+     * Plugin namespace this config setting belongs to.
+     * Only the root node needs to provide a namespace, all children will default to that.
+     * @return namespace used in i18n for translating the config
+     */
+    default @Nullable PluginInfo getNamespace() {
+        Parent<?> parent = getParent();
+        return parent == null ? null : parent.getNamespace();
+    }
 
     /**
      * @return translation key for this setting.
@@ -62,13 +73,6 @@ public interface ConfigSetting<T> {
      * @return the value handler for this config setting
      */
     ValueHandler<T> getHandler();
-
-    /**
-     * @param clazz Expected type of the handler
-     * @param <H> type the handler must be assignable to
-     * @return if the handler is an instance of H, the handler as a type of H, otherwise null
-     */
-    @Nullable <H> H getHandler(Class<H> clazz);
 
     /**
      * Config settings that are not leaf nodes of the tree, will implement the parent interface,

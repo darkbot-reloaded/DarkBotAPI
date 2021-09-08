@@ -2,6 +2,7 @@ package eu.darkbot.impl.config;
 
 import eu.darkbot.api.config.ConfigSetting;
 import eu.darkbot.api.config.annotations.Editor;
+import eu.darkbot.api.config.annotations.Readonly;
 import eu.darkbot.api.config.util.ValueHandler;
 import eu.darkbot.util.ReflectionUtils;
 import org.jetbrains.annotations.Nullable;
@@ -27,6 +28,8 @@ public class DefaultHandler<T> implements ValueHandler<T> {
             Editor editor = field.getAnnotation(Editor.class);
             if (editor != null)
                 this.metadata.put("editor", editor.value());
+            if (field.isAnnotationPresent(Readonly.class))
+                this.metadata.put("readonly", true);
         }
     }
 

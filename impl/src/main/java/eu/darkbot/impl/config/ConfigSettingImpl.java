@@ -2,6 +2,7 @@ package eu.darkbot.impl.config;
 
 import eu.darkbot.api.config.ConfigSetting;
 import eu.darkbot.api.config.util.ValueHandler;
+import eu.darkbot.api.extensions.PluginInfo;
 import eu.darkbot.util.ReflectionUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -108,11 +109,20 @@ public class ConfigSettingImpl<T> implements ConfigSetting<T> {
     }
 
     public static class Root<T> extends Parent<T> {
-        public Root(String key, String name, String description,
+        private final PluginInfo namespace;
+
+        public Root(PluginInfo namespace,
+                    String key, String name, String description,
                     Class<T> type,
                     ValueHandler<T> handler,
                     Function<ConfigSetting.Parent<?>, Map<String, ConfigSetting<?>>> children) {
             super(null, key, name, description, type, handler, children);
+            this.namespace = namespace;
+        }
+
+        @Override
+        public @Nullable PluginInfo getNamespace() {
+            return namespace;
         }
     }
 
