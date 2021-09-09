@@ -6,9 +6,13 @@ import eu.darkbot.api.extensions.PluginInfo;
 import eu.darkbot.util.ReflectionUtils;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -26,7 +30,7 @@ public class ConfigSettingImpl<T> implements ConfigSetting<T> {
     private final ValueHandler<T> handler;
     private T value;
 
-    private final List<Consumer<T>> listeners = new ArrayList<>();
+    private final Set<Consumer<T>> listeners = Collections.newSetFromMap(new WeakHashMap<>());
 
     public ConfigSettingImpl(@Nullable ConfigSetting.Parent<?> parent,
                              String key, String name, String description,
@@ -74,8 +78,7 @@ public class ConfigSettingImpl<T> implements ConfigSetting<T> {
     }
 
     public void addListener(Consumer<T> listener) {
-        if (!this.listeners.contains(listener))
-            this.listeners.add(listener);
+        this.listeners.add(listener);
     }
 
     public void removeListener(Consumer<T> listener) {

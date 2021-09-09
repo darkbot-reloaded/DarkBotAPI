@@ -59,12 +59,17 @@ public interface ConfigSetting<T> {
 
     /**
      * Append a listener that will be called whenever the value is updated
+     *
+     * Listeners will only be weakly referenced, and as such, you are responsible
+     * for keeping a strong reference to the listener to avoid it being removed.
+     *
      * @param listener listener to be appended
      */
     void addListener(Consumer<T> listener);
 
     /**
-     * Remove a listener previously added
+     * Remove a listener that was previously added
+     *
      * @param listener listener to remove
      */
     void removeListener(Consumer<T> listener);
