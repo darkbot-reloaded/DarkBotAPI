@@ -3,6 +3,7 @@ package eu.darkbot.util;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.Desktop;
+import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
@@ -33,7 +34,7 @@ public class SystemUtils {
 
     /**
      * @param toCopy string to copy into user's clipboard
-     * @throws HeadlessException if user don't have desktop environment.
+     * @throws HeadlessException if {@link GraphicsEnvironment#isHeadless()} returns true
      */
     public static void toClipboard(String toCopy) {
         if (toCopy == null || toCopy.isEmpty()) return;

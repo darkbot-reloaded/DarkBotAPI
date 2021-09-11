@@ -1,5 +1,8 @@
 package eu.darkbot.api.config.types;
 
+import eu.darkbot.api.config.annotations.Configuration;
+
+@Configuration("config.loot.npc_table.extra")
 public enum NpcExtraFlag {
     NO_CIRCLE,
     IGNORE_OWNERSHIP,

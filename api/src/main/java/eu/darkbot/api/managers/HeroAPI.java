@@ -4,6 +4,8 @@ import eu.darkbot.api.API;
 import eu.darkbot.api.config.types.ShipMode;
 import eu.darkbot.api.game.entities.Npc;
 import eu.darkbot.api.game.entities.Ship;
+import eu.darkbot.api.game.items.Item;
+import eu.darkbot.api.game.items.SelectableItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -71,6 +73,35 @@ public interface HeroAPI extends Ship, API.Singleton {
      * @return true if the ship is now flying in run mode, false otherwise
      */
     boolean setRunMode();
+
+    /**
+     * Via this method you can trigger(stop/start) the laser attack.
+     * Will attempt to trigger laser attack on whatever the target is.
+     *
+     * <b>Keep in mind that, update of {@link #isAttacking()} may take some ticks</b>
+     *
+     * @return if any trigger action of lasers (attack/abort) was successful
+     * @see #getTarget()
+     * @see #isAttacking()
+     */
+    boolean triggerLaserAttack();
+
+    /**
+     * Will try to launch the rocket which is currently selected
+     * @return if launch was successful
+     * @see Item#isReady()
+     */
+    boolean launchRocket();
+
+    /**
+     * @return currently selected in-game {@link SelectableItem.Laser}
+     */
+    SelectableItem.Laser getLaser();
+
+    /**
+     * @return currently selected in-game {@link SelectableItem.Rocket}
+     */
+    SelectableItem.Rocket getRocket();
 
     /**
      * Represents in-game {@link HeroAPI} configs.

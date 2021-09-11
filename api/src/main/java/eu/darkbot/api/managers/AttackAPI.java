@@ -1,11 +1,16 @@
 package eu.darkbot.api.managers;
 
 import eu.darkbot.api.API;
+import eu.darkbot.api.extensions.AmmoProvider;
+import eu.darkbot.api.extensions.Behavior;
 import eu.darkbot.api.game.other.Attackable;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Provides a way to lock &amp; attack other entities.
+ *
+ * This API relies on {@link AmmoProvider} which your {@link eu.darkbot.api.extensions.Module} or {@link Behavior} can implement.
+ * The API will decide which {@link AmmoProvider} should be used based on {@link AmmoProvider.Priority}
  */
 public interface AttackAPI extends API.Singleton {
 
@@ -40,6 +45,12 @@ public interface AttackAPI extends API.Singleton {
      * @return true if target is locked in-game
      */
     boolean isLocked();
+
+    /**
+     * Will attempt to lock the target in-game.
+     * @see #getTarget()
+     */
+    void tryLockTarget();
 
     /**
      * @return true if {@link HeroAPI} is laser attacking selected target

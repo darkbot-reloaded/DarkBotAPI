@@ -22,44 +22,56 @@ import static java.lang.Math.random;
 
 public class LootModule implements Module {
 
-    private final BotAPI bot;
-    private final PetAPI pet;
-    private final HeroAPI hero;
-    private final PluginAPI pluginApi;
-    private final SafetyFinder safety;
-    private final MovementAPI movement;
-    private final AttackAPI attack;
-    private final StarSystemAPI starSystem;
+    protected final PluginAPI api;
+    protected final BotAPI bot;
+    protected final PetAPI pet;
+    protected final HeroAPI hero;
+    protected final SafetyFinder safety;
+    protected final MovementAPI movement;
+    protected final AttackAPI attack;
+    protected final StarSystemAPI starSystem;
 
-    private final Collection<? extends Npc> npcs;
-    private final Collection<? extends Ship> ships;
-    private final Collection<? extends Portal> portals;
+    protected final Collection<? extends Npc> npcs;
+    protected final Collection<? extends Ship> ships;
+    protected final Collection<? extends Portal> portals;
 
-    private final ConfigSetting<Integer> workingMap;
-    private final ConfigSetting<Integer> npcDistanceIgnore;
-    private final ConfigSetting<Integer> maxCircleIterations;
-    private final ConfigSetting<Boolean> runConfigInCircle;
-    private final ConfigSetting<Boolean> onlyKillPrefered;
+    protected final ConfigSetting<Integer> workingMap;
+    protected final ConfigSetting<Integer> npcDistanceIgnore;
+    protected final ConfigSetting<Integer> maxCircleIterations;
+    protected final ConfigSetting<Boolean> runConfigInCircle;
+    protected final ConfigSetting<Boolean> onlyKillPrefered;
 
     protected Npc target;
-    
+
     protected boolean backwards = false;
     protected long refreshing;
 
-    public LootModule(BotAPI bot,
+    public LootModule(PluginAPI api) {
+        this(api, api.requireAPI(BotAPI.class),
+                api.requireAPI(PetAPI.class),
+                api.requireAPI(HeroAPI.class),
+                api.requireAPI(ConfigAPI.class),
+                api.requireInstance(SafetyFinder.class),
+                api.requireAPI(MovementAPI.class),
+                api.requireAPI(EntitiesAPI.class),
+                api.requireAPI(AttackAPI.class),
+                api.requireAPI(StarSystemAPI.class));
+    }
+
+    public LootModule(PluginAPI api,
+                      BotAPI bot,
                       PetAPI pet,
                       HeroAPI hero,
                       ConfigAPI config,
-                      PluginAPI pluginApi,
                       SafetyFinder safety,
                       MovementAPI movement,
                       EntitiesAPI entities,
                       AttackAPI attack,
                       StarSystemAPI starSystem) {
+        this.api = api;
         this.bot = bot;
         this.pet = pet;
         this.hero = hero;
-        this.pluginApi = pluginApi;
         this.safety = safety;
         this.movement = movement;
         this.attack = attack;
@@ -111,8 +123,8 @@ public class LootModule implements Module {
 
     protected boolean checkMap() {
         if (!workingMap.getValue().equals(starSystem.getCurrentMap().getId()) && !portals.isEmpty()) {
-            this.bot.setModule(new MapModule(bot, pluginApi.requireInstance(MapTraveler.class),
-                            pluginApi.requireAPI(I18nAPI.class)))
+            this.bot.setModule(new MapModule(bot, api.requireInstance(MapTraveler.class),
+                            api.requireAPI(I18nAPI.class)))
                     .setTarget(starSystem.getOrCreateMapById(workingMap.getValue()));
             return false;
         }
@@ -120,6 +132,7 @@ public class LootModule implements Module {
     }
 
     protected boolean findTarget() {
+        target = attack.getTargetAs(Npc.class);
         attack.setTarget(target = closestNpc(hero));
         return attack.hasTarget();
     }
@@ -228,8 +241,8 @@ public class LootModule implements Module {
     }
 
     protected Npc closestNpc(Locatable location) {
-        int extraPriority = attack.hasTarget() &&
-                (hero.getTarget() == target || hero.distanceTo(target) < 600)
+        //cant use attack.hasTarget() or isLocked() here cause can return true even if getTargetAs returns null
+        int extraPriority = target != null && (hero.getTarget() == target || hero.distanceTo(target) < 600)
                 ? 20 - (int) (target.getHealth().hpPercent() * 10) : 0;
 
         return this.npcs.stream()

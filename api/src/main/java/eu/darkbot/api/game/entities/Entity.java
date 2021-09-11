@@ -39,9 +39,10 @@ public interface Entity extends Locatable {
     boolean isSelectable();
 
     /**
-     * Selects this entity as the target in-game, can instantly attempt to attack with {@code tryAttack} param.
+     * Selects this entity as the target in-game, can instantly attempt to attack with {@code tryAttack} param
+     * if and only if option "attack via double-click" in-game is enabled.
      *
-     * @param tryAttack instantly attempt to attack this entity
+     * @param tryAttack instantly attempt to attack this entity if option "attack via double-click" in-game is enabled.
      * @return true on successful selection
      */
     boolean trySelect(boolean tryAttack);
