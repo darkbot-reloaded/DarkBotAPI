@@ -3,6 +3,7 @@ package eu.darkbot.shared.modules;
 import eu.darkbot.api.PluginAPI;
 import eu.darkbot.api.config.ConfigSetting;
 import eu.darkbot.api.config.types.NpcExtraFlag;
+import eu.darkbot.api.extensions.Feature;
 import eu.darkbot.api.extensions.Module;
 import eu.darkbot.api.game.entities.Npc;
 import eu.darkbot.api.game.entities.Portal;
@@ -11,6 +12,7 @@ import eu.darkbot.api.game.enums.EntityEffect;
 import eu.darkbot.api.game.other.Locatable;
 import eu.darkbot.api.game.other.Location;
 import eu.darkbot.api.managers.*;
+import eu.darkbot.api.utils.Inject;
 import eu.darkbot.shared.utils.MapTraveler;
 import eu.darkbot.shared.utils.SafetyFinder;
 
@@ -20,6 +22,7 @@ import java.util.Comparator;
 import static java.lang.Double.min;
 import static java.lang.Math.random;
 
+@Feature(name = "Npc Killer", description = "Npc-only module. Will never pick up resources.")
 public class LootModule implements Module {
 
     protected final PluginAPI api;
@@ -58,6 +61,7 @@ public class LootModule implements Module {
                 api.requireAPI(StarSystemAPI.class));
     }
 
+    @Inject
     public LootModule(PluginAPI api,
                       BotAPI bot,
                       PetAPI pet,

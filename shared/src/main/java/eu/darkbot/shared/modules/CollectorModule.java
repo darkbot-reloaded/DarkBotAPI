@@ -20,6 +20,7 @@ import eu.darkbot.api.managers.MovementAPI;
 import eu.darkbot.api.managers.PetAPI;
 import eu.darkbot.api.managers.StarSystemAPI;
 import eu.darkbot.api.managers.StatsAPI;
+import eu.darkbot.api.utils.Inject;
 import eu.darkbot.shared.utils.SafetyFinder;
 
 import java.util.Collection;
@@ -54,6 +55,21 @@ public class CollectorModule implements Module {
 
     private long invisibleUntil, waitingUntil;
 
+    public CollectorModule(PluginAPI api) {
+        this(api.requireAPI(BotAPI.class),
+                api.requireAPI(PetAPI.class),
+                api.requireAPI(HeroAPI.class),
+                api.requireAPI(StarSystemAPI.class),
+                api.requireAPI(StatsAPI.class),
+                api.requireAPI(ConfigAPI.class),
+                api,
+                api.requireAPI(MovementAPI.class),
+                api.requireAPI(HeroItemsAPI.class),
+                api.requireAPI(EntitiesAPI.class),
+                api.requireInstance(SafetyFinder.class));
+    }
+
+    @Inject
     public CollectorModule(BotAPI bot,
                            PetAPI pet,
                            HeroAPI hero,
