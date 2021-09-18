@@ -73,8 +73,10 @@ public interface PetAPI extends Pet, API.Singleton {
      * @param gearId gear to set when possible, null to default back to user choice
      * @throws ItemNotEquippedException if given gear is not equipped or doesn't exist
      */
+    @Deprecated
     void setGear(@Nullable Integer gearId) throws ItemNotEquippedException;
 
+    @Deprecated
     default void setGear(@Nullable PetGear petGear) throws ItemNotEquippedException {
         setGear(petGear == null ? null : petGear.getId());
     }
@@ -134,7 +136,7 @@ public interface PetAPI extends Pet, API.Singleton {
      * The available pet stats for search
      */
     enum Stat {
-        HP, SHIELD, FUEL, XP, HEAT;
+        HP, SHIELD, FUEL, XP, HEAT
     }
 
 }

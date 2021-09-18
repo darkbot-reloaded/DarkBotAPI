@@ -136,7 +136,6 @@ public class LootModule implements Module {
     }
 
     protected boolean findTarget() {
-        target = attack.getTargetAs(Npc.class);
         attack.setTarget(target = closestNpc(hero));
         return attack.hasTarget();
     }
@@ -245,7 +244,7 @@ public class LootModule implements Module {
     }
 
     protected Npc closestNpc(Locatable location) {
-        //cant use attack.hasTarget() or isLocked() here cause can return true even if getTargetAs returns null
+        Npc target = attack.getTargetAs(Npc.class);
         int extraPriority = target != null && (hero.getTarget() == target || hero.distanceTo(target) < 600)
                 ? 20 - (int) (target.getHealth().hpPercent() * 10) : 0;
 

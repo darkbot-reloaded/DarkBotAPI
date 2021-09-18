@@ -49,6 +49,7 @@ public interface HeroAPI extends Ship, API.Singleton {
      * @param mode the flying mode to set
      * @return true if the ship is now flying in the given mode, false otherwise
      */
+    @Deprecated
     boolean setMode(@NotNull ShipMode mode);
 
     /**
@@ -60,6 +61,7 @@ public interface HeroAPI extends Ship, API.Singleton {
      * @param target what Npc to configure attacking mode for
      * @return true if the ship is now flying in attack mode for this npc, false otherwise
      */
+    //ShipMode getAttackMode(target) etc
     boolean setAttackMode(@Nullable Npc target);
 
     /**

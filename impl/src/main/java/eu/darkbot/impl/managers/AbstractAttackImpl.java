@@ -1,6 +1,6 @@
 package eu.darkbot.impl.managers;
 
-import eu.darkbot.api.extensions.AmmoProvider;
+import eu.darkbot.api.game.items.SelectableItem;
 import eu.darkbot.api.game.other.Attackable;
 import eu.darkbot.api.managers.AttackAPI;
 import eu.darkbot.api.managers.HeroAPI;
@@ -27,8 +27,8 @@ public abstract class AbstractAttackImpl implements AttackAPI {
     }
 
     @Override
-    public void setTarget(@Nullable Attackable attackable) {
-        this.target = attackable;
+    public void setTarget(@Nullable Attackable target) {
+        this.target = target;
     }
 
     @Override
@@ -54,11 +54,11 @@ public abstract class AbstractAttackImpl implements AttackAPI {
             if (!hero.isAttacking() && attackTryTime > System.currentTimeMillis() - delayBetweenAttackAttempts) {
                 attackTryTime = System.currentTimeMillis();
 
-                AmmoProvider ammo = getBestAmmoProvider();
-                if (ammo == null || ammo.getLaser() == null) return; //should only attack if laser ammo is not null?
+                SelectableItem.Laser laser = getBestLaserAmmo();
+                if (laser == null) return;//should only attack if laser ammo is not null?
 
-                if (hero.getLaser() != ammo.getLaser()) {
-                    heroItems.useItem(ammo.getLaser(), 500);
+                if (hero.getLaser() != laser) {
+                    heroItems.useItem(laser, 500);
 
                     if (!isAttackViaSlotBarEnabled())
                         hero.triggerLaserAttack();
@@ -80,5 +80,5 @@ public abstract class AbstractAttackImpl implements AttackAPI {
 
     protected abstract boolean isAttackViaSlotBarEnabled();
 
-    protected abstract AmmoProvider getBestAmmoProvider();
+    protected abstract SelectableItem.Laser getBestLaserAmmo();
 }
