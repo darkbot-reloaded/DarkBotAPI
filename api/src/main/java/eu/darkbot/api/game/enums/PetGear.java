@@ -45,8 +45,8 @@ public enum PetGear implements EquippableItem {
      * @return The gear with the corresponding id, or null if not found
      */
     public static PetGear of(int gearId) {
-        if (gearId < 0 || gearId >= values().length) return null;
-        return values()[gearId];
+        if (gearId < 1 || gearId > values().length) return null;
+        return values()[gearId - 1];
     }
 
     /**

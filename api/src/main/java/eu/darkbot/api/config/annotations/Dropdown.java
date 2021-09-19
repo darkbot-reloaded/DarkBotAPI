@@ -1,12 +1,14 @@
 package eu.darkbot.api.config.annotations;
 
 import eu.darkbot.api.API;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.util.List;
+import java.util.Collection;
 import java.util.Objects;
 
 @Target(ElementType.FIELD)
@@ -33,14 +35,14 @@ public @interface Dropdown {
          * List of the available options, will be called often
          * @return list with the available options to be picked
          */
-        List<T> options();
+        Collection<T> options();
 
         /**
          * Text to display for this setting, default to toString
          * @param option option to get text for
          * @return text to display
          */
-        default String getText(T option) {
+        default @NotNull String getText(@Nullable T option) {
             return Objects.toString(option);
         }
 
@@ -49,7 +51,7 @@ public @interface Dropdown {
          * @param option the option to get the tooltip for
          * @return null for no tooltip, the tooltip text otherwise
          */
-        default String getTooltip(T option) {
+        default @Nullable String getTooltip(@Nullable T option) {
             return null;
         }
 
