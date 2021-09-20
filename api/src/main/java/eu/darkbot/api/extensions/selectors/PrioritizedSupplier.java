@@ -1,9 +1,15 @@
 package eu.darkbot.api.extensions.selectors;
 
-public interface PrioritizedSupplier<T> {
+import org.jetbrains.annotations.Nullable;
 
-    T getBest();
+import java.util.function.Supplier;
 
+public interface PrioritizedSupplier<T> extends Supplier<T> {
+
+    /**
+     * In case when this method returns null, the supplier will be skipped
+     */
+    @Nullable
     default Priority getPriority() {
         return Priority.LOWEST;
     }

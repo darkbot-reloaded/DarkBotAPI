@@ -22,7 +22,7 @@ public interface HeroAPI extends Ship, API.Singleton {
 
     /**
      * Will check if {@link HeroAPI} is in given {@code mode}.
-     *
+     * <p>
      * A mode is the combination of a configuration and a formation
      *
      * @param mode the mode to check
@@ -33,46 +33,50 @@ public interface HeroAPI extends Ship, API.Singleton {
     /**
      * Will check if {@link HeroAPI} is in the given {@link ShipMode},
      * if it isn't, it will try to set the {@link ShipMode}
-     *
+     * <p>
      * Keep in mind because of in-game cool-downs it can take a while
      * to apply the mode, you should keep on calling the function each
      * tick with the mode you want to keep set on your ship.
-     *
+     * <p>
      * Checking {@link #isInMode} beforehand is unadvised, simply call this directly.
-     *
+     * <p>
      * Unless you have user-defined modes in the config for your feature,
      * you'll probably find more use in one of the base modes:
-     * @see #setAttackMode(Npc)
-     * @see #setRoamMode()
-     * @see #setRunMode()
      *
      * @param mode the flying mode to set
      * @return true if the ship is now flying in the given mode, false otherwise
+     * @see #setAttackMode(Npc)
+     * @see #setRoamMode()
+     * @see #setRunMode()
+     * @see eu.darkbot.api.extensions.selectors.ShipModeSelector TODO
      */
-    @Deprecated
     boolean setMode(@NotNull ShipMode mode);
 
     /**
      * Attempts to {@link #setMode} with the user-defined mode to attack this type of NPC.
-     *
+     * <p>
      * If no npc is selected you can use null for default attack configuration, however,
      * always prefer passing in the NPC for better user control over formations.
      *
      * @param target what Npc to configure attacking mode for
      * @return true if the ship is now flying in attack mode for this npc, false otherwise
+     * @see eu.darkbot.api.extensions.selectors.ShipModeSelector TODO
      */
-    //ShipMode getAttackMode(target) etc
     boolean setAttackMode(@Nullable Npc target);
 
     /**
      * Attempts to {@link #setMode} with the user-defined mode to roam.
+     *
      * @return true if the ship is now flying in run mode, false otherwise
+     * @see eu.darkbot.api.extensions.selectors.ShipModeSelector TODO
      */
     boolean setRoamMode();
 
     /**
      * Attempts to {@link #setMode} with the user-defined mode to run.
+     *
      * @return true if the ship is now flying in run mode, false otherwise
+     * @see eu.darkbot.api.extensions.selectors.ShipModeSelector TODO
      */
     boolean setRunMode();
 
@@ -90,6 +94,7 @@ public interface HeroAPI extends Ship, API.Singleton {
 
     /**
      * Will try to launch the rocket which is currently selected
+     *
      * @return if launch was successful
      * @see Item#isReady()
      */

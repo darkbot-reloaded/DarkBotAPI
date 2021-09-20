@@ -1,10 +1,10 @@
 package eu.darkbot.api.extensions.selectors;
 
 import eu.darkbot.api.game.items.SelectableItem;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 public interface LaserSelector {
 
-    @Nullable
+    @NotNull
     PrioritizedSupplier<SelectableItem.Laser> getLaserSupplier();
 }

@@ -1,10 +1,10 @@
 package eu.darkbot.api.extensions.selectors;
 
 import eu.darkbot.api.config.types.ShipMode;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 public interface ShipModeSelector {
 
-    @Nullable
+    @NotNull
     PrioritizedSupplier<ShipMode> getShipModeSupplier();
 }

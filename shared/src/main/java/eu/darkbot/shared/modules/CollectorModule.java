@@ -34,13 +34,13 @@ public class CollectorModule implements Module {
 
     protected static final int DISTANCE_FROM_DANGEROUS = 1500;
 
+    protected final PluginAPI api;
     protected final BotAPI bot;
     protected final PetAPI pet;
     protected final HeroAPI hero;
     protected final StarSystemAPI star;
     protected final StatsAPI stats;
     protected final ConfigAPI config;
-    protected final PluginAPI pluginAPI;
     protected final MovementAPI movement;
     protected final HeroItemsAPI heroItems;
 
@@ -56,13 +56,12 @@ public class CollectorModule implements Module {
     private long invisibleUntil, waitingUntil;
 
     public CollectorModule(PluginAPI api) {
-        this(api.requireAPI(BotAPI.class),
+        this(api, api.requireAPI(BotAPI.class),
                 api.requireAPI(PetAPI.class),
                 api.requireAPI(HeroAPI.class),
                 api.requireAPI(StarSystemAPI.class),
                 api.requireAPI(StatsAPI.class),
                 api.requireAPI(ConfigAPI.class),
-                api,
                 api.requireAPI(MovementAPI.class),
                 api.requireAPI(HeroItemsAPI.class),
                 api.requireAPI(EntitiesAPI.class),
@@ -70,24 +69,24 @@ public class CollectorModule implements Module {
     }
 
     @Inject
-    public CollectorModule(BotAPI bot,
+    public CollectorModule(PluginAPI api,
+                           BotAPI bot,
                            PetAPI pet,
                            HeroAPI hero,
                            StarSystemAPI star,
                            StatsAPI stats,
                            ConfigAPI config,
-                           PluginAPI pluginAPI,
                            MovementAPI movement,
                            HeroItemsAPI heroItems,
                            EntitiesAPI entities,
                            SafetyFinder safetyFinder) {
+        this.api = api;
         this.bot = bot;
         this.pet = pet;
         this.hero = hero;
         this.star = star;
         this.stats = stats;
         this.config = config;
-        this.pluginAPI = pluginAPI;
         this.heroItems = heroItems;
         this.movement = movement;
 
@@ -141,7 +140,7 @@ public class CollectorModule implements Module {
     protected boolean checkMap() {
         GameMap map;
         if (!portals.isEmpty() && (map = config.getLegacy().getGeneral().getWorkingMap()) != star.getCurrentMap()) {
-            this.bot.setModule(pluginAPI.requireInstance(MapModule.class)).setTarget(map);
+            this.bot.setModule(api.requireInstance(MapModule.class)).setTarget(map);
             return false;
         }
 
