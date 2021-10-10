@@ -9,14 +9,15 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractAttackImpl implements AttackAPI {
 
+    protected int DELAY_BETWEEN_ATTACK_ATTEMPTS = 750;
+
     protected final HeroItemsAPI heroItems;
     protected final HeroAPI hero;
 
     protected Attackable target;
     protected long lockTryTime, attackTryTime;
-    protected int delayBetweenAttackAttempts = 750;
 
-    private AbstractAttackImpl(HeroItemsAPI heroItems, HeroAPI hero) {
+    protected AbstractAttackImpl(HeroItemsAPI heroItems, HeroAPI hero) {
         this.heroItems = heroItems;
         this.hero = hero;
     }
@@ -51,25 +52,27 @@ public abstract class AbstractAttackImpl implements AttackAPI {
     @Override
     public void tryLockAndAttack() {
         if (isLocked()) {
-            if (!hero.isAttacking() && attackTryTime > System.currentTimeMillis() - delayBetweenAttackAttempts) {
-                attackTryTime = System.currentTimeMillis();
+            SelectableItem.Laser laser = getBestLaserAmmo();
+            if (laser == null) return;//should only attack if laser ammo is not null?
 
-                SelectableItem.Laser laser = getBestLaserAmmo();
-                if (laser == null) return;//should only attack if laser ammo is not null?
-
-                if (hero.getLaser() != laser) {
-                    heroItems.useItem(laser, 500);
-
-                    if (!isAttackViaSlotBarEnabled())
-                        hero.triggerLaserAttack();
-                }
+            if (hero.getLaser() != laser) {
+                heroItems.useItem(laser, 500);
+                if (isAttackViaSlotBarEnabled())
+                    attackTryTime = System.currentTimeMillis();
             }
+
+            attack();
         } else tryLockTarget();
+    }
+
+    private void attack() {
+        if (hero.isAttacking() || attackTryTime > System.currentTimeMillis() - DELAY_BETWEEN_ATTACK_ATTEMPTS) return;
+        if (hero.triggerLaserAttack()) attackTryTime = System.currentTimeMillis();
     }
 
     @Override
     public void stopAttack() {
-        if (!hero.isAttacking() || attackTryTime > System.currentTimeMillis() - delayBetweenAttackAttempts) return;
+        if (!hero.isAttacking() || attackTryTime > System.currentTimeMillis() - DELAY_BETWEEN_ATTACK_ATTEMPTS) return;
         if (hero.triggerLaserAttack()) attackTryTime = System.currentTimeMillis();
     }
 

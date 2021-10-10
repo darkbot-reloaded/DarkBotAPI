@@ -25,6 +25,6 @@ public interface Attacker extends Attackable {
      * @return true if attacks {@code other}
      */
     default boolean isAttacking(Attackable other) {
-        return getTarget() == other;
+        return isAttacking() && getTarget() == other;
     }
 }

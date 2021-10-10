@@ -53,7 +53,7 @@ public interface Item extends SelectableItem {
     /**
      * @return last successful use attempt time of {@link Item} in milliseconds from epoch, 0 = no attempts
      */
-    double lastUseTime();
+    long lastUseTime();
 
     @Override
     default ItemCategory getCategory() {

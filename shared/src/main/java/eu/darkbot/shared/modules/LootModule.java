@@ -13,7 +13,6 @@ import eu.darkbot.api.game.other.Locatable;
 import eu.darkbot.api.game.other.Location;
 import eu.darkbot.api.managers.*;
 import eu.darkbot.api.utils.Inject;
-import eu.darkbot.shared.utils.MapTraveler;
 import eu.darkbot.shared.utils.SafetyFinder;
 
 import java.util.Collection;
@@ -127,8 +126,7 @@ public class LootModule implements Module {
 
     protected boolean checkMap() {
         if (!workingMap.getValue().equals(starSystem.getCurrentMap().getId()) && !portals.isEmpty()) {
-            this.bot.setModule(new MapModule(bot, api.requireInstance(MapTraveler.class),
-                            api.requireAPI(I18nAPI.class)))
+            this.bot.setModule(new MapModule(api, true))
                     .setTarget(starSystem.getOrCreateMapById(workingMap.getValue()));
             return false;
         }
