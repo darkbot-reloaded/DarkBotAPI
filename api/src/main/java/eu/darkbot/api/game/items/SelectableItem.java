@@ -2,7 +2,6 @@ package eu.darkbot.api.game.items;
 
 import eu.darkbot.api.game.enums.PetGear;
 import eu.darkbot.api.managers.HeroItemsAPI;
-import eu.darkbot.util.ArrayUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -22,8 +21,8 @@ public interface SelectableItem {
     Map<ItemCategory, List<SelectableItem>> ALL_ITEMS = Arrays.stream(SelectableItem.class.getClasses())
             .filter(Class::isEnum)
             .filter(SelectableItem.class::isAssignableFrom)
-            .collect(Collectors.toMap(c -> ((SelectableItem) c.getEnumConstants()[0]).getCategory(),
-                    c -> (List<SelectableItem>) ArrayUtils.enumValuesAsList(c), ArrayUtils::mergeLists));
+            .flatMap(c -> Arrays.stream(((Class<SelectableItem>) c).getEnumConstants()))
+            .collect(Collectors.groupingBy(SelectableItem::getCategory));
 
     /**
      * @return The in-game id of this item

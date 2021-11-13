@@ -19,17 +19,4 @@ public class ArrayUtils {
         return coll != null && !coll.isEmpty();
     }
 
-    public static <T> List<T> mergeLists(List<T> l1, List<T> l2) {
-        l1.addAll(l2);
-        return l1;
-    }
-
-    @SafeVarargs
-    public static <T> List<T> enumValuesAsList(Class<? extends T>... enumTypes) {
-        return Arrays.stream(enumTypes)
-                .map(Class::getEnumConstants)
-                .flatMap(Arrays::stream)
-                .map(e -> (T) e)
-                .collect(Collectors.toList());
-    }
 }
