@@ -1,12 +1,12 @@
 package eu.darkbot.api.game.entities;
 
-import eu.darkbot.api.game.other.Attackable;
+import eu.darkbot.api.game.other.Lockable;
 import eu.darkbot.api.game.other.Obstacle;
 
 /**
  * In-game clan base station or meteoroid
  */
-public interface BattleStation extends Obstacle, Attackable {
+public interface BattleStation extends Obstacle, Lockable {
 
     /**
      * In-game id for the visual hull type.
@@ -19,7 +19,7 @@ public interface BattleStation extends Obstacle, Attackable {
     /**
      * In-game battle station modules around the main battle station
      */
-    interface Module extends Obstacle, Attackable /*should be attacker but...*/ {
+    interface Module extends Obstacle, Lockable /*should be attacker but...*/ {
 
         /**
          * @return the in-game id of the module

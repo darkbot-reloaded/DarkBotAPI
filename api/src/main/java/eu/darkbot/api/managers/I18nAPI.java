@@ -2,6 +2,7 @@ package eu.darkbot.api.managers;
 
 import eu.darkbot.api.API;
 import eu.darkbot.api.extensions.PluginInfo;
+import eu.darkbot.util.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,15 +20,13 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface I18nAPI extends API.Singleton {
 
-    Object[] EMPTY = new Object[0];
-
     /**
      * Get the translation for a specific bot translation key
      * @param key translation key to search for
      * @return The translated text if available, a placeholder text otherwise
      */
     default String get(@NotNull String key) {
-        return get(key, EMPTY);
+        return get(key, ArrayUtils.EMPTY_OBJECT_ARRAY);
     }
 
     /**
@@ -37,7 +36,7 @@ public interface I18nAPI extends API.Singleton {
      * @return The translated text if available, a placeholder text otherwise
      */
     default String get(@Nullable PluginInfo namespace, @NotNull String key) {
-        return get(namespace, key, EMPTY);
+        return get(namespace, key, ArrayUtils.EMPTY_OBJECT_ARRAY);
     }
 
     /**
@@ -66,7 +65,7 @@ public interface I18nAPI extends API.Singleton {
      * @return the translated message if available, fallback otherwise
      */
     default String getOrDefault(@Nullable String key, @Nullable String fallback) {
-        return getOrDefault(key, fallback, EMPTY);
+        return getOrDefault(key, fallback, ArrayUtils.EMPTY_OBJECT_ARRAY);
     }
 
     /**
@@ -77,7 +76,7 @@ public interface I18nAPI extends API.Singleton {
      * @return the translated message if available, fallback otherwise
      */
     default String getOrDefault(@Nullable PluginInfo namespace, @Nullable String key, @Nullable String fallback) {
-        return getOrDefault(namespace, key, fallback, EMPTY);
+        return getOrDefault(namespace, key, fallback, ArrayUtils.EMPTY_OBJECT_ARRAY);
     }
 
     /**

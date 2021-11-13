@@ -41,7 +41,7 @@ public class LootModule implements Module {
     protected final ConfigSetting<Integer> npcDistanceIgnore;
     protected final ConfigSetting<Integer> maxCircleIterations;
     protected final ConfigSetting<Boolean> runConfigInCircle;
-    protected final ConfigSetting<Boolean> onlyKillPrefered;
+    protected final ConfigSetting<Boolean> onlyKillPreferred;
 
     protected Npc target;
 
@@ -88,7 +88,7 @@ public class LootModule implements Module {
         this.npcDistanceIgnore = config.requireConfig("loot.npc_distance_ignore");
         this.maxCircleIterations = config.requireConfig("loot.max_circle_iterations");
         this.runConfigInCircle = config.requireConfig("loot.run_config_in_circle");
-        this.onlyKillPrefered = config.requireConfig("general.roaming.only_kill_preferred");
+        this.onlyKillPreferred = config.requireConfig("general.roaming.only_kill_preferred");
     }
 
     @Override
@@ -242,13 +242,13 @@ public class LootModule implements Module {
     }
 
     protected Npc closestNpc(Locatable location) {
-        Npc target = attack.getTargetAs(Npc.class);
+        Npc target = attack.getTargetAs(Npc.class).orElse(null);
         int extraPriority = target != null && (hero.getTarget() == target || hero.distanceTo(target) < 600)
                 ? 20 - (int) (target.getHealth().hpPercent() * 10) : 0;
 
         return this.npcs.stream()
                 .filter(n -> (n == target && hero.isAttacking(target)) ||
-                        ((!onlyKillPrefered.getValue() || movement.isInPreferredZone(n))
+                        ((!onlyKillPreferred.getValue() || movement.isInPreferredZone(n))
                                 && shouldKill(n)
                                 && movement.getClosestDistance(n) < 500))
                 .min(Comparator.<Npc>comparingInt(n -> n.getInfo().getPriority() - (n == target ? extraPriority : 0))

@@ -1,7 +1,7 @@
 package eu.darkbot.impl.managers;
 
 import eu.darkbot.api.game.items.SelectableItem;
-import eu.darkbot.api.game.other.Attackable;
+import eu.darkbot.api.game.other.Lockable;
 import eu.darkbot.api.managers.AttackAPI;
 import eu.darkbot.api.managers.HeroAPI;
 import eu.darkbot.api.managers.HeroItemsAPI;
@@ -14,7 +14,7 @@ public abstract class AbstractAttackImpl implements AttackAPI {
     protected final HeroItemsAPI heroItems;
     protected final HeroAPI hero;
 
-    protected Attackable target;
+    protected Lockable target;
     protected long lockTryTime, attackTryTime;
 
     protected AbstractAttackImpl(HeroItemsAPI heroItems, HeroAPI hero) {
@@ -23,12 +23,12 @@ public abstract class AbstractAttackImpl implements AttackAPI {
     }
 
     @Override
-    public @Nullable Attackable getTarget() {
+    public @Nullable Lockable getTarget() {
         return target;
     }
 
     @Override
-    public void setTarget(@Nullable Attackable target) {
+    public void setTarget(@Nullable Lockable target) {
         this.target = target;
     }
 

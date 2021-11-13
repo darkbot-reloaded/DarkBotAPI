@@ -6,19 +6,19 @@ import eu.darkbot.api.managers.HeroAPI;
 /**
  * An entity that can be locked &amp; attacked
  */
-public interface Attackable extends Entity {
+public interface Lockable extends Entity {
 
     /**
      * This method can return true for any non-attacked entities by other players.
      *
-     * @return if this {@link Attackable} is owned by {@link HeroAPI}
+     * @return if this {@link Lockable} is owned by {@link HeroAPI}
      */
     default boolean isOwned() {
         return getLockType() == Lock.OWNED;
     }
 
     /**
-     * Check lock type for this {@link Attackable}
+     * Check lock type for this {@link Lockable}
      *
      * @return {@link Lock}
      */

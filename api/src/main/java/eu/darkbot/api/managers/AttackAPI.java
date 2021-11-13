@@ -1,11 +1,14 @@
 package eu.darkbot.api.managers;
 
 import eu.darkbot.api.API;
+import eu.darkbot.api.extensions.Behavior;
 import eu.darkbot.api.extensions.selectors.LaserSelector;
 import eu.darkbot.api.extensions.selectors.PrioritizedSupplier;
-import eu.darkbot.api.extensions.Behavior;
-import eu.darkbot.api.game.other.Attackable;
+import eu.darkbot.api.game.other.Lockable;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
+
+import java.util.Optional;
 
 /**
  * Provides a way to lock &amp; attack other entities.
@@ -16,29 +19,30 @@ import org.jetbrains.annotations.Nullable;
 public interface AttackAPI extends API.Singleton {
 
     /**
-     * @return true if target is non-null
+     * @return true if target is non-null and is valid
      */
     default boolean hasTarget() {
-        Attackable target = getTarget();
+        Lockable target = getTarget();
         return target != null && target.isValid();
     }
 
     /**
-     * @return currently set target entity
+     * @return currently set target entity or null if none is set
      */
-    @Nullable Attackable getTarget();
+    @UnknownNullability("Check #hasTarget")
+    Lockable getTarget();
 
     /**
      * @return result of {@link #getTarget()} method cast to given type if possible, null otherwise
      */
-    @Nullable default <T extends Attackable> T getTargetAs(Class<T> type) {
-        Attackable target = getTarget();
-        return type.isInstance(target) ? type.cast(target) : null;
+    default <T extends Lockable> Optional<T> getTargetAs(Class<T> type) {
+        Lockable target = getTarget();
+        return type.isInstance(target) ? Optional.of(type.cast(target)) : Optional.empty();
     }
     /**
      * @param target The entity to attack, null to set none
      */
-    void setTarget(@Nullable Attackable target);
+    void setTarget(@Nullable Lockable target);
 
     /**
      * This method checks if {@link #getTarget()} is locked/marked/targeted in-game.

@@ -2,8 +2,10 @@ package eu.darkbot.api.game.items;
 
 import eu.darkbot.api.game.enums.PetGear;
 import eu.darkbot.api.managers.HeroItemsAPI;
+import eu.darkbot.util.ArrayUtils;
 
-import java.util.Locale;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Represents a type of in-game item, that can be selected via the hot bar or category bar
@@ -12,6 +14,16 @@ import java.util.Locale;
  * @see HeroItemsAPI
  */
 public interface SelectableItem {
+
+    /**
+     * All item constants grouped by {@link ItemCategory}
+     */
+    @SuppressWarnings("unchecked")
+    Map<ItemCategory, List<SelectableItem>> ALL_ITEMS = Arrays.stream(SelectableItem.class.getClasses())
+            .filter(Class::isEnum)
+            .filter(SelectableItem.class::isAssignableFrom)
+            .collect(Collectors.toMap(c -> ((SelectableItem) c.getEnumConstants()[0]).getCategory(),
+                    c -> (List<SelectableItem>) ArrayUtils.enumValuesAsList(c), ArrayUtils::mergeLists));
 
     /**
      * @return The in-game id of this item

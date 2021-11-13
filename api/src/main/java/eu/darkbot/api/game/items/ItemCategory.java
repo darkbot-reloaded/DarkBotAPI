@@ -23,4 +23,13 @@ public enum ItemCategory {
     public String getId() {
         return name().toLowerCase(Locale.ROOT);
     }
+
+    public static ItemCategory of(String categoryId) {
+        for (ItemCategory itemCategory : values()) {
+            if (itemCategory.getId().equals(categoryId))
+                    return itemCategory;
+        }
+
+        return null;
+    }
 }

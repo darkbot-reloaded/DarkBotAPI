@@ -1,11 +1,11 @@
 package eu.darkbot.util;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ArrayUtils {
+
+    public static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
 
     @SafeVarargs
     public static <T> List<T> asImmutableList(T... a) {
@@ -17,5 +17,19 @@ public class ArrayUtils {
      */
     public static boolean isNotBlank(Collection<?> coll) {
         return coll != null && !coll.isEmpty();
+    }
+
+    public static <T> List<T> mergeLists(List<T> l1, List<T> l2) {
+        l1.addAll(l2);
+        return l1;
+    }
+
+    @SafeVarargs
+    public static <T> List<T> enumValuesAsList(Class<? extends T>... enumTypes) {
+        return Arrays.stream(enumTypes)
+                .map(Class::getEnumConstants)
+                .flatMap(Arrays::stream)
+                .map(e -> (T) e)
+                .collect(Collectors.toList());
     }
 }

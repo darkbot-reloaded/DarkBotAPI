@@ -211,8 +211,7 @@ public class SafetyFinder implements Listener {
         if ((escape == Escaping.SIGHT && !RUNNING.getStopRunning()) || hasEnemy()) return Escaping.SIGHT;
         if (escape == Escaping.REPAIR || hero.getHealth().hpPercent() < SAFETY.getRepairHealthRange().getMin() ||
                 (hero.getHealth().hpPercent() < this.SAFETY.getRepairHealthNoNpc() &&
-                        (!attacker.hasTarget() ||
-                                Objects.requireNonNull(attacker.getTarget()).getHealth().hpPercent() > 0.9)))
+                        (!attacker.hasTarget() || attacker.getTarget().getHealth().hpPercent() > 0.9)))
             return Escaping.REPAIR;
         return refreshing ? Escaping.REFRESH : Escaping.NONE;
     }

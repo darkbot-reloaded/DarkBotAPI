@@ -6,6 +6,7 @@ import eu.darkbot.api.game.other.GameMap;
 import eu.darkbot.api.managers.BotAPI;
 import eu.darkbot.api.managers.ConfigAPI;
 import eu.darkbot.api.managers.I18nAPI;
+import eu.darkbot.api.utils.Inject;
 import eu.darkbot.shared.utils.MapTraveler;
 
 import java.util.function.Consumer;
@@ -19,8 +20,7 @@ public class MapModule extends TemporalModule {
     protected ConfigSetting<Object> mapChangeSetting;
 
     public MapModule(PluginAPI api, boolean backOnConfigChange) {
-        this(api.requireAPI(BotAPI.class), api.requireInstance(MapTraveler.class),
-                api.requireAPI(I18nAPI.class));
+        this(api.requireAPI(BotAPI.class), api.requireInstance(MapTraveler.class), api.requireAPI(I18nAPI.class));
 
         if (backOnConfigChange) {
             this.mapChangeSetting = api.requireAPI(ConfigAPI.class).requireConfig("general.working_map");
@@ -28,6 +28,7 @@ public class MapModule extends TemporalModule {
         }
     }
 
+    @Inject
     public MapModule(BotAPI bot,
                      MapTraveler mapTraveler,
                      I18nAPI i18n) {
