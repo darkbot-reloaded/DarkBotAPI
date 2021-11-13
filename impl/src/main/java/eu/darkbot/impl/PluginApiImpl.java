@@ -11,8 +11,11 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @SuppressWarnings("unchecked")
 public class PluginApiImpl implements PluginAPI {
@@ -21,6 +24,8 @@ public class PluginApiImpl implements PluginAPI {
     protected final Set<Singleton> weakSingletons = Collections.newSetFromMap(new WeakHashMap<>());
     protected final Set<Class<?>> implClasses = new HashSet<>();
     protected final Set<ClassDecorator<?>> decorators = new HashSet<>();
+
+    protected final ThreadLocal<LinkedList<Class<?>>> creationStack = ThreadLocal.withInitial(LinkedList::new);
 
     public PluginApiImpl() {
         singletons.add(this);
@@ -47,6 +52,21 @@ public class PluginApiImpl implements PluginAPI {
         Collections.addAll(this.implClasses, implementations);
     }
 
+    /*
+     * Impl note: this method is synchronized to prevent multiple threads from creating the same instances,
+     * and messing up with the creation stack tracking circular dependencies.
+     *
+     * This should always be the called method, over getOrCreateSingleton or createNewInstance
+     */
+    private synchronized <T> T getOrCreate(Class<T> clazz) {
+        if (Singleton.class.isAssignableFrom(clazz))
+            return (T) getOrCreateSingleton((Class<Singleton>) clazz);
+        return createNewInstance(clazz);
+    }
+
+    /*
+     * Impl note: should always use getOrCreate() instead, since it's synchronized
+     */
     private <T extends Singleton> T getOrCreateSingleton(Class<T> clazz) throws UnsupportedOperationException {
         Set<Singleton> workingSet = clazz.getClassLoader() == getClass().getClassLoader() ? singletons : weakSingletons;
         for (Singleton implementation : workingSet) {
@@ -58,35 +78,25 @@ public class PluginApiImpl implements PluginAPI {
         return impl;
     }
 
-    private Constructor<?> getBestConstructor(Class<?> clazz) {
-        Constructor<?>[] constructors = clazz.getConstructors();
-        if (constructors.length == 0)
-            throw new UnsupportedOperationException("No public constructor exists for " + clazz.getName());
-        // Ideal case, just one constructor to call
-        if (constructors.length == 1) return constructors[0];
-
-        // For multiple constructors, search for the @Inject annotation
-        Constructor<?> result = null;
-        for (Constructor<?> c : constructors) {
-            if (c.getAnnotation(Inject.class) == null) continue;
-            if (result != null)
-                throw new UnsupportedOperationException("Found multiple @Inject constructors in " + clazz.getName() +
-                        ". You must only annotate one constructor with @Inject");
-            result = c;
-        }
-        if (result == null)
-            throw new UnsupportedOperationException("Multiple constructors were found in " + clazz.getName() +
-                    ". You must either annotate one with @Inject or");
-        return result;
-    }
-
+    /*
+     * Impl note: should always use getOrCreate() instead, since it's synchronized
+     */
     private <T> T createNewInstance(Class<T> clazz) throws UnsupportedOperationException {
-        if (clazz.isInterface())
-            return (T) createNewInstance(implClasses.stream()
-                    .filter(clazz::isAssignableFrom)
-                    .findFirst()
-                    .orElseThrow(() ->
-                            new UnsupportedOperationException("No implementation found for " + clazz.getName())));
+        if (creationStack.get().contains(clazz)) {
+            throw new UnsupportedOperationException("Circular dependency detected: " +
+                    Stream.concat(creationStack.get().stream(), Stream.of(clazz))
+                            .map(Class::getSimpleName)
+                            .collect(Collectors.joining(" -> ")));
+        }
+
+        creationStack.get().addLast(clazz);
+        if (clazz.isInterface()) {
+            try {
+                return (T) createNewInstance(getImplementationClass(clazz));
+            } finally {
+                creationStack.get().removeLast();
+            }
+        }
 
         Constructor<?> constructor = getBestConstructor(clazz);
 
@@ -102,15 +112,11 @@ public class PluginApiImpl implements PluginAPI {
             value = (T) constructor.newInstance(params);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException("Exception calling constructor for API: " + clazz.getName(), e);
+        } finally {
+            creationStack.get().removeLast();
         }
         decorators.forEach(d -> d.tryLoad(value));
         return value;
-    }
-
-    private <T> T getOrCreate(Class<T> clazz) {
-        if (Singleton.class.isAssignableFrom(clazz))
-            return (T) getOrCreateSingleton((Class<Singleton>) clazz);
-        return createNewInstance(clazz);
     }
 
     @Override
@@ -139,6 +145,42 @@ public class PluginApiImpl implements PluginAPI {
                     clazz.getName() + ", use requireAPI instead");
 
         return getOrCreate(clazz);
+    }
+
+    /*
+     * Small helper method to get the best constructor for a class
+     */
+    private static Constructor<?> getBestConstructor(Class<?> clazz) {
+        Constructor<?>[] constructors = clazz.getConstructors();
+        if (constructors.length == 0)
+            throw new UnsupportedOperationException("No public constructor exists for " + clazz.getName());
+        // Ideal case, just one constructor to call
+        if (constructors.length == 1) return constructors[0];
+
+        // For multiple constructors, search for the @Inject annotation
+        Constructor<?> result = null;
+        for (Constructor<?> c : constructors) {
+            if (c.getAnnotation(Inject.class) == null) continue;
+            if (result != null)
+                throw new UnsupportedOperationException("Found multiple @Inject constructors in " + clazz.getName() +
+                        ". You must only annotate one constructor with @Inject");
+            result = c;
+        }
+        if (result == null)
+            throw new UnsupportedOperationException("Multiple constructors were found in " + clazz.getName() +
+                    ". You must either annotate one with @Inject or");
+        return result;
+    }
+
+    /*
+     * Small helper method to get the implementation class for an interface
+     */
+    private Class<?> getImplementationClass(Class<?> itf) {
+        return implClasses.stream()
+                .filter(itf::isAssignableFrom)
+                .findFirst()
+                .orElseThrow(() ->
+                        new UnsupportedOperationException("No implementation found for " + itf.getName()));
     }
 
 }
