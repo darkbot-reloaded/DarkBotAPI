@@ -93,7 +93,7 @@ public class MapTraveler implements Listener {
     }
 
     @EventHandler
-    protected void onMapChange(StarSystemAPI.MapChangeEvent event) {
+    public void onMapChange(StarSystemAPI.MapChangeEvent event) {
         mapChangeWait = System.currentTimeMillis() + 2000;
         lastPortals = -1;
     }

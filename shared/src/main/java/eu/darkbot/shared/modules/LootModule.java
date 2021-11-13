@@ -187,7 +187,7 @@ public class LootModule implements Module {
                     radiusFix = (int) Math.max(Math.min(radius - distance, maxRadFix), -maxRadFix);
             distance = (radius += radiusFix);
             // Moved distance + speed - distance to chosen radius same angle, divided by radius
-            angleDiff = Math.max(/*(hero.shipInfo.speed * 0.625) +*/ (min(200, target.getLocationInfo().getSpeed()) * 0.625)
+            angleDiff = Math.max((hero.getSpeed() * 0.625) + (min(200, target.getLocationInfo().getSpeed()) * 0.625)
                     - hero.distanceTo(Location.of(targetLoc, angle, radius)), 0) / radius;
         }
         direction = getBestDir(targetLoc, angle, angleDiff, distance);

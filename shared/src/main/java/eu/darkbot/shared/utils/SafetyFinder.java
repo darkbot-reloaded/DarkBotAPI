@@ -94,7 +94,7 @@ public class SafetyFinder implements Listener {
     }
 
     @EventHandler
-    protected void onMapChange(StarSystemAPI.MapChangeEvent event) {
+    public void onMapChange(StarSystemAPI.MapChangeEvent event) {
         if (safety != null && safety.getType() == SafetyInfo.Type.PORTAL) {
             if (event.getNext() == prevMap) jumpState = JumpState.RETURNED;
             else if (jumpState == JumpState.JUMPING) jumpState = JumpState.JUMPED;
