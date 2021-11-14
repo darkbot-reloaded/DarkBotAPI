@@ -10,6 +10,8 @@ import java.util.Optional;
  */
 public interface NpcInfo {
 
+    boolean shouldKill();
+
     /**
      * @return How important this box is to the user, the lower number is more important
      */

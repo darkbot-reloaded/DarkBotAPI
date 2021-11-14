@@ -1,14 +1,24 @@
 package eu.darkbot.api.game.other;
 
 import eu.darkbot.api.game.entities.Entity;
+import eu.darkbot.api.managers.HeroAPI;
 
 /**
  * An entity that can be locked &amp; attacked
  */
-public interface Attackable extends Entity {
+public interface Lockable extends Entity {
 
     /**
-     * Check lock type for this {@link Attackable}
+     * This method can return true for any non-attacked entities by other players.
+     *
+     * @return if this {@link Lockable} is owned by {@link HeroAPI}
+     */
+    default boolean isOwned() {
+        return getLockType() == Lock.OWNED;
+    }
+
+    /**
+     * Check lock type for this {@link Lockable}
      *
      * @return {@link Lock}
      */
@@ -35,7 +45,7 @@ public interface Attackable extends Entity {
         UNKNOWN,
 
         /**
-         * Owned by {@link eu.darkbot.api.managers.HeroAPI}.
+         * Owned by {@link HeroAPI}.
          * Known as red circle around the target.
          */
         OWNED,

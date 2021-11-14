@@ -1,0 +1,99 @@
+package eu.darkbot.shared.modules;
+
+import eu.darkbot.api.PluginAPI;
+import eu.darkbot.api.config.ConfigSetting;
+import eu.darkbot.api.config.types.NpcExtraFlag;
+import eu.darkbot.api.extensions.Feature;
+import eu.darkbot.api.extensions.Module;
+import eu.darkbot.api.game.entities.Box;
+import eu.darkbot.api.game.entities.Npc;
+import eu.darkbot.api.managers.*;
+import eu.darkbot.api.utils.Inject;
+
+@Feature(name = "Kill & Collect", description = "Kills npcs and collects resources at the same time.")
+public class LootCollectorModule implements Module {
+
+    protected final LootModule loot;
+    protected final CollectorModule collector;
+    protected final PetAPI pet;
+    protected final HeroAPI hero;
+    protected final MovementAPI movement;
+    protected final I18nAPI i18n;
+
+    protected final ConfigSetting<Integer> collectRadius;
+
+    public LootCollectorModule(PluginAPI api) {
+        this(api.requireInstance(LootModule.class),
+                api.requireInstance(CollectorModule.class),
+                api.requireAPI(PetAPI.class),
+                api.requireAPI(HeroAPI.class),
+                api.requireAPI(MovementAPI.class),
+                api.requireAPI(ConfigAPI.class),
+                api.requireAPI(I18nAPI.class));
+    }
+
+    @Inject
+    public LootCollectorModule(LootModule loot,
+                               CollectorModule collector,
+                               PetAPI pet,
+                               HeroAPI hero,
+                               MovementAPI movement,
+                               ConfigAPI config,
+                               I18nAPI i18n) {
+        this.loot = loot;
+        this.collector = collector;
+        this.pet = pet;
+        this.hero = hero;
+        this.movement = movement;
+        this.i18n = i18n;
+
+        this.collectRadius = config.requireConfig("collect.radius");
+    }
+
+    @Override
+    public void onTickModule() {
+        if (collector.isNotWaiting() && loot.checkDangerousAndCurrentMap()) {
+            pet.setEnabled(true);
+
+            if (loot.findTarget()) {
+                collector.findBox();
+
+                Box box = collector.currentBox;
+                Npc npc = loot.target;
+
+                if (box == null || !box.isValid()
+                        || box.distanceTo(hero) > collectRadius.getValue()
+                        || (npc.getInfo().hasExtraFlag(NpcExtraFlag.IGNORE_BOXES)
+                        && npc.distanceTo(box) > Math.min(800, npc.getInfo().getRadius() * 2))
+                        || npc.getHealth().hpPercent() < 0.25) {
+                    loot.moveToAnSafePosition();
+                } else {
+                    loot.setConfig(box);
+                    collector.tryCollectNearestBox();
+                }
+
+                loot.ignoreInvalidTarget();
+                loot.attack.tryLockAndAttack();
+
+            } else {
+                hero.setRoamMode();
+                collector.findBox();
+
+                if (!collector.tryCollectNearestBox() && (!movement.isMoving() || movement.isOutOfMap())) {
+                    movement.moveRandom();
+                }
+            }
+        }
+    }
+
+    @Override
+    public boolean canRefresh() {
+        return collector.isNotWaiting() && loot.canRefresh();
+
+    }
+
+    @Override
+    public String getStatus() {
+        return i18n.get("module.kill_n_collect.status", loot.getStatus(), collector.getStatus());
+    }
+}

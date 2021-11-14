@@ -27,14 +27,22 @@ public interface Entity extends Locatable {
     boolean isValid();
 
     /**
+     * @return if {@link Entity} is currently moving
+     */
+    default boolean isMoving() {
+        return getLocationInfo().isMoving();
+    }
+
+    /**
      * @return true if {@link Entity} can be selected (locked).
      */
     boolean isSelectable();
 
     /**
-     * Selects this entity as the target in-game, can instantly attempt to attack with {@code tryAttack} param.
+     * Selects this entity as the target in-game, can instantly attempt to attack with {@code tryAttack} param
+     * if and only if option "attack via double-click" in-game is enabled.
      *
-     * @param tryAttack instantly attempt to attack this entity
+     * @param tryAttack instantly attempt to attack this entity if option "attack via double-click" in-game is enabled.
      * @return true on successful selection
      */
     boolean trySelect(boolean tryAttack);
@@ -43,16 +51,6 @@ public interface Entity extends Locatable {
      * @return the location of the entity as well as other information about the location
      */
     LocationInfo getLocationInfo();
-
-    @Override
-    default double getX() {
-        return getLocationInfo().getX();
-    }
-
-    @Override
-    default double getY() {
-        return getLocationInfo().getY();
-    }
 
     /**
      * Checks that {@link Entity} have given effect id.
@@ -96,4 +94,14 @@ public interface Entity extends Locatable {
      * @return value for the key or {@code null} if key doesnt exists.
      */
     @Nullable Object getMetadata(@NotNull String key);
+
+    @Override
+    default double getX() {
+        return getLocationInfo().getX();
+    }
+
+    @Override
+    default double getY() {
+        return getLocationInfo().getY();
+    }
 }

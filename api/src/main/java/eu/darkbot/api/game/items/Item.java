@@ -1,5 +1,7 @@
 package eu.darkbot.api.game.items;
 
+import java.util.Optional;
+
 /**
  * Represents an item in-game, the type of this item is a {@link SelectableItem}
  */
@@ -9,6 +11,11 @@ public interface Item extends SelectableItem {
      * @return id of the {@link Item}
      */
     String getId();
+
+    /**
+     * @return optional constant representation of this item if present
+     */
+    <T extends Enum<T> & SelectableItem> Optional<T> getAs(Class<T> type);
 
     /**
      * @return current quantity of item
@@ -26,7 +33,7 @@ public interface Item extends SelectableItem {
     boolean isSelected();
 
     /**
-     * @return true if item can be bought via click
+     * @return true if item can be bought via selection
      */
     boolean isBuyable();
 
@@ -36,27 +43,21 @@ public interface Item extends SelectableItem {
     boolean isAvailable();
 
     /**
-     * @return true if item is ready - not cooling down
-     */
-    boolean isReady();
-
-    /**
-     * @return time in {@code milliseconds} needed to be passed till {@link Item} will be available
-     */
-    double readyIn();
-
-    /**
-     * @return total cooldown time in {@code milliseconds} of {@link Item}
-     */
-    double totalCooldown();
-
-    /**
      * @return last successful use attempt time of {@link Item} in milliseconds from epoch, 0 = no attempts
      */
-    double lastUseTime();
+    long lastUseTime();
 
-    @Override
-    default ItemCategory getCategory() {
-        return null; // Category is unknown
+    /**
+     * @return true if item is ready - not cooling down
+     */
+    default boolean isReady() {
+        return !getItemTimer().isPresent();
     }
+
+    /**
+     * Will optionally get the {@link ItemTimer} if item is cooling down or is activated for X time in-game
+     *
+     * @return ItemTimer if present, {@link Optional#empty()} otherwise
+     */
+    Optional<ItemTimer> getItemTimer();
 }

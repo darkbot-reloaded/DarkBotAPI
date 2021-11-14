@@ -131,4 +131,11 @@ public interface MovementAPI extends API.Singleton {
     default double getDistanceBetween(@NotNull Locatable loc, @NotNull Locatable otherLoc) {
         return getDistanceBetween(loc.getX(), loc.getY(), otherLoc.getX(), otherLoc.getY());
     }
+
+    /**
+     *
+     * @param location
+     * @return
+     */
+    boolean isInPreferredZone(Locatable location);
 }

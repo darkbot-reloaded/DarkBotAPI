@@ -1,11 +1,11 @@
 package eu.darkbot.util;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ArrayUtils {
+
+    public static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
 
     @SafeVarargs
     public static <T> List<T> asImmutableList(T... a) {
@@ -18,4 +18,5 @@ public class ArrayUtils {
     public static boolean isNotBlank(Collection<?> coll) {
         return coll != null && !coll.isEmpty();
     }
+
 }

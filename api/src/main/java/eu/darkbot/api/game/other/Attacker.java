@@ -3,16 +3,22 @@ package eu.darkbot.api.game.other;
 import eu.darkbot.api.game.entities.Entity;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
+
 /**
  * Represents in-game entity which can attack other in-game entities.
  */
-public interface Attacker extends Attackable {
+public interface Attacker extends Lockable {
 
     /**
      * @return the target if present, otherwise {@code null}
      */
-    @Nullable
-    Entity getTarget();
+    @Nullable Entity getTarget();
+
+    default <T extends Entity> Optional<T> getTargetAs(Class<T> type) {
+        Entity target = getTarget();
+        return type.isInstance(target) ? Optional.of(type.cast(target)) : Optional.empty();
+    }
 
     /**
      * @return true if attacks current target
@@ -21,10 +27,10 @@ public interface Attacker extends Attackable {
     boolean isAttacking();
 
     /**
-     * @param other {@link Attackable} to check
+     * @param other {@link Lockable} to check
      * @return true if attacks {@code other}
      */
-    default boolean isAttacking(Attackable other) {
-        return getTarget() == other;
+    default boolean isAttacking(Lockable other) {
+        return isAttacking() && getTarget() == other;
     }
 }

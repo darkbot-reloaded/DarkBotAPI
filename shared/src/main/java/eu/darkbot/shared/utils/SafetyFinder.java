@@ -94,7 +94,7 @@ public class SafetyFinder implements Listener {
     }
 
     @EventHandler
-    protected void onMapChange(StarSystemAPI.MapChangeEvent event) {
+    public void onMapChange(StarSystemAPI.MapChangeEvent event) {
         if (safety != null && safety.getType() == SafetyInfo.Type.PORTAL) {
             if (event.getNext() == prevMap) jumpState = JumpState.RETURNED;
             else if (jumpState == JumpState.JUMPING) jumpState = JumpState.JUMPED;
@@ -211,8 +211,7 @@ public class SafetyFinder implements Listener {
         if ((escape == Escaping.SIGHT && !RUNNING.getStopRunning()) || hasEnemy()) return Escaping.SIGHT;
         if (escape == Escaping.REPAIR || hero.getHealth().hpPercent() < SAFETY.getRepairHealthRange().getMin() ||
                 (hero.getHealth().hpPercent() < this.SAFETY.getRepairHealthNoNpc() &&
-                        (!attacker.hasTarget() ||
-                                Objects.requireNonNull(attacker.getTarget()).getHealth().hpPercent() > 0.9)))
+                        (!attacker.hasTarget() || attacker.getTarget().getHealth().hpPercent() > 0.9)))
             return Escaping.REPAIR;
         return refreshing ? Escaping.REFRESH : Escaping.NONE;
     }
