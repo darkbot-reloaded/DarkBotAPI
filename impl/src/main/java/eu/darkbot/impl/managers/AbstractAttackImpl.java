@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractAttackImpl implements AttackAPI {
 
-    protected int DELAY_BETWEEN_ATTACK_ATTEMPTS = 750;
+    private static final int DELAY_BETWEEN_ATTACK_ATTEMPTS = 750;
 
     protected final HeroItemsAPI heroItems;
     protected final HeroAPI hero;
