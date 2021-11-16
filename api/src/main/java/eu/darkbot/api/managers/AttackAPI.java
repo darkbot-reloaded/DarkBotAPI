@@ -39,6 +39,7 @@ public interface AttackAPI extends API.Singleton {
         Lockable target = getTarget();
         return type.isInstance(target) ? Optional.of(type.cast(target)) : Optional.empty();
     }
+
     /**
      * @param target The entity to attack, null to set none
      */
