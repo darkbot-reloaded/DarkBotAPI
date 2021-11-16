@@ -25,12 +25,14 @@ public interface ExtensionsAPI extends API.Singleton {
 
     /**
      * @param feature class to get instance of
+     * @param <T>     type of feature
      * @return instance of given feature
      */
     <T> Optional<T> getFeature(@NotNull Class<T> feature);
 
     /**
      * @param feature class to get {@link FeatureInfo} of
+     * @param <T>     type of feature
      * @return {@link FeatureInfo} of given feature.
      */
     @Nullable <T> FeatureInfo<T> getFeatureInfo(@NotNull Class<T> feature);
@@ -39,6 +41,7 @@ public interface ExtensionsAPI extends API.Singleton {
      * Get what class loader has been used to load the plugin
      * May be used to search for resources in the plugin
      *
+     * @param plugin plugin to get class loader of
      * @return the class loader used to load this plugin
      */
     ClassLoader getClassLoader(@NotNull PluginInfo plugin);

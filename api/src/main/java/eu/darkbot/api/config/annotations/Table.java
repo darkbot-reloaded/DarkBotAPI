@@ -55,6 +55,7 @@ public @interface Table {
     /**
      * Decorators that do final touch-ups to the table.
      * You may use this to register custom table editors, modify table or wrapper size, etc.
+     * @return a list of decorators for the table
      */
     Class<? extends Decorator<?>>[] decorator() default {};
 

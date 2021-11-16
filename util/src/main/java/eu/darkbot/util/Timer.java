@@ -103,7 +103,8 @@ public class Timer {
     }
 
     /**
-     * True if timer is set to any value, can be reset with {@link #disarm()}
+     * If timer is set to any value, can be reset with {@link #disarm()}
+     * @return true if timer is armed, false otherwise
      */
     public boolean isArmed() {
         return time > 0;

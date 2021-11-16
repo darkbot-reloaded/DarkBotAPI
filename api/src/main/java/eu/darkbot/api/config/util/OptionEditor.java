@@ -14,6 +14,7 @@ public interface OptionEditor<T> {
      * and set up the editor for the new setting.
      *
      * @param setting the setting to be edited
+     * @return a component that allows user to edit the setting
      */
     JComponent getEditorComponent(ConfigSetting<T> setting);
 

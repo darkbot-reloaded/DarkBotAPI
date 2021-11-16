@@ -47,11 +47,15 @@ public interface Gui extends Point {
 
     /**
      * Clicks at gui position + plusX/Y
+     * @param plusX offset in the x position inside this gui
+     * @param plusY offset in the y position inside this gui
      */
     void click(int plusX, int plusY);
 
     /**
      * Moves mouse at gui position + plusX/Y
+     * @param plusX offset in the x position inside this gui
+     * @param plusY offset in the y position inside this gui
      */
     void hover(int plusX, int plusY);
 }

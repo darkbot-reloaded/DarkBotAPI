@@ -10,6 +10,7 @@ import java.util.Map;
 public interface Config {
 
     /**
+     * @param map the map to get infos for
      * @return configured safeties for the requested map
      */
     Collection<? extends SafetyInfo> getSafeties(GameMap map);

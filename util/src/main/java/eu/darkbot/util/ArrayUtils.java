@@ -14,9 +14,11 @@ public class ArrayUtils {
 
     /**
      * Returns true whenever collection is not null and not empty.
+     * @param collection The collection to check
+     * @return true if collection is not null and not empty
      */
-    public static boolean isNotBlank(Collection<?> coll) {
-        return coll != null && !coll.isEmpty();
+    public static boolean isNotBlank(Collection<?> collection) {
+        return collection != null && !collection.isEmpty();
     }
 
 }

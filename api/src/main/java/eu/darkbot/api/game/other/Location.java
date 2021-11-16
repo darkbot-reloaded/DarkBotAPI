@@ -29,6 +29,7 @@ public interface Location extends Locatable, Point {
 
     /**
      * Copies current location into a new {@link Location} object and returns it.
+     * @return a new {@link Location} object with same coordinates as current
      */
     default Location copy() {
         return Location.of(this.getX(), this.getY());
@@ -36,6 +37,9 @@ public interface Location extends Locatable, Point {
 
     /**
      * Sets current location into specified location.
+     * @param x new x coordinate for this location
+     * @param y new y coordinate for this location
+     * @return this {@link Location} with new coordinates
      */
     Location setTo(double x, double y);
 

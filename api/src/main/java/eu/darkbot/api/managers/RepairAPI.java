@@ -24,6 +24,9 @@ public interface RepairAPI extends API.Singleton {
     /**
      * Tries to repair ship with given repair option
      *
+     * TODO: Add enum with repair options in-game
+     *
+     * @param repairOption int of the repair option to use, these are defined in in-game constants
      * @throws IllegalStateException if ship is already repaired
      */
     void tryRevive(int repairOption) throws IllegalStateException;

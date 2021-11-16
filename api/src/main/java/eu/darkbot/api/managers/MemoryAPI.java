@@ -80,6 +80,7 @@ public interface MemoryAPI extends API.Singleton {
      * Reads String from memory.
      *
      * @param address to read
+     * @return the string from memory if present, null otherwise
      */
     String readString(long address);
 

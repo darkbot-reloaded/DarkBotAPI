@@ -13,6 +13,7 @@ public interface BotAPI extends API.Singleton {
 
     /**
      * {@link Version} of the DarkBot.
+     * @return The current version of the bot
      */
     Version getVersion();
 
@@ -53,6 +54,7 @@ public interface BotAPI extends API.Singleton {
      *  - A behavior wanting temporal control over movement can install a temporal module that does that
      *
      * @param module The module to set, often a {@link eu.darkbot.api.extensions.TemporalModule}
+     * @param <M>     type of module
      * @return The same module that was passed in, useful to chain methods.
      */
     <M extends Module> M setModule(@Nullable M module);
