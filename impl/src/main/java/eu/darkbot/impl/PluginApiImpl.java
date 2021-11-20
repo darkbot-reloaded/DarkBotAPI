@@ -4,6 +4,7 @@ import eu.darkbot.api.API;
 import eu.darkbot.api.PluginAPI;
 import eu.darkbot.api.utils.Inject;
 import eu.darkbot.impl.decorators.ClassDecorator;
+import eu.darkbot.impl.decorators.PostInitializationDecorator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,6 +30,7 @@ public class PluginApiImpl implements PluginAPI {
 
     public PluginApiImpl() {
         singletons.add(this);
+        decorators.add(requireInstance(PostInitializationDecorator.class));
     }
 
     /**
@@ -56,32 +58,25 @@ public class PluginApiImpl implements PluginAPI {
      * Impl note: this method is synchronized to prevent multiple threads from creating the same instances,
      * and messing up with the creation stack tracking circular dependencies.
      *
-     * This should always be the called method, over getOrCreateSingleton or createNewInstance
+     * This should always be the called method over createNewInstance
      */
     private synchronized <T> T getOrCreate(Class<T> clazz) {
-        if (Singleton.class.isAssignableFrom(clazz))
-            return (T) getOrCreateSingleton((Class<Singleton>) clazz);
-        return createNewInstance(clazz);
-    }
-
-    /*
-     * Impl note: should always use getOrCreate() instead, since it's synchronized
-     */
-    private <T extends Singleton> T getOrCreateSingleton(Class<T> clazz) throws UnsupportedOperationException {
-        Set<Singleton> workingSet = clazz.getClassLoader() == getClass().getClassLoader() ? singletons : weakSingletons;
-        for (Singleton implementation : workingSet) {
-            if (clazz.isInstance(implementation))
-                return clazz.cast(implementation);
+        Set<Singleton> workingSet = null;
+        if (Singleton.class.isAssignableFrom(clazz)) {
+            workingSet = clazz.getClassLoader() == getClass().getClassLoader() ? singletons : weakSingletons;
+            for (Singleton implementation : workingSet) {
+                if (clazz.isInstance(implementation))
+                    return clazz.cast(implementation);
+            }
         }
-        T impl = createNewInstance(clazz);
-        workingSet.add(impl);
-        return impl;
+        return createNewInstance(clazz, workingSet);
     }
 
     /*
      * Impl note: should always use getOrCreate() instead, since it's synchronized
      */
-    private <T> T createNewInstance(Class<T> clazz) throws UnsupportedOperationException {
+    private <T> T createNewInstance(Class<T> clazz, @Nullable Set<Singleton> workingSet)
+            throws UnsupportedOperationException {
         if (creationStack.get().contains(clazz)) {
             throw new UnsupportedOperationException("Circular dependency detected: " +
                     Stream.concat(creationStack.get().stream(), Stream.of(clazz))
@@ -92,7 +87,7 @@ public class PluginApiImpl implements PluginAPI {
         creationStack.get().addLast(clazz);
         if (clazz.isInterface()) {
             try {
-                return (T) createNewInstance(getImplementationClass(clazz));
+                return (T) createNewInstance(getImplementationClass(clazz), workingSet);
             } finally {
                 creationStack.get().removeLast();
             }
@@ -110,12 +105,17 @@ public class PluginApiImpl implements PluginAPI {
             }
 
             value = (T) constructor.newInstance(params);
+            if (workingSet != null && value instanceof Singleton)
+                workingSet.add((Singleton) value);
+
+            for (ClassDecorator<?> d : decorators)
+                d.tryLoad(value);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException("Exception calling constructor for API: " + clazz.getName(), e);
         } finally {
             creationStack.get().removeLast();
         }
-        decorators.forEach(d -> d.tryLoad(value));
+
         return value;
     }
 

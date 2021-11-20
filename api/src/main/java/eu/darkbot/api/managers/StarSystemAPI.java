@@ -21,7 +21,10 @@ public interface StarSystemAPI extends API.Singleton {
     List<String> BLACK_LIGHT_MAPS  = ArrayUtils.asImmutableList("1BL", "2BL", "3BL");
 
     /**
-     * @return current {@link GameMap}
+     * Get the current map the hero is in.
+     * This method is equivalent to {@link HeroAPI#getMap()}
+     *
+     * @return current {@link GameMap} the hero is in
      */
     GameMap getCurrentMap();
 

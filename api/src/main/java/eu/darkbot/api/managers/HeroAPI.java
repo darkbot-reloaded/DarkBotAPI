@@ -6,6 +6,7 @@ import eu.darkbot.api.game.entities.Npc;
 import eu.darkbot.api.game.entities.Ship;
 import eu.darkbot.api.game.items.Item;
 import eu.darkbot.api.game.items.SelectableItem;
+import eu.darkbot.api.game.other.GameMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,6 +15,14 @@ import org.jetbrains.annotations.Nullable;
  * hero mode (attacking, running) &amp; change formations or configuration.
  */
 public interface HeroAPI extends Ship, API.Singleton {
+
+    /**
+     * Get the current map the hero is in.
+     * This method is equivalent to {@link StarSystemAPI#getCurrentMap()}
+     *
+     * @return current {@link GameMap} the hero is in
+     */
+    GameMap getMap();
 
     /**
      * @return current used {@link Configuration}
