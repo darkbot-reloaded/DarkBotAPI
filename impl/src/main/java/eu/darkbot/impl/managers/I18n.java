@@ -9,6 +9,7 @@ import eu.darkbot.api.managers.I18nAPI;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -57,13 +58,13 @@ public class I18n implements I18nAPI, Listener {
             case BEFORE_LOAD:
                 pluginProps.clear();
                 break;
-            case AFTER_LOAD_COMPLETE:
+            case AFTER_LOAD:
                 if (extensions == null)
                     this.extensions = pluginAPI.requireAPI(ExtensionsAPI.class);
                 extensions.getPluginInfos().stream()
                         .filter(pi -> pi.getBasePackage() != null)
                         .forEach(pi -> pluginProps.put(pi, new PropertyContainer(props)));
-
+                reloadResources();
         }
     }
 
@@ -113,16 +114,18 @@ public class I18n implements I18nAPI, Listener {
 
         private URL getLangFile(Locale locale, String base, ClassLoader loader) {
             if (!base.isEmpty()) base = base.replace(".", "/") + "/";
-            URL res = loader.getResource(base + "lang/strings_" + locale.toLanguageTag() + ".properties");
+            String filePath = base + "lang/strings_" + locale.toLanguageTag() + ".properties";
+            URL res = loader.getResource(filePath);
 
-            if (res == null) System.out.println("Couldn't find translation file for " + locale + " in " + base);
+            if (res == null) System.out.println("Couldn't find translation file for " + locale + " in " + filePath);
             return res;
         }
 
         private void loadResource(Properties props, URL resource) {
             if (resource == null) return;
-            try {
-                props.load(new InputStreamReader(resource.openStream(), StandardCharsets.UTF_8));
+            try (InputStream is = resource.openStream();
+                 InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8)){
+                props.load(isr);
             } catch (IOException e) {
                 System.err.println("Failed to load translations: " + resource);
                 e.printStackTrace();

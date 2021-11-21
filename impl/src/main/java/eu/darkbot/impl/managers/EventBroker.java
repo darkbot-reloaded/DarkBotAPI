@@ -9,7 +9,11 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.stream.Collectors;
 
@@ -17,19 +21,35 @@ public class EventBroker implements EventBrokerAPI {
 
     private final WeakHashMap<Listener, EventDispatcher> dispatchers = new WeakHashMap<>();
 
+    private final Set<Listener> toAdd = Collections.newSetFromMap(new WeakHashMap<>());
+    private final Set<Listener> toRemove = Collections.newSetFromMap(new WeakHashMap<>());
+    // Handle concurrent events being sent to listeners
+    private int eventsBeingSent = 0;
+
     @Override
-    public void sendEvent(@NotNull Event event) {
-        dispatchers.forEach((l, d) -> d.handle(l, event));
+    public synchronized void sendEvent(@NotNull Event event) {
+        try {
+            eventsBeingSent++;
+            dispatchers.forEach((l, d) -> d.handle(l, event));
+        } finally {
+            eventsBeingSent--;
+        }
+        if (eventsBeingSent == 0) {
+            toAdd.forEach(this::registerListener);
+            toRemove.forEach(dispatchers::remove);
+        }
     }
 
     @Override
-    public void registerListener(@NotNull Listener listener) {
-        dispatchers.put(listener, new EventDispatcher(listener.getClass()));
+    public synchronized void registerListener(@NotNull Listener listener) {
+        if (eventsBeingSent == 0) dispatchers.put(listener, new EventDispatcher(listener.getClass()));
+        else toAdd.add(listener);
     }
 
     @Override
-    public void unregisterListener(@NotNull Listener listener) {
-        dispatchers.remove(listener);
+    public synchronized void unregisterListener(@NotNull Listener listener) {
+        if (eventsBeingSent == 0) dispatchers.remove(listener);
+        else toRemove.add(listener);
     }
 
     private static class EventDispatcher {
