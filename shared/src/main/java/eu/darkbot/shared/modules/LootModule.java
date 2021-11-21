@@ -3,6 +3,7 @@ package eu.darkbot.shared.modules;
 import eu.darkbot.api.PluginAPI;
 import eu.darkbot.api.config.ConfigSetting;
 import eu.darkbot.api.config.types.NpcExtraFlag;
+import eu.darkbot.api.config.types.NpcInfo;
 import eu.darkbot.api.extensions.Feature;
 import eu.darkbot.api.extensions.Module;
 import eu.darkbot.api.game.entities.Npc;
@@ -42,8 +43,6 @@ public class LootModule implements Module {
     protected final ConfigSetting<Integer> maxCircleIterations;
     protected final ConfigSetting<Boolean> runConfigInCircle;
     protected final ConfigSetting<Boolean> onlyKillPreferred;
-
-    protected Npc target;
 
     protected boolean backwards = false;
     protected long refreshing;
@@ -119,6 +118,10 @@ public class LootModule implements Module {
                 : (attack.hasTarget() ? "Killing npc" : "Roaming");
     }
 
+    public AttackAPI getAttacker() {
+        return attack;
+    }
+
     protected boolean checkDangerousAndCurrentMap() {
         safety.setRefreshing(System.currentTimeMillis() <= refreshing);
         return safety.tick() && checkMap();
@@ -134,13 +137,16 @@ public class LootModule implements Module {
     }
 
     protected boolean findTarget() {
-        attack.setTarget(target = closestNpc(hero));
+        attack.setTarget(closestNpc(hero));
         return attack.hasTarget();
     }
 
     protected void ignoreInvalidTarget() {
-        double closestDist = movement.getClosestDistance(target);
-        if (hero.getTarget() != target) {
+        Npc target = attack.getTargetAs(Npc.class);
+        if (target == null) return;
+
+        double closestDist = movement.getClosestDistance(attack.getTarget());
+        if (hero.getTarget() != attack.getTarget()) {
             if (closestDist > 600) {
                 target.setBlacklisted(1000);
                 attack.setTarget(null);
@@ -160,16 +166,22 @@ public class LootModule implements Module {
         }
     }
 
+    protected double getRadius(Npc npc) {
+        return attack.modifyRadius(npc.getInfo().getRadius());
+    }
+
     protected void moveToAnSafePosition() {
+        Npc target = attack.getTargetAs(Npc.class);
+        if (target == null) return;
+
         Location direction = movement.getDestination();
         Location targetLoc = target.getLocationInfo().destinationInTime(400);
 
-        double distance = hero.distanceTo(target);
+        double distance = hero.distanceTo(attack.getTarget());
         double angle = targetLoc.angleTo(hero);
-        double radius = target.getInfo().getRadius();
+        double radius = getRadius(target);
         boolean noCircle = target.getInfo().hasExtraFlag(NpcExtraFlag.NO_CIRCLE);
 
-        radius = attack.modifyRadius(radius);
         if (radius > 750) noCircle = false;
 
         double angleDiff;
@@ -217,13 +229,14 @@ public class LootModule implements Module {
 
     protected double score(Locatable loc) {
         return (movement.canMove(loc) ? 0 : -1000) - npcs.stream() // Consider barrier as bad as 1000 radius units.
-                .filter(n -> target != n)
+                .filter(n -> attack.getTarget() != n)
                 .mapToDouble(n -> Math.max(0, n.getInfo().getRadius() - n.distanceTo(loc)))
                 .sum();
     }
 
     protected void setConfig(Locatable direction) {
-        if (!attack.hasTarget()) hero.setRoamMode();
+        Npc target = attack.getTargetAs(Npc.class);
+        if (target == null || !target.isValid()) hero.setRoamMode();
         else if (runConfigInCircle.getValue()
                 && target.getHealth().hpPercent() < 0.25
                 && hero.distanceTo(direction) > target.getInfo().getRadius() * 2) hero.setRunMode();
@@ -243,7 +256,7 @@ public class LootModule implements Module {
 
     protected Npc closestNpc(Locatable location) {
         Npc target = attack.getTargetAs(Npc.class);
-        int extraPriority = target != null && (hero.getTarget() == target || hero.distanceTo(target) < 600)
+        int extraPriority = target != null && (hero.getLocalTarget() == target || hero.distanceTo(target) < 600)
                 ? 20 - (int) (target.getHealth().hpPercent() * 10) : 0;
 
         return this.npcs.stream()

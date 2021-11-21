@@ -59,7 +59,7 @@ public class LootCollectorModule implements Module {
                 collector.findBox();
 
                 Box box = collector.currentBox;
-                Npc npc = loot.target;
+                Npc npc = loot.getAttacker().getTargetAs(Npc.class);
 
                 if (box == null || !box.isValid()
                         || box.distanceTo(hero) > collectRadius.getValue()

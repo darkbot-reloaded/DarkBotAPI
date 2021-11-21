@@ -44,7 +44,10 @@ public abstract class AbstractAttackImpl implements AttackAPI {
     public void tryLockTarget() {
         if (isLocked() || lockTry.isActive()) return;
 
-        lockTry.activate(this.target.trySelect(false) ? 500 : 250);
+        if (lockTry.tryActivate(500)) {
+            hero.setLocalTarget(this.target);
+            target.trySelect(false);
+        }
     }
 
     @Override
