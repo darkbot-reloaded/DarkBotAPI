@@ -1,5 +1,7 @@
 package eu.darkbot.api.game.items;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Optional;
 
 /**
@@ -13,9 +15,10 @@ public interface Item extends SelectableItem {
     String getId();
 
     /**
-     * @return optional constant representation of this item if present
+     * Get the constant representation of this item, if it exists
+     * @return item constant, if it exists, null otherwise
      */
-    <T extends Enum<T> & SelectableItem> Optional<T> getAs(Class<T> type);
+    <T extends Enum<T> & SelectableItem> @Nullable T getAs(Class<T> type);
 
     /**
      * @return current quantity of item
