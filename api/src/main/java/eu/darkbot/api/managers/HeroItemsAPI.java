@@ -7,6 +7,7 @@ import eu.darkbot.api.game.items.ItemFlag;
 import eu.darkbot.api.game.items.ItemUseResult;
 import eu.darkbot.api.game.items.SelectableItem;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -63,4 +64,25 @@ public interface HeroItemsAPI extends API.Singleton {
      * @return use result of the selectableItem
      */
     ItemUseResult useItem(@NotNull SelectableItem selectableItem, double minWait, ItemFlag... itemFlags);
+
+    /**
+     * Find the item corresponding to a user set keyBind
+     *
+     * @param keyBind the character to press
+     * @return the item belonging to the keyBind, or null if no item is mapped to that key
+     *
+     * @deprecated You should ask the user for SelectableItem directly, instead of asking for keyBind and transforming
+     */
+    @Deprecated
+    @Nullable Item getItem(Character keyBind);
+
+    /**
+     * Find the keyBind to click to enable a certain item
+     *
+     * @param item the item to click
+     * @deprecated Make use of {@link #useItem(SelectableItem, ItemFlag...)} instead
+     */
+    @Deprecated
+    @Nullable Character getKeyBind(SelectableItem item);
+
 }
