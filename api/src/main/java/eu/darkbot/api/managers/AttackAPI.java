@@ -1,9 +1,12 @@
 package eu.darkbot.api.managers;
 
 import eu.darkbot.api.API;
+import eu.darkbot.api.config.types.NpcInfo;
 import eu.darkbot.api.extensions.Behavior;
 import eu.darkbot.api.extensions.selectors.LaserSelector;
 import eu.darkbot.api.extensions.selectors.PrioritizedSupplier;
+import eu.darkbot.api.game.entities.Npc;
+import eu.darkbot.api.game.entities.Ship;
 import eu.darkbot.api.game.other.Lockable;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
@@ -44,6 +47,13 @@ public interface AttackAPI extends API.Singleton {
      * @param target The entity to attack, null to set none
      */
     void setTarget(@Nullable Lockable target);
+
+    /**
+     * String representing the current state of the attacker
+     *
+     * @return a human-readable status for the attack api
+     */
+    String getStatus();
 
     /**
      * This method checks if {@link #getTarget()} is locked/marked/targeted in-game.
@@ -93,4 +103,47 @@ public interface AttackAPI extends API.Singleton {
      * @return the input radius, but modified to fit the needs of the attacker
      */
     double modifyRadius(double radius);
+
+    /**
+     * If the current target being locked is bugged in-game.
+     * If the method returns true you should find another target to select.
+     *
+     * @return true if the current target is bugged, false otherwise
+     */
+    boolean isBugged();
+
+    /**
+     * If the npc attacker is currently trying to cast offensive ability on the target.
+     *
+     * @return true when trying to cast ability, false if already casted, waiting, or not ability is configured
+     */
+    boolean isCastingAbility();
+
+    /**
+     * If the attacker's current target is an {@link eu.darkbot.api.game.entities.Npc} this acts as a proxy to
+     * {@link Npc#getInfo()}'s {@link NpcInfo#hasExtraFlag(Enum)} method.
+     * If the target is not an {@link eu.darkbot.api.game.entities.Npc} this will return false.
+     *
+     * @param flag The flag to check
+     * @return true if the target is an npc and has the flag enabled, false otherwise
+     */
+    default boolean hasExtraFlag(Enum<?> flag) {
+        Lockable target = getTarget();
+        return target instanceof Npc && ((Npc) target).getInfo().hasExtraFlag(flag);
+    }
+
+    /**
+     * Equivalent to calling {@link #setTarget(Lockable)} with null.
+     * Additionally, if the target supports blacklisting (currently {@link Ship} &amp; its children support it),
+     * it will call {@link Ship#setBlacklisted(long)}.
+     *
+     * @param millis how long to blacklist the target for. Ignored if the target is not a {@link Ship}
+     * @see Ship#setBlacklisted(long)
+     */
+    default void setBlacklisted(long millis) {
+        Lockable target = getTarget();
+        setTarget(null);
+        if (target instanceof Ship) ((Ship) target).setBlacklisted(millis);
+    }
+
 }
