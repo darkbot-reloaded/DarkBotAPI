@@ -35,9 +35,9 @@ public interface AttackAPI extends API.Singleton {
     /**
      * @return result of {@link #getTarget()} method cast to given type if possible, null otherwise
      */
-    default <T extends Lockable> Optional<T> getTargetAs(Class<T> type) {
+    default <T extends Lockable> T getTargetAs(Class<T> type) {
         Lockable target = getTarget();
-        return type.isInstance(target) ? Optional.of(type.cast(target)) : Optional.empty();
+        return type.isInstance(target) ? type.cast(target) : null;
     }
 
     /**

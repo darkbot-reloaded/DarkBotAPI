@@ -15,9 +15,9 @@ public interface Attacker extends Lockable {
      */
     @Nullable Entity getTarget();
 
-    default <T extends Entity> Optional<T> getTargetAs(Class<T> type) {
+    default <T extends Entity> @Nullable T getTargetAs(Class<T> type) {
         Entity target = getTarget();
-        return type.isInstance(target) ? Optional.of(type.cast(target)) : Optional.empty();
+        return type.isInstance(target) ? type.cast(target) : null;
     }
 
     /**

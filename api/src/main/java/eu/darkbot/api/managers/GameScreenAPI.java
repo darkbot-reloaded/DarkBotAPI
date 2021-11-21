@@ -3,6 +3,7 @@ package eu.darkbot.api.managers;
 import eu.darkbot.api.API;
 import eu.darkbot.api.game.other.Area;
 import eu.darkbot.api.game.other.Gui;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -26,6 +27,13 @@ public interface GameScreenAPI extends API.Singleton {
      * @return {@link Collection} of in-game guis
      */
     Collection<? extends Gui> getGuis();
+
+    /**
+     * Get a specific gui by its in-game registered key
+     * @param key the in-game key for the gui
+     * @return the gui if registered to the bot, null otherwise
+     */
+    @Nullable Gui getGui(String key);
 
     /**
      * @return in-game FPS.

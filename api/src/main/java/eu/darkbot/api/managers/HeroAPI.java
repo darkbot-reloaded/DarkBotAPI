@@ -7,6 +7,7 @@ import eu.darkbot.api.game.entities.Ship;
 import eu.darkbot.api.game.items.Item;
 import eu.darkbot.api.game.items.SelectableItem;
 import eu.darkbot.api.game.other.GameMap;
+import eu.darkbot.api.game.other.Lockable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,6 +24,20 @@ public interface HeroAPI extends Ship, API.Singleton {
      * @return current {@link GameMap} the hero is in
      */
     GameMap getMap();
+
+    /**
+     * Get the current local target the bot is using
+     *
+     * The local target represents an entity that the bot current module is
+     * trying to, or successfully, targeting and attacking.
+     */
+    @Nullable Lockable getLocalTarget();
+
+    /**
+     * @param target the local target to use
+     * @see #getLocalTarget
+     */
+    void setLocalTarget(@Nullable Lockable target);
 
     /**
      * @return current used {@link Configuration}

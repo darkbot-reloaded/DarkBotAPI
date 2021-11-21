@@ -35,6 +35,7 @@ description = "darkbot-common"
 version = findProperty("api_version") as String
 
 dependencies {
+    implementation(project(":darkbot-util"))
     implementation(project(":darkbot-api"))
     implementation(project(":darkbot-shared"))
 }

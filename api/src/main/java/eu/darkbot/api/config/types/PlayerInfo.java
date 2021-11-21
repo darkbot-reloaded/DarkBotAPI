@@ -18,6 +18,13 @@ public interface PlayerInfo {
     String getUsername();
 
     /**
+     * If the username is known, you may set it via this method.
+     *
+     * @param username the username to set for the user
+     */
+    void setUsername(String username);
+
+    /**
      * @return the user id for this player
      */
     int getUserId();

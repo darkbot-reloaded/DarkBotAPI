@@ -44,6 +44,11 @@ public interface SafetyInfo extends Locatable {
     RunMode getRunMode();
 
     /**
+     * @param runMode the new run mode to use
+     */
+    void setRunMode(RunMode runMode);
+
+    /**
      * @return the defined {@link JumpMode} for portals, null otherwise
      */
     @Nullable JumpMode getJumpMode();

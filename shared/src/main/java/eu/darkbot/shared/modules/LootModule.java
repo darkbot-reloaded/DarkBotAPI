@@ -242,7 +242,7 @@ public class LootModule implements Module {
     }
 
     protected Npc closestNpc(Locatable location) {
-        Npc target = attack.getTargetAs(Npc.class).orElse(null);
+        Npc target = attack.getTargetAs(Npc.class);
         int extraPriority = target != null && (hero.getTarget() == target || hero.distanceTo(target) < 600)
                 ? 20 - (int) (target.getHealth().hpPercent() * 10) : 0;
 

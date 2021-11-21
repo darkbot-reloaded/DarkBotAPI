@@ -13,8 +13,8 @@ import eu.darkbot.api.utils.Inject;
 @Feature(name = "Kill & Collect", description = "Kills npcs and collects resources at the same time.")
 public class LootCollectorModule implements Module {
 
-    protected final LootModule loot;
-    protected final CollectorModule collector;
+    protected LootModule loot;
+    protected CollectorModule collector;
     protected final PetAPI pet;
     protected final HeroAPI hero;
     protected final MovementAPI movement;
