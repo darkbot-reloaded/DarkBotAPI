@@ -3,7 +3,7 @@ package eu.darkbot.api.managers;
 import eu.darkbot.api.API;
 import eu.darkbot.api.config.types.ShipMode;
 import eu.darkbot.api.game.entities.Npc;
-import eu.darkbot.api.game.entities.Ship;
+import eu.darkbot.api.game.entities.Player;
 import eu.darkbot.api.game.items.Item;
 import eu.darkbot.api.game.items.SelectableItem;
 import eu.darkbot.api.game.other.GameMap;
@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
  * Represents the in-game hero (your ship), provides methods to manage
  * hero mode (attacking, running) &amp; change formations or configuration.
  */
-public interface HeroAPI extends Ship, API.Singleton {
+public interface HeroAPI extends Player, API.Singleton {
 
     /**
      * Get the current map the hero is in.

@@ -4,6 +4,7 @@ import eu.darkbot.api.PluginAPI;
 import eu.darkbot.api.extensions.Feature;
 import eu.darkbot.api.extensions.Module;
 import eu.darkbot.api.game.entities.Box;
+import eu.darkbot.api.game.entities.Player;
 import eu.darkbot.api.game.entities.Portal;
 import eu.darkbot.api.game.entities.Ship;
 import eu.darkbot.api.game.enums.EntityEffect;
@@ -47,7 +48,7 @@ public class CollectorModule implements Module {
     protected final SafetyFinder safetyFinder;
 
     protected final Collection<? extends Box> boxes;
-    protected final Collection<? extends Ship> ships;
+    protected final Collection<? extends Player> ships;
     protected final Collection<? extends Portal> portals;
 
     public Box currentBox;

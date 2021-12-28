@@ -2,16 +2,7 @@ package eu.darkbot.api.managers;
 
 import eu.darkbot.api.API;
 import eu.darkbot.api.events.Event;
-import eu.darkbot.api.game.entities.BattleStation;
-import eu.darkbot.api.game.entities.Box;
-import eu.darkbot.api.game.entities.Entity;
-import eu.darkbot.api.game.entities.Mine;
-import eu.darkbot.api.game.entities.Npc;
-import eu.darkbot.api.game.entities.Ore;
-import eu.darkbot.api.game.entities.Pet;
-import eu.darkbot.api.game.entities.Portal;
-import eu.darkbot.api.game.entities.Ship;
-import eu.darkbot.api.game.entities.Station;
+import eu.darkbot.api.game.entities.*;
 import eu.darkbot.api.game.other.Obstacle;
 import org.jetbrains.annotations.UnmodifiableView;
 
@@ -47,7 +38,7 @@ public interface EntitiesAPI extends API.Singleton {
      * @see Ship
      */
     @UnmodifiableView
-    Collection<? extends Ship> getPlayers();
+    Collection<? extends Player> getPlayers();
 
     /**
      * @return All other players or pets visible on the map.
