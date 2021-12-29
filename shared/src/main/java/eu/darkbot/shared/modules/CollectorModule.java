@@ -53,7 +53,7 @@ public class CollectorModule implements Module {
     public Box currentBox;
     protected long refreshing;
 
-    private long invisibleUntil, waitingUntil;
+    protected long invisibleUntil, waitingUntil;
 
     public CollectorModule(PluginAPI api) {
         this(api, api.requireAPI(BotAPI.class),
