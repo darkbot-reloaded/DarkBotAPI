@@ -3,7 +3,6 @@ package eu.darkbot.shared.modules;
 import eu.darkbot.api.PluginAPI;
 import eu.darkbot.api.config.ConfigSetting;
 import eu.darkbot.api.config.types.NpcExtraFlag;
-import eu.darkbot.api.config.types.NpcInfo;
 import eu.darkbot.api.extensions.Feature;
 import eu.darkbot.api.extensions.Module;
 import eu.darkbot.api.game.entities.Npc;
@@ -14,15 +13,19 @@ import eu.darkbot.api.game.other.Locatable;
 import eu.darkbot.api.game.other.Location;
 import eu.darkbot.api.game.other.Lockable;
 import eu.darkbot.api.game.other.Movable;
-import eu.darkbot.api.managers.*;
+import eu.darkbot.api.managers.AttackAPI;
+import eu.darkbot.api.managers.BotAPI;
+import eu.darkbot.api.managers.ConfigAPI;
+import eu.darkbot.api.managers.EntitiesAPI;
+import eu.darkbot.api.managers.HeroAPI;
+import eu.darkbot.api.managers.MovementAPI;
+import eu.darkbot.api.managers.PetAPI;
+import eu.darkbot.api.managers.StarSystemAPI;
 import eu.darkbot.api.utils.Inject;
 import eu.darkbot.shared.utils.SafetyFinder;
 
 import java.util.Collection;
 import java.util.Comparator;
-
-import static java.lang.Double.min;
-import static java.lang.Math.random;
 
 @Feature(name = "Npc Killer", description = "Npc-only module. Will never pick up resources.")
 public class LootModule implements Module {
@@ -196,14 +199,14 @@ public class LootModule implements Module {
                 setConfig(direction);
                 return;
             }
-            distance = minRad + random() * (radius - minRad - 10);
-            angleDiff = (random() * 0.1) - 0.05;
+            distance = minRad + Math.random() * (radius - minRad - 10);
+            angleDiff = (Math.random() * 0.1) - 0.05;
         } else {
             double maxRadFix = radius / 2,
                     radiusFix = (int) Math.max(Math.min(radius - distance, maxRadFix), -maxRadFix);
             distance = (radius += radiusFix);
             // Moved distance + speed - distance to chosen radius same angle, divided by radius
-            angleDiff = Math.max((hero.getSpeed() * 0.625) + (min(200, speed) * 0.625)
+            angleDiff = Math.max((hero.getSpeed() * 0.625) + (Math.max(200, speed) * 0.625)
                     - hero.distanceTo(Location.of(targetLoc, angle, radius)), 0) / radius;
         }
         direction = getBestDir(targetLoc, angle, angleDiff, distance);
