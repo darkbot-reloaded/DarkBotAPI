@@ -1,9 +1,13 @@
 package eu.darkbot.api.game.items;
 
+import eu.darkbot.api.config.annotations.Configuration;
 import eu.darkbot.api.game.enums.PetGear;
 import eu.darkbot.api.managers.HeroItemsAPI;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -37,6 +41,7 @@ public interface SelectableItem {
     /**
      * In-game laser ammo items that can be shot
      */
+    @Configuration("items.lasers")
     enum Laser implements SelectableItem {
         LCB_10,
         MCB_25,
@@ -48,14 +53,14 @@ public interface SelectableItem {
         JOB_100,
         RB_214,
         PIB_100,
-        SPACECUP_GROUP_A("ammunition_laser_spacecup_group-a"),
-        SPACECUP_GROUP_B("ammunition_laser_spacecup_group-b"),
-        SPACECUP_GROUP_C("ammunition_laser_spacecup_group-c"),
-        SPACECUP_GROUP_D("ammunition_laser_spacecup_group-d"),
-        SPACECUP_GROUP_E("ammunition_laser_spacecup_group-e"),
-        SPACECUP_GROUP_F("ammunition_laser_spacecup_group-f"),
-        SPACECUP_GROUP_G("ammunition_laser_spacecup_group-g"),
-        SPACECUP_GROUP_H("ammunition_laser_spacecup_group-h"),
+        CC_A("ammunition_laser_spacecup_group-a"),
+        CC_B("ammunition_laser_spacecup_group-b"),
+        CC_C("ammunition_laser_spacecup_group-c"),
+        CC_D("ammunition_laser_spacecup_group-d"),
+        CC_E("ammunition_laser_spacecup_group-e"),
+        CC_F("ammunition_laser_spacecup_group-f"),
+        CC_G("ammunition_laser_spacecup_group-g"),
+        CC_H("ammunition_laser_spacecup_group-h"),
         A_BL,
         RCB_140(true),
         IDB_125,
@@ -113,6 +118,7 @@ public interface SelectableItem {
     /**
      * In-game rocket items that are fired regularly
      */
+    @Configuration("items.rockets")
     enum Rocket implements SelectableItem {
         R_310,
         PLT_2026,
@@ -171,6 +177,7 @@ public interface SelectableItem {
     /**
      * In-game rocket items that are fired using a rocket launcher
      */
+    @Configuration("items.rocket_launchers")
     enum RocketLauncher implements SelectableItem {
         /**
          * The actual rocket launcher item, used to launch the rockets
@@ -226,6 +233,7 @@ public interface SelectableItem {
     /**
      * Represents special items in-game, like smart-bomb, insta-shield or EMP.
      */
+    @Configuration("items.special")
     enum Special implements SpecialItem {
         SMB_01("ammunition_mine_smb-01"),
         ISH_01("equipment_extra_cpu_ish-01"),
@@ -246,6 +254,7 @@ public interface SelectableItem {
     /**
      * In-game firework items, as well as the firework ignite action
      */
+    @Configuration("items.fireworks")
     enum Firework implements SpecialItem {
         FWX_S,
         FWX_M,
@@ -270,6 +279,7 @@ public interface SelectableItem {
     /**
      * In-game user-activated emote items
      */
+    @Configuration("items.emotes")
     enum Emote implements SpecialItem {
         ALIEN_ANGRY,
         ALIEN_CRY,
@@ -318,6 +328,7 @@ public interface SelectableItem {
     /**
      * In-game user-activated sprite items
      */
+    @Configuration("items.sprays")
     enum Spray implements SpecialItem {
         CROSS,
         HEARTS,
@@ -364,6 +375,7 @@ public interface SelectableItem {
     /**
      * In-game mine items that can be laid down on the map
      */
+    @Configuration("items.mines")
     enum Mine implements SelectableItem {
         ACM_01,
         EMPM_01,
@@ -410,6 +422,7 @@ public interface SelectableItem {
     /**
      * In-game CPU items that can be activated
      */
+    @Configuration("items.cpus")
     enum Cpu implements SelectableItem {
         /** CPU increasing hit chance, costs {@link eu.darkbot.api.managers.OreAPI.Ore#XENOMIT} to run */
         AIM(CpuType.CPU),
@@ -482,6 +495,7 @@ public interface SelectableItem {
     /**
      * In-game auto-buy actions
      */
+    @Configuration("items.auto_buy")
     enum AutoBuy implements SelectableItem {
         LCB_10,
         MCB_25,
@@ -519,6 +533,7 @@ public interface SelectableItem {
     /**
      * In-game nano-factory tech items
      */
+    @Configuration("items.techs")
     enum Tech implements SelectableItem {
         ENERGY_LEECH,
         CHAIN_IMPULSE,
@@ -556,6 +571,7 @@ public interface SelectableItem {
     /**
      * In-game ship abilities, what ships can use each will differ.
      */
+    @Configuration("items.abilities")
     enum Ability implements SelectableItem {
         SPEARHEAD_ULTIMATE_CLOAK,
         SPEARHEAD_JAM_X,
@@ -629,6 +645,7 @@ public interface SelectableItem {
     /**
      * In-game drone formations
      */
+    @Configuration("items.formations")
     enum Formation implements SelectableItem {
 
         /**
@@ -740,6 +757,7 @@ public interface SelectableItem {
      * In-game hot bar selectable {@link PetGear}.
      * Note that not all gears are available here to use as items.
      */
+    @Configuration("items.pet")
     enum Pet implements SelectableItem {
         /** Enables {@link PetGear#MEGA_MINE} gear */
         G_MM1(PetGear.MEGA_MINE),
