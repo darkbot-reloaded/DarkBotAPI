@@ -7,7 +7,7 @@ import java.net.URL;
 /**
  * The information of a plugin, usually specified in a plugin.json file inside the jar
  */
-public interface PluginInfo {
+public interface PluginInfo extends IssueHandler {
 
     /**
      * Used as both an identifier and the base for features &amp; resources
