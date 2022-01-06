@@ -8,6 +8,7 @@ import eu.darkbot.api.game.other.GameMap;
 import java.util.Collection;
 import java.util.Map;
 
+@Deprecated
 public interface Config {
 
     /**

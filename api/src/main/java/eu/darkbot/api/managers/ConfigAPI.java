@@ -3,6 +3,8 @@ package eu.darkbot.api.managers;
 import eu.darkbot.api.API;
 import eu.darkbot.api.config.ConfigSetting;
 import eu.darkbot.api.config.legacy.Config;
+import eu.darkbot.api.config.types.BoxInfo;
+import eu.darkbot.api.config.types.NpcInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -161,4 +163,19 @@ public interface ConfigAPI extends API.Singleton {
         return null;
     }
 
+    /**
+     * Will get or create BoxInfo with given box name
+     *
+     * @param name of the box
+     * @return BoxInfo of given box name
+     */
+    BoxInfo getOrCreateBoxInfo(String name);
+
+    /**
+     * Will get or create NpcInfo with given npc name
+     *
+     * @param name of the npc
+     * @return NpcInfo of given npc name
+     */
+    NpcInfo getOrCreateNpcInfo(String name);
 }
