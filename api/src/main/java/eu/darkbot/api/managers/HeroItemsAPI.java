@@ -89,6 +89,22 @@ public interface HeroItemsAPI extends API.Singleton {
     @Nullable Item getItem(Character keyBind, @NotNull ItemCategory itemCategory);
 
     /**
+     * Find the item corresponding to a user set keyBind
+     *
+     * @param keyBind the character to press
+     * @param category to search for item
+     * @param type the type of item to return
+     * @return the item belonging to the keyBind, or empty optional if no item is mapped to that key
+     *
+     * @deprecated You should ask the user for SelectableItem directly, instead of asking for keyBind and transforming
+     */
+    @Deprecated
+    default <T extends Enum<T> & SelectableItem> Optional<T> getItem(Character keyBind, ItemCategory category, Class<T> type) {
+        if (keyBind == null) return Optional.empty();
+        return Optional.ofNullable(getItem(keyBind, category)).map(item -> item.getAs(type));
+    }
+
+    /**
      * Find the keyBind to click to enable a certain item
      *
      * @param item the item to click
