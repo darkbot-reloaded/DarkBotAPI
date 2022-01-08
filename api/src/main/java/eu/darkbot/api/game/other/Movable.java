@@ -16,9 +16,18 @@ public interface Movable extends Entity {
     int getSpeed();
 
     /**
+     * Reads in-game angle which is, where entity looks at, not where it flies to.
+     *
      * @return angle of the {@link Movable} in-game as radians.
      */
     double getAngle();
+
+    /**
+     * Comparing with {@link Double#MIN_VALUE} means that angle was never updated.
+     *
+     * @return angle based on current position and destination
+     */
+    double getDestinationAngle();
 
     /**
      * @param other the other locatable to test against

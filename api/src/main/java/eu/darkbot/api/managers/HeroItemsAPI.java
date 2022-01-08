@@ -77,6 +77,18 @@ public interface HeroItemsAPI extends API.Singleton {
     @Nullable Item getItem(Character keyBind);
 
     /**
+     * Find the item corresponding to a user set keyBind in given item category
+     *
+     * @param keyBind the character to press
+     * @param itemCategory to search for item
+     * @return the item belonging to the keyBind, or null if no item is mapped to that key
+     *
+     * @deprecated You should ask the user for SelectableItem directly, instead of asking for keyBind and transforming
+     */
+    @Deprecated
+    @Nullable Item getItem(Character keyBind, @NotNull ItemCategory itemCategory);
+
+    /**
      * Find the keyBind to click to enable a certain item
      *
      * @param item the item to click

@@ -9,6 +9,7 @@ import eu.darkbot.api.game.entities.Mine;
 import eu.darkbot.api.game.entities.Npc;
 import eu.darkbot.api.game.entities.Ore;
 import eu.darkbot.api.game.entities.Pet;
+import eu.darkbot.api.game.entities.Player;
 import eu.darkbot.api.game.entities.Portal;
 import eu.darkbot.api.game.entities.Ship;
 import eu.darkbot.api.game.entities.Station;
@@ -47,7 +48,7 @@ public interface EntitiesAPI extends API.Singleton {
      * @see Ship
      */
     @UnmodifiableView
-    Collection<? extends Ship> getPlayers();
+    Collection<? extends Player> getPlayers();
 
     /**
      * @return All other players or pets visible on the map.

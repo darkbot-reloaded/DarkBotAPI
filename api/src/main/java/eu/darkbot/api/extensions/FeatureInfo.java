@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
  * The information about a feature provided by a plugin
  * @param <T> The type of the actual feature
  */
-public interface FeatureInfo<T> {
+public interface FeatureInfo<T> extends IssueHandler {
 
     /**
      * @return If this feature is currently enabled by the user, defaults to {@link Feature#enabledByDefault()}
