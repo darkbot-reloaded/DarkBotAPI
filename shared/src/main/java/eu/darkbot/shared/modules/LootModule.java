@@ -2,7 +2,7 @@ package eu.darkbot.shared.modules;
 
 import eu.darkbot.api.PluginAPI;
 import eu.darkbot.api.config.ConfigSetting;
-import eu.darkbot.api.config.types.NpcExtraFlag;
+import eu.darkbot.api.config.types.NpcFlag;
 import eu.darkbot.api.extensions.Feature;
 import eu.darkbot.api.extensions.Module;
 import eu.darkbot.api.game.entities.Npc;
@@ -155,7 +155,7 @@ public class LootModule implements Module {
                 attack.setBlacklisted(1000);
                 hero.setLocalTarget(null);
             }
-        } else if (!(attack.hasExtraFlag(NpcExtraFlag.IGNORE_OWNERSHIP) || target.isOwned())
+        } else if (!(attack.hasExtraFlag(NpcFlag.IGNORE_OWNERSHIP) || target.isOwned())
                 || attack.isBugged()
                 || (hero.distanceTo(target) > npcDistanceIgnore.getValue()) // Too far away from ship
                 || (closestDist > 650 && target.getHealth().hpPercent() > 0.90)   // Too far into obstacle and full hp
@@ -163,7 +163,7 @@ public class LootModule implements Module {
                 && (target.getHealth().shieldIncreasedIn(1000) || target.getHealth().shieldPercent() > 0.99))) {
             attack.setBlacklisted(5000);
             hero.setLocalTarget(null);
-        } else if (target.getEntityInfo().getUsername().contains("Invoke") && attack.hasExtraFlag(NpcExtraFlag.PASSIVE)
+        } else if (target.getEntityInfo().getUsername().contains("Invoke") && attack.hasExtraFlag(NpcFlag.PASSIVE)
                 && target == hero.getLocalTarget() && !attack.isCastingAbility()) {
             attack.setBlacklisted(600_000);
             hero.setLocalTarget(null);
@@ -187,7 +187,7 @@ public class LootModule implements Module {
         double angle = targetLoc.angleTo(hero);
         double radius = getRadius(target);
         double speed = target instanceof Movable ? ((Movable) target).getSpeed() : 0;
-        boolean noCircle = attack.hasExtraFlag(NpcExtraFlag.NO_CIRCLE);
+        boolean noCircle = attack.hasExtraFlag(NpcFlag.NO_CIRCLE);
 
         if (radius > 750) noCircle = false;
 
@@ -255,7 +255,7 @@ public class LootModule implements Module {
         for (Ship ship : this.ships) {
             if (!ship.isAttacking(npc)) continue;
 
-            if (!npc.getInfo().hasExtraFlag(NpcExtraFlag.IGNORE_ATTACKED)) npc.setBlacklisted(20_000);
+            if (!npc.getInfo().hasExtraFlag(NpcFlag.IGNORE_ATTACKED)) npc.setBlacklisted(20_000);
             return true;
         }
         return false;
@@ -281,10 +281,10 @@ public class LootModule implements Module {
     protected boolean shouldKill(Npc n) {
         boolean attacked = this.isAttackedByOthers(n);
         return n.getInfo().shouldKill() && !n.isBlacklisted() &&
-                (hero.hasEffect(EntityEffect.ENERGY_LEECH) || !n.getInfo().hasExtraFlag(NpcExtraFlag.LEECH_ONLY)) &&
-                (n.getInfo().hasExtraFlag(NpcExtraFlag.IGNORE_ATTACKED) || !attacked) && // Either ignore attacked, or not being attacked
-                (!n.getInfo().hasExtraFlag(NpcExtraFlag.ATTACK_SECOND) || attacked) &&   // Either don't want to attack second, or being attacked
+                (hero.hasEffect(EntityEffect.ENERGY_LEECH) || !n.getInfo().hasExtraFlag(NpcFlag.LEECH_ONLY)) &&
+                (n.getInfo().hasExtraFlag(NpcFlag.IGNORE_ATTACKED) || !attacked) && // Either ignore attacked, or not being attacked
+                (!n.getInfo().hasExtraFlag(NpcFlag.ATTACK_SECOND) || attacked) &&   // Either don't want to attack second, or being attacked
                 (n.getEntityInfo().getUsername().contains("Invoke")
-                        || !n.getInfo().hasExtraFlag(NpcExtraFlag.PASSIVE) || n.isAttacking(hero));
+                        || !n.getInfo().hasExtraFlag(NpcFlag.PASSIVE) || n.isAttacking(hero));
     }
 }

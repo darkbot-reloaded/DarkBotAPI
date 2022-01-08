@@ -2,7 +2,7 @@ package eu.darkbot.shared.modules;
 
 import eu.darkbot.api.PluginAPI;
 import eu.darkbot.api.config.ConfigSetting;
-import eu.darkbot.api.config.types.NpcExtraFlag;
+import eu.darkbot.api.config.types.NpcFlag;
 import eu.darkbot.api.extensions.Feature;
 import eu.darkbot.api.extensions.Module;
 import eu.darkbot.api.game.entities.Box;
@@ -63,7 +63,7 @@ public class LootCollectorModule implements Module {
 
                 if (box == null || !box.isValid()
                         || box.distanceTo(hero) > collectRadius.getValue()
-                        || (npc.getInfo().hasExtraFlag(NpcExtraFlag.IGNORE_BOXES)
+                        || (npc.getInfo().hasExtraFlag(NpcFlag.IGNORE_BOXES)
                         && npc.distanceTo(box) > Math.min(800, npc.getInfo().getRadius() * 2))
                         || npc.getHealth().hpPercent() < 0.25) {
                     loot.moveToAnSafePosition();

@@ -4,7 +4,7 @@ import eu.darkbot.api.config.annotations.Configuration;
 import eu.darkbot.api.extensions.NpcFlags;
 
 @Configuration("config.loot.npc_table.extra")
-public enum NpcExtraFlag implements NpcFlags<NpcExtraFlag> {
+public enum NpcFlag implements NpcFlags<NpcFlag> {
     NO_CIRCLE,
     IGNORE_OWNERSHIP,
     IGNORE_ATTACKED,
