@@ -81,7 +81,7 @@ public class GalaxyInfoImpl implements eu.darkbot.api.game.galaxy.GalaxyInfo {
 
     private void updateMultipliers(Element e) {
         XmlUtils.streamOf(e.getElementsByTagName("multiplier"))
-                .forEach(multiplier -> Optional.ofNullable(multiplier.getAttribute("mode"))
+                .forEach(multiplier -> Optional.of(multiplier.getAttribute("mode"))
                         .map(GalaxyGate::of)
                         .ifPresent(galaxyGate -> getGateInfo(galaxyGate).setMultiplier(XmlUtils.attrToInt(multiplier, "value"))));
     }
