@@ -4,6 +4,7 @@ import eu.darkbot.api.API;
 import eu.darkbot.api.extensions.Task;
 import eu.darkbot.util.TimeUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.UnknownNullability;
 
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -18,12 +19,22 @@ import java.util.Optional;
  */
 public interface BackpageAPI extends API.Singleton {
 
+    /**
+     * Check if any instance connection can be made,
+     * however this doesn't ensure you that SID is valid/alive
+     *
+     * @return true if sid and instance uri are usable
+     */
+    boolean isInstanceValid();
+
+    @UnknownNullability("Check #isInstanceValid")
     String getSid();
 
     /**
      * Returns instance {@link URI}
      * for example: {@code https://int1.darkorbit.com/}
      */
+    @UnknownNullability("Check #isInstanceValid")
     URI getInstanceURI();
 
     /**

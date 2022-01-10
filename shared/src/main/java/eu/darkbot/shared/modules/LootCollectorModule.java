@@ -7,7 +7,11 @@ import eu.darkbot.api.extensions.Feature;
 import eu.darkbot.api.extensions.Module;
 import eu.darkbot.api.game.entities.Box;
 import eu.darkbot.api.game.entities.Npc;
-import eu.darkbot.api.managers.*;
+import eu.darkbot.api.managers.ConfigAPI;
+import eu.darkbot.api.managers.HeroAPI;
+import eu.darkbot.api.managers.I18nAPI;
+import eu.darkbot.api.managers.MovementAPI;
+import eu.darkbot.api.managers.PetAPI;
 import eu.darkbot.api.utils.Inject;
 
 @Feature(name = "Kill & Collect", description = "Kills npcs and collects resources at the same time.")
@@ -25,9 +29,6 @@ public class LootCollectorModule implements Module {
     public LootCollectorModule(PluginAPI api) {
         this(api.requireInstance(LootModule.class),
                 api.requireInstance(CollectorModule.class),
-                api.requireAPI(PetAPI.class),
-                api.requireAPI(HeroAPI.class),
-                api.requireAPI(MovementAPI.class),
                 api.requireAPI(ConfigAPI.class),
                 api.requireAPI(I18nAPI.class));
     }
@@ -35,16 +36,13 @@ public class LootCollectorModule implements Module {
     @Inject
     public LootCollectorModule(LootModule loot,
                                CollectorModule collector,
-                               PetAPI pet,
-                               HeroAPI hero,
-                               MovementAPI movement,
                                ConfigAPI config,
                                I18nAPI i18n) {
         this.loot = loot;
         this.collector = collector;
-        this.pet = pet;
-        this.hero = hero;
-        this.movement = movement;
+        this.pet = loot.pet;
+        this.hero = loot.hero;
+        this.movement = loot.movement;
         this.i18n = i18n;
 
         this.collectRadius = config.requireConfig("collect.radius");

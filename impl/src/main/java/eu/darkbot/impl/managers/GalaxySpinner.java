@@ -70,7 +70,7 @@ public class GalaxySpinner implements GalaxySpinnerAPI {
     }
 
     private Boolean handleRequest(String params, int expiryTime, int minWait) {
-        if (System.currentTimeMillis() <= lastUpdate + expiryTime) return null;
+        if (!backpage.isInstanceValid() || System.currentTimeMillis() <= lastUpdate + expiryTime) return null;
         try {
             Document document = getDocument(backpage.getConnection(params, minWait));
             if (document == null) return false;

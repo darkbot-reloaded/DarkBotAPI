@@ -1,16 +1,17 @@
 package eu.darkbot.shared.modules;
 
 import eu.darkbot.api.PluginAPI;
+import eu.darkbot.api.config.ConfigSetting;
 import eu.darkbot.api.extensions.Feature;
 import eu.darkbot.api.extensions.Module;
 import eu.darkbot.api.game.entities.Box;
 import eu.darkbot.api.game.entities.Player;
 import eu.darkbot.api.game.entities.Portal;
-import eu.darkbot.api.game.entities.Ship;
 import eu.darkbot.api.game.enums.EntityEffect;
 import eu.darkbot.api.game.items.ItemFlag;
 import eu.darkbot.api.game.items.SelectableItem;
 import eu.darkbot.api.game.other.GameMap;
+import eu.darkbot.api.game.other.Locatable;
 import eu.darkbot.api.game.other.Location;
 import eu.darkbot.api.managers.BotAPI;
 import eu.darkbot.api.managers.ConfigAPI;
@@ -39,17 +40,22 @@ public class CollectorModule implements Module {
     protected final BotAPI bot;
     protected final PetAPI pet;
     protected final HeroAPI hero;
-    protected final StarSystemAPI star;
     protected final StatsAPI stats;
-    protected final ConfigAPI config;
     protected final MovementAPI movement;
-    protected final HeroItemsAPI heroItems;
+    protected final HeroItemsAPI items;
+    protected final StarSystemAPI starSystem;
 
     protected final SafetyFinder safetyFinder;
 
     protected final Collection<? extends Box> boxes;
-    protected final Collection<? extends Player> ships;
+    protected final Collection<? extends Player> players;
     protected final Collection<? extends Portal> portals;
+
+    protected final ConfigSetting<GameMap> workingMap;
+    protected final ConfigSetting<Boolean> autoCloak;
+    protected final ConfigSetting<Integer> rememberEnemiesFor;
+    protected final ConfigSetting<Boolean> stayAwayFromEnemies;
+    protected final ConfigSetting<Boolean> ignoreContestedBoxes;
 
     public Box currentBox;
     protected long refreshing;
@@ -60,12 +66,12 @@ public class CollectorModule implements Module {
         this(api, api.requireAPI(BotAPI.class),
                 api.requireAPI(PetAPI.class),
                 api.requireAPI(HeroAPI.class),
-                api.requireAPI(StarSystemAPI.class),
                 api.requireAPI(StatsAPI.class),
                 api.requireAPI(ConfigAPI.class),
                 api.requireAPI(MovementAPI.class),
                 api.requireAPI(HeroItemsAPI.class),
                 api.requireAPI(EntitiesAPI.class),
+                api.requireAPI(StarSystemAPI.class),
                 api.requireInstance(SafetyFinder.class));
     }
 
@@ -74,28 +80,33 @@ public class CollectorModule implements Module {
                            BotAPI bot,
                            PetAPI pet,
                            HeroAPI hero,
-                           StarSystemAPI star,
                            StatsAPI stats,
                            ConfigAPI config,
                            MovementAPI movement,
-                           HeroItemsAPI heroItems,
+                           HeroItemsAPI items,
                            EntitiesAPI entities,
+                           StarSystemAPI starSystem,
                            SafetyFinder safetyFinder) {
         this.api = api;
         this.bot = bot;
         this.pet = pet;
         this.hero = hero;
-        this.star = star;
         this.stats = stats;
-        this.config = config;
-        this.heroItems = heroItems;
+        this.items = items;
         this.movement = movement;
+        this.starSystem = starSystem;
 
         this.boxes = entities.getBoxes();
-        this.ships = entities.getPlayers();
+        this.players = entities.getPlayers();
         this.portals = entities.getPortals();
 
         this.safetyFinder = safetyFinder;
+
+        this.workingMap = config.requireConfig("general.working_map");
+        this.autoCloak = config.requireConfig("collect.auto_cloack");
+        this.rememberEnemiesFor = config.requireConfig("general.running.remember_enemies_for");
+        this.stayAwayFromEnemies = config.requireConfig("collect.stay_away_from_enemies");
+        this.ignoreContestedBoxes = config.requireConfig("collect.ignore_contested_boxes");
     }
 
     @Override
@@ -139,8 +150,8 @@ public class CollectorModule implements Module {
     }
 
     protected boolean checkMap() {
-        GameMap map;
-        if (!portals.isEmpty() && (map = config.getLegacy().getGeneral().getWorkingMap()) != star.getCurrentMap()) {
+        GameMap map = workingMap.getValue();
+        if (!portals.isEmpty() && map != starSystem.getCurrentMap()) {
             this.bot.setModule(api.requireInstance(MapModule.class)).setTarget(map);
             return false;
         }
@@ -153,7 +164,7 @@ public class CollectorModule implements Module {
                 .stream()
                 .filter(this::canCollect)
                 .min(Comparator.<Box>comparingInt(b -> b.getInfo().getPriority())
-                        .thenComparingDouble(hero.getLocationInfo()::distanceTo)).orElse(null);
+                        .thenComparingDouble(hero::distanceTo)).orElse(null);
 
         this.currentBox = currentBox == null || best == null || currentBox.isCollected() || isBetter(best)
                 ? best : currentBox;
@@ -177,13 +188,11 @@ public class CollectorModule implements Module {
     }
 
     protected void collectBox() {
-
-        double distance = hero.getLocationInfo().distanceTo(currentBox);
+        double distance = hero.distanceTo(currentBox);
 
         if (distance < 200) {
             //movement.stop(false);
-            if (!hero.hasEffect(EntityEffect.BOX_COLLECTING)
-                    || hero.getLocationInfo().distanceTo(currentBox) == 0)
+            if (!hero.hasEffect(EntityEffect.BOX_COLLECTING) || hero.distanceTo(currentBox) == 0)
                 currentBox.tryCollect();
             else return;
 
@@ -197,23 +206,23 @@ public class CollectorModule implements Module {
     }
 
     protected void checkDangerous() {
-        if (config.getLegacy().getCollect().getStayAwayFromEnemies()) {
-            Location dangerous = findClosestEnemyAndAddToDangerousList();
+        if (stayAwayFromEnemies.getValue()) {
+            Player dangerous = findClosestEnemyAndAddToDangerousList();
             if (dangerous != null) stayAwayFromLocation(dangerous);
         }
     }
 
     public void checkInvisibility() {
-        if (config.getLegacy().getCollect().getAutoCloak()
+        if (autoCloak.getValue()
                 && !hero.isInvisible()
-                && System.currentTimeMillis() - invisibleUntil > 60000) {
+                && System.currentTimeMillis() - invisibleUntil > 30_000) {
 
-            heroItems.useItem(SelectableItem.Cpu.CL04K, ItemFlag.POSITIVE_QUANTITY)
+            items.useItem(SelectableItem.Cpu.CL04K, ItemFlag.POSITIVE_QUANTITY)
                     .ifSuccessful(r -> invisibleUntil = System.currentTimeMillis());
         }
     }
 
-    protected void stayAwayFromLocation(Location awayLocation) {
+    protected void stayAwayFromLocation(Locatable awayLocation) {
         double angle = awayLocation.angleTo(hero);
         double moveDistance = hero.getSpeed();
         double distance = DISTANCE_FROM_DANGEROUS + 100;
@@ -230,28 +239,27 @@ public class CollectorModule implements Module {
         movement.moveTo(target);
     }
 
-    protected Location findClosestEnemyAndAddToDangerousList() {
-        return ships.stream()
+    protected Player findClosestEnemyAndAddToDangerousList() {
+        return players.stream()
                 .filter(s -> s.getEntityInfo().isEnemy() && !s.isInvisible() && s.distanceTo(hero) < DISTANCE_FROM_DANGEROUS)
                 .peek(s -> {
                     if (!s.isBlacklisted() && s.isAttacking(hero))
-                        s.setBlacklisted(config.getLegacy().getGeneral().getRunning().getEnemyRemember().toMillis());
+                        s.setBlacklisted(rememberEnemiesFor.getValue());
                 })
-                .map(Ship::getLocationInfo)
-                .min(Comparator.comparingDouble(location -> location.distanceTo(hero)))
+                .min(Comparator.comparingDouble(player -> player.distanceTo(hero)))
                 .orElse(null);
     }
 
     private boolean isBetter(Box box) {
-        double currentDistance = currentBox.getLocationInfo().distanceTo(hero);
-        return currentDistance > 100 && currentDistance - 150 > box.getLocationInfo().distanceTo(hero);
+        double currentDistance = currentBox.distanceTo(hero);
+        return currentDistance > 100 && currentDistance - 150 > box.distanceTo(hero);
     }
 
     protected boolean isContested(Box box) {
-        if (!config.getLegacy().getCollect().getIgnoreContestedBoxes()) return false;
+        if (!ignoreContestedBoxes.getValue()) return false;
 
         double heroTimeTo = hero.timeTo(box);
-        return ships.stream()
+        return players.stream()
                 .filter(ship -> ship.getDestination().isPresent())
                 .filter(ship -> ship.getDestination().get().distanceTo(box) == 0)
                 .anyMatch(ship -> heroTimeTo < ship.timeTo(box));

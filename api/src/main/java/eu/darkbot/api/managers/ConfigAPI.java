@@ -120,6 +120,7 @@ public interface ConfigAPI extends API.Singleton {
             if (root == null)
                 throw new IllegalArgumentException("Configuration not found: " + s + " in " + path);
         }
+        //noinspection unchecked
         return (ConfigSetting<T>) root;
     }
 

@@ -2,6 +2,8 @@ package eu.darkbot.api.managers;
 
 import eu.darkbot.api.API;
 
+import java.time.Duration;
+
 /**
  * Provides access to base statistics, like ping, level, running time, current/earned money etc.
  */
@@ -20,11 +22,6 @@ public interface StatsAPI extends API.Singleton {
     int getLevel();
 
     /**
-     * @return running time in milliseconds.
-     */
-    long getRunningTime();
-
-    /**
      * @return current amount of cargo
      */
     int getCargo();
@@ -33,6 +30,16 @@ public interface StatsAPI extends API.Singleton {
      * @return max amount of cargo
      */
     int getMaxCargo();
+
+    /**
+     * Will reset running time and earned values.
+     */
+    void resetStats();
+
+    /**
+     * @return running time in milliseconds.
+     */
+    Duration getRunningTime();
 
     /**
      * @return total amount of credits which hero currently have

@@ -9,7 +9,7 @@ import eu.darkbot.api.events.Event;
  *
  * @see EventBrokerAPI
  */
-public interface LogAPI extends API.Singleton {
+public interface GameLogAPI extends API.Singleton {
 
     class LogMessageEvent implements Event {
         private final String message;
