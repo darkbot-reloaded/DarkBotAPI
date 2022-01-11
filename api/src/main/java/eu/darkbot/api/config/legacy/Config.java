@@ -51,14 +51,4 @@ public interface Config {
      */
     void refreshPlayerList();
 
-    /**
-     * @return general configuration section with generic base configurations
-     */
-    General getGeneral();
-
-    /**
-     * @return collect configuration section with configurations about how to collect
-     */
-    Collect getCollect();
-
 }
