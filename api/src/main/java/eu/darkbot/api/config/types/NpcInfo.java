@@ -46,19 +46,9 @@ public interface NpcInfo {
     Optional<SelectableItem.Laser> getAmmo();
 
     /**
-     * Sets the type of ammo the ship will attack this npc with.
-     */
-    void setAmmo(SelectableItem.Laser ammo);
-
-    /**
      * @return The formation the user wants to use for this npc.
      */
     Optional<SelectableItem.Formation> getFormation();
-
-    /**
-     * Sets the formation the ship will use for this npc.
-     */
-    void setFormation(SelectableItem.Formation formation);
 
     /**
      * If the user has selected the additional configuration flag.
