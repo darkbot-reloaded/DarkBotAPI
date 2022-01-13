@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.HashMap;
@@ -123,9 +124,15 @@ public class I18n implements I18nAPI, Listener {
 
         private void loadResource(Properties props, URL resource) {
             if (resource == null) return;
-            try (InputStream is = resource.openStream();
-                 InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8)){
-                props.load(isr);
+            try {
+                // We must explicitly disable cache, as otherwise plugins will fail to unload.
+                URLConnection connection = resource.openConnection();
+                connection.setUseCaches(false);
+
+                try (InputStream is = connection.getInputStream();
+                     InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8)) {
+                    props.load(isr);
+                }
             } catch (IOException e) {
                 System.err.println("Failed to load translations: " + resource);
                 e.printStackTrace();
