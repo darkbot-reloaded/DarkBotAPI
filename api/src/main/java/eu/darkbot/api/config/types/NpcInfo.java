@@ -10,12 +10,30 @@ import java.util.Optional;
  */
 public interface NpcInfo {
 
+    /**
+     * Sets whether to kill the npc or not.
+     */
+    void setShouldKill(boolean shouldKill);
+
+    /**
+     * @return whether to kill the npc or not.
+     */
     boolean shouldKill();
+
+    /**
+     * Sets how important this box is to the collector, the lower number is more important
+     */
+    void setPriority(int priority);
 
     /**
      * @return How important this box is to the user, the lower number is more important
      */
     int getPriority();
+
+    /**
+     * Sets how far away the ship will stand from this npc, in in-game distance units
+     */
+    void setRadius(double radius);
 
     /**
      * @return How far away the user wants to stand from this npc, in in-game distance units
