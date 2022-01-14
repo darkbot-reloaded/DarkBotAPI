@@ -3,6 +3,8 @@ package eu.darkbot.api.managers;
 import eu.darkbot.api.API;
 import eu.darkbot.api.game.entities.Station;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.Locale;
 
@@ -38,12 +40,12 @@ public interface OreAPI extends API.Singleton {
      * Will either open or close the ore trade window based on the value of {@code show}
      *
      * @param show       true for showing ore trade window, false for closing ore trade window
-     * @param tradePoint the {@code BasePoint} of the ore trader base station
+     * @param tradePoint the {@code BasePoint} of the ore trader base station. For show(false) this is ignored.
      * @return true if ore trader window has been opened or closed and its animation is done,
      * false if animation is not done, or no action is needed to be taken
      * to change the visibility status of the ore trader window
      */
-    boolean showTrade(boolean show, @NotNull Station.Refinery tradePoint);
+    boolean showTrade(boolean show, @Nullable("if show == false") Station.Refinery tradePoint);
 
     /**
      * Types of Ores visible in refinery window
