@@ -1,13 +1,16 @@
 package eu.darkbot.shared.utils;
 
-import eu.darkbot.api.config.legacy.General;
+import eu.darkbot.api.config.ConfigSetting;
+import eu.darkbot.api.config.types.PercentRange;
 import eu.darkbot.api.config.types.SafetyInfo;
+import eu.darkbot.api.config.types.ShipMode;
 import eu.darkbot.api.events.EventHandler;
 import eu.darkbot.api.events.Listener;
 import eu.darkbot.api.game.entities.BattleStation;
 import eu.darkbot.api.game.entities.Entity;
 import eu.darkbot.api.game.entities.Portal;
 import eu.darkbot.api.game.entities.Ship;
+import eu.darkbot.api.game.items.SelectableItem;
 import eu.darkbot.api.game.other.GameMap;
 import eu.darkbot.api.game.other.Location;
 import eu.darkbot.api.managers.AttackAPI;
@@ -21,7 +24,6 @@ import eu.darkbot.api.managers.StarSystemAPI;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class SafetyFinder implements Listener {
@@ -33,8 +35,21 @@ public class SafetyFinder implements Listener {
     protected final StarSystemAPI starSystem;
 
     protected final ConfigAPI config;
-    protected final General.Safety SAFETY;
-    protected final General.Running RUNNING;
+
+    protected final ConfigSetting<PercentRange> repairHpRange;
+    protected final ConfigSetting<Double> repairRoamingHp;
+    protected final ConfigSetting<Double> repairToShield;
+    protected final ConfigSetting<ShipMode> repairMode;
+
+    protected final ConfigSetting<Boolean> runFromEnemy;
+    protected final ConfigSetting<Integer> rememberEnemySeconds;
+    protected final ConfigSetting<Boolean> runInSight;
+    protected final ConfigSetting<Boolean> stopRunningNoSight;
+    protected final ConfigSetting<Integer> maxSightDistance;
+    protected final ConfigSetting<Integer> runClosestDistance;
+    protected final ConfigSetting<Integer> shipAbilityMinDistance;
+    protected final ConfigSetting<Character> shipAbilityKey;
+
     protected final Collection<? extends Ship> ships;
 
     protected final MapTraveler mapTraveler;
@@ -84,8 +99,20 @@ public class SafetyFinder implements Listener {
         this.starSystem = starSystem;
 
         this.config = config;
-        this.SAFETY = config.getLegacy().getGeneral().getSafety();
-        this.RUNNING = config.getLegacy().getGeneral().getRunning();
+
+        this.repairHpRange = config.requireConfig("general.safety.repair_hp_range");
+        this.repairRoamingHp = config.requireConfig("general.safety.repair_hp_no_npc");
+        this.repairToShield = config.requireConfig("general.safety.repair_to_shield");
+        this.repairMode = config.requireConfig("general.safety.repair");
+
+        this.runFromEnemy = config.requireConfig("general.running.run_from_enemies");
+        this.rememberEnemySeconds = config.requireConfig("general.running.remember_enemies_for");
+        this.runInSight = config.requireConfig("general.running.run_from_enemies_sight");
+        this.stopRunningNoSight = config.requireConfig("general.running.stop_running_no_sight");
+        this.maxSightDistance = config.requireConfig("general.running.max_sight_distance");
+        this.runClosestDistance = config.requireConfig("general.running.run_furthest_port");
+        this.shipAbilityMinDistance = config.requireConfig("general.running.ship_ability_min");
+        this.shipAbilityKey = config.requireConfig("general.running.ship_ability");
 
         this.ships = entities.getShips();
 
@@ -208,9 +235,9 @@ public class SafetyFinder implements Listener {
     protected Escaping getEscape() {
         if (escape == Escaping.ENEMY || isUnderAttack()) return Escaping.ENEMY;
         if (escape == Escaping.WAITING) return Escaping.WAITING;
-        if ((escape == Escaping.SIGHT && !RUNNING.getStopRunning()) || hasEnemy()) return Escaping.SIGHT;
-        if (escape == Escaping.REPAIR || hero.getHealth().hpPercent() < SAFETY.getRepairHealthRange().getMin() ||
-                (hero.getHealth().hpPercent() < this.SAFETY.getRepairHealthNoNpc() &&
+        if ((escape == Escaping.SIGHT && !stopRunningNoSight.getValue()) || hasEnemy()) return Escaping.SIGHT;
+        if (escape == Escaping.REPAIR || hero.getHealth().hpPercent() < repairHpRange.getValue().getMin() ||
+                (hero.getHealth().hpPercent() < repairRoamingHp.getValue() &&
                         (!attacker.hasTarget() || attacker.getTarget().getHealth().hpPercent() > 0.9)))
             return Escaping.REPAIR;
         return refreshing ? Escaping.REFRESH : Escaping.NONE;
@@ -230,8 +257,8 @@ public class SafetyFinder implements Listener {
         SafetyInfo best = safeties.get(0);
 
         if (escape == Escaping.REPAIR || escape == Escaping.REFRESH ||
-                RUNNING.getRunClosestDistance() == 0 ||
-                best.getDistance() < RUNNING.getRunClosestDistance()) return best;
+                runClosestDistance.getValue() == 0 ||
+                best.getDistance() < runClosestDistance.getValue()) return best;
 
         List<Ship> enemies = ships.stream().filter(this::runFrom).collect(Collectors.toList());
 
@@ -253,36 +280,37 @@ public class SafetyFinder implements Listener {
     }
 
     protected void castDefensiveAbility() {
-        if (movement.getDistanceBetween(hero, movement.getDestination()) >= RUNNING.getShipAbilityMinDistance()) {
-            items.useItem(RUNNING.getShipAbility());
+        if (movement.getDistanceBetween(hero, movement.getDestination()) >= shipAbilityMinDistance.getValue()) {
+            SelectableItem item = items.getItem(shipAbilityKey.getValue());
+            if (item != null) items.useItem(item);
         }
     }
 
     protected boolean doneRepairing() {
-        if (!hero.isInMode(SAFETY.getRepairMode())
+        if (!hero.isInMode(repairMode.getValue())
                 && (hero.getHealth().hpIncreasedIn(1000) || hero.getHealth().hpPercent() == 1)
-                && (hero.getHealth().shieldDecreasedIn(1000) || hero.getHealth().shieldPercent() == 0)) hero.setMode(SAFETY.getRepairMode());
-        return this.hero.getHealth().shieldPercent() >= SAFETY.getRepairToShield() &&
-                hero.setMode(SAFETY.getRepairMode()) && this.hero.getHealth().hpPercent() >= SAFETY.getRepairHealthRange().getMax();
+                && (hero.getHealth().shieldDecreasedIn(1000) || hero.getHealth().shieldPercent() == 0)) hero.setMode(repairMode.getValue());
+        return this.hero.getHealth().shieldPercent() >= repairToShield.getValue() &&
+                hero.setMode(repairMode.getValue()) && this.hero.getHealth().hpPercent() >= repairHpRange.getValue().getMax();
     }
 
     protected boolean isUnderAttack() {
-        if (!RUNNING.getRunFromEnemies() && !RUNNING.getRunInSight()) return false;
+        if (!runFromEnemy.getValue() && !runInSight.getValue()) return false;
         return ships.stream().anyMatch(s -> s.getEntityInfo().isEnemy() && isAttackingOrBlacklisted(s));
     }
 
     protected boolean hasEnemy() {
-        if (!RUNNING.getRunFromEnemies() && !RUNNING.getRunInSight()) return false;
+        if (!runFromEnemy.getValue() && !runInSight.getValue()) return false;
         return ships.stream().anyMatch(this::runFrom);
     }
 
     protected boolean runFrom(Ship ship) {
         return ship.getEntityInfo().isEnemy() && (isAttackingOrBlacklisted(ship) ||
-                (RUNNING.getRunInSight() && ship.distanceTo(hero) < RUNNING.getMaxSightDistance()));
+                (runInSight.getValue() && ship.distanceTo(hero) < maxSightDistance.getValue()));
     }
 
     protected boolean isAttackingOrBlacklisted(Ship ship) {
-        if (ship.isAttacking(hero)) ship.setBlacklisted(RUNNING.getEnemyRemember().toMillis());
+        if (ship.isAttacking(hero)) ship.setBlacklisted(rememberEnemySeconds.getValue() * 1000L);
         return ship.isBlacklisted();
     }
 
