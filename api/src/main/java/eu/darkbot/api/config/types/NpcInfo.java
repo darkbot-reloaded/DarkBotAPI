@@ -17,6 +17,7 @@ public interface NpcInfo {
 
     /**
      * Sets whether to kill the npc or not.
+     * @param shouldKill whether to kill the npc or not
      */
     void setShouldKill(boolean shouldKill);
 
@@ -26,7 +27,8 @@ public interface NpcInfo {
     int getPriority();
 
     /**
-     * Sets how important this box is to the collector, the lower number is more important
+     * Sets how important this npc is, the lower number is more important
+     * @param priority what priority to assign to this npc
      */
     void setPriority(int priority);
 
@@ -37,6 +39,7 @@ public interface NpcInfo {
 
     /**
      * Sets how far away the ship will stand from this npc, in in-game distance units
+     * @param radius what to set the radius to
      */
     void setRadius(double radius);
 

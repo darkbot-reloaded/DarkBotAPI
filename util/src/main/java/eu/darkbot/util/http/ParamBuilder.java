@@ -114,7 +114,7 @@ public class ParamBuilder {
 
     /**
      * Creates a String of parameters from objects.
-     * Example: "key=value&anotherKey=anotherValue".
+     * Example: "key=value&amp;anotherKey=anotherValue".
      *
      * @return String of current parameters
      */

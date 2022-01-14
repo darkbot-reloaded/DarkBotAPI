@@ -16,6 +16,7 @@ public interface ThrowingFunction<T, R, E extends Throwable> {
      *
      * @param t the function argument
      * @return the function result
+     * @throws E if the function body throws an exception
      */
     R apply(T t) throws E;
 }

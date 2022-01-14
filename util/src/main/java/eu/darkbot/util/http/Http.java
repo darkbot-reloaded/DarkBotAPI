@@ -239,9 +239,11 @@ public class Http {
      *         }
      * }</pre>
      *
-     * @param function    function which will consume InputStream
-     * @param <R>         type of return
-     * @return <R> of your expression or null on exception.
+     * @param function function which will consume InputStream
+     * @param <R>      type of return
+     * @param <X>      type of exception
+     * @return the result of calling function with the input stream
+     * @throws X if your function throws an exception
      */
     @SuppressWarnings("unchecked")
     public <R, X extends Throwable> R consumeInputStream(ThrowingFunction<InputStream, R, X> function) throws X {
