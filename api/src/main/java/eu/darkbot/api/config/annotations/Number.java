@@ -24,4 +24,21 @@ public @interface Number {
      * @return how much should the value go up/down with a user click
      */
     double step() default 5;
+
+    /**
+     * Add a checkbox to be able to disable this field
+     */
+    @Target(ElementType.FIELD)
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface Disabled {
+        /**
+         * @return the value for the config if the checkbox is unchecked
+         */
+        double value() default -1;
+
+        /**
+         * @return the default value to show if the field is disabled
+         */
+        double def() default 0;
+    }
 }
