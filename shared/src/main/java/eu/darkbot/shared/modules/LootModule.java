@@ -280,7 +280,7 @@ public class LootModule implements Module {
 
     protected boolean shouldKill(Npc n) {
         boolean attacked = this.isAttackedByOthers(n);
-        return n.getInfo().shouldKill() && !n.isBlacklisted() &&
+        return n.getInfo().getShouldKill() && !n.isBlacklisted() &&
                 (hero.hasEffect(EntityEffect.ENERGY_LEECH) || !n.getInfo().hasExtraFlag(NpcFlag.LEECH_ONLY)) &&
                 (n.getInfo().hasExtraFlag(NpcFlag.IGNORE_ATTACKED) || !attacked) && // Either ignore attacked, or not being attacked
                 (!n.getInfo().hasExtraFlag(NpcFlag.ATTACK_SECOND) || attacked) &&   // Either don't want to attack second, or being attacked
