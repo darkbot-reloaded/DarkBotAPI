@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * Represents a setting that can be configured by the user
@@ -78,6 +79,33 @@ public interface ConfigSetting<T> {
      * @return the value handler for this config setting
      */
     ValueHandler<T> getHandler();
+
+    /**
+     * Get metadata from the value handler
+     *
+     * Shorthand for {@code getHandler().getMetadata(key)}
+     *
+     * @param key the key used for this data
+     * @param <V> the datatype for the data
+     * @return the metadata value for the key if present, null otherwise
+     */
+    default <V> @Nullable V getMetadata(String key) {
+        return getHandler().getMetadata(key);
+    }
+
+    /**
+     * Get metadata from the value handler, or create it if it doesn't exist
+     *
+     * Shorthand for {@code getHandler().getOrCreateMetadata(key, builder)}
+     *
+     * @param key the key used for this data
+     * @param builder the builder to generate the type of metadata
+     * @param <V> the datatype for the data
+     * @return the metadata value for the key if present, null otherwise
+     */
+    default <V> V getOrCreateMetadata(String key, Supplier<V> builder) {
+        return getHandler().getOrCreateMetadata(key, builder);
+    }
 
     /**
      * Config settings that are not leaf nodes of the tree, will implement the parent interface,
