@@ -7,6 +7,10 @@ import eu.darkbot.api.game.other.Movable;
  * In-game generic ship on the map, like players, npc, pets and more.
  */
 public interface Ship extends Attacker, Movable {
+    /**
+     * @return id of the ship type in-game
+     */
+    int getShipId();
 
     /**
      * @return true if ship is invisible/cloaked.
