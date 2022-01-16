@@ -26,6 +26,13 @@ allprojects {
     dependencies {
         compileOnly("org.jetbrains:annotations:22.0.0")
     }
+
+    val javadocOpts = tasks.javadoc.get().options as StandardJavadocDocletOptions
+    javadocOpts.addStringOption("Xdoclint:none", "-quiet") //no warnings about missing docs
+
+    tasks.withType(JavaCompile::class) {
+        options.isDeprecation = false // disable deprecation warnings
+    }
 }
 
 description = "darkbot-common"
