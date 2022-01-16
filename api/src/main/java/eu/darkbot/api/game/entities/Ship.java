@@ -7,6 +7,10 @@ import eu.darkbot.api.game.other.Movable;
  * In-game generic ship on the map, like players, npc, pets and more.
  */
 public interface Ship extends Attacker, Movable {
+    /**
+     * @return ship type in-game like `ship_venom_design_frozen`
+     */
+    String getShipType();
 
     /**
      * @return true if ship is invisible/cloaked.

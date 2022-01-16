@@ -18,7 +18,7 @@ public class XmlUtils {
 
     public static Integer attrToInt(Element e, String attr) {
         String value = e.getAttribute(attr);
-        return value == null || value.isEmpty() ? null : Integer.parseInt(value);
+        return value.isEmpty() ? null : Integer.parseInt(value);
     }
 
     public static Integer childValueToInt(Element e, String name) {

@@ -3,7 +3,7 @@ plugins {
     `maven-publish`
 }
 
-subprojects {
+allprojects {
     group = findProperty("api_group") as String
     version = findProperty("api_version") as String
 
@@ -18,9 +18,7 @@ subprojects {
     publishing {
         publications {
             create<MavenPublication>("maven") {
-                artifact(tasks.jar)
-                artifact(tasks["sourcesJar"])
-                artifact(tasks["javadocJar"])
+                from(components["java"])
             }
         }
     }
@@ -30,9 +28,7 @@ subprojects {
     }
 }
 
-group = findProperty("api_group") as String
 description = "darkbot-common"
-version = findProperty("api_version") as String
 
 dependencies {
     implementation(project(":darkbot-util"))
@@ -44,11 +40,17 @@ tasks.jar {
     from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
 }
 
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            artifact(tasks.jar)
-        }
-    }
+val allSources = configurations.runtimeClasspath.get().incoming.dependencies.map {
+    project(it.name).sourceSets["main"].allJava
 }
 
+tasks.javadoc {
+    if (JavaVersion.current().isJava9Compatible)
+            (options as StandardJavadocDocletOptions).addBooleanOption("html5", true)
+
+    source(allSources)
+}
+
+tasks.named<Jar>("sourcesJar") {
+    from(allSources)
+}

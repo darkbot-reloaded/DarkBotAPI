@@ -9,6 +9,10 @@ import java.util.Optional;
  * In-game player ship
  */
 public interface Player extends Ship {
+    /**
+     * @return id of the ship type in-game
+     */
+    int getShipId();
 
     /**
      * @return if this ship has a {@link Pet} enabled flying on the map.
