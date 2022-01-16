@@ -10,9 +10,9 @@ import java.util.Optional;
  */
 public interface Player extends Ship {
     /**
-     * @return id of the ship type in-game
+     * @return ship type in-game like `ship_venom_design_frozen`
      */
-    int getShipId();
+    String getShipType();
 
     /**
      * @return if this ship has a {@link Pet} enabled flying on the map.

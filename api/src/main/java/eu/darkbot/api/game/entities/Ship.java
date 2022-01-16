@@ -8,9 +8,9 @@ import eu.darkbot.api.game.other.Movable;
  */
 public interface Ship extends Attacker, Movable {
     /**
-     * @return ship type in-game like `ship_venom_design_frozen`
+     * @return id of the ship type in-game
      */
-    String getShipType();
+    int getShipId();
 
     /**
      * @return true if ship is invisible/cloaked.
