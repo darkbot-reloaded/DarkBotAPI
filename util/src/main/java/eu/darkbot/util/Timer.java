@@ -4,7 +4,7 @@ package eu.darkbot.util;
 /**
  * Util to make timing easier.
  *
- * The naming is modeled after the idea of a bomb timer. You can prime it with
+ * The naming is modeled after the idea of a bomb timer. You can prime (activate) it with
  * a certain fuse, and it defuses after that time.
  */
 public class Timer {
@@ -115,6 +115,14 @@ public class Timer {
      */
     public void disarm() {
         time = 0;
+    }
+
+    /**
+     * Get the remaining time until the timer runs out
+     * @return amount of remaining time in milliseconds. Negative if the timer is already over.
+     */
+    public long getRemainingFuse() {
+        return time - System.currentTimeMillis();
     }
 
 }
