@@ -3,9 +3,11 @@ plugins {
     `maven-publish`
 }
 
+val apiVersion = "0.2.2"
+
 allprojects {
-    group = findProperty("api_group") as String
-    version = findProperty("api_version") as String
+    group = "eu.darkbot"
+    version = apiVersion
 
     apply(plugin = "java-library")
     java {
