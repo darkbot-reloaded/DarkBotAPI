@@ -51,7 +51,7 @@ public class CollectorModule implements Module {
     protected final Collection<? extends Player> players;
     protected final Collection<? extends Portal> portals;
 
-    protected final ConfigSetting<GameMap> workingMap;
+    protected final ConfigSetting<Integer> workingMap;
     protected final ConfigSetting<Boolean> autoCloak;
     protected final ConfigSetting<Integer> rememberEnemiesFor;
     protected final ConfigSetting<Boolean> stayAwayFromEnemies;
@@ -149,8 +149,12 @@ public class CollectorModule implements Module {
         return safetyFinder.tick() && checkMap();
     }
 
+    protected GameMap getWorkingMap() {
+        return starSystem.getOrCreateMapById(workingMap.getValue());
+    }
+
     protected boolean checkMap() {
-        GameMap map = workingMap.getValue();
+        GameMap map = getWorkingMap();
         if (!portals.isEmpty() && map != starSystem.getCurrentMap()) {
             this.bot.setModule(api.requireInstance(MapModule.class)).setTarget(map);
             return false;
