@@ -44,13 +44,14 @@ public class GalaxyInfoImpl implements eu.darkbot.api.game.galaxy.GalaxyInfo {
         if ((tempValue = XmlUtils.valueToInt(XmlUtils.getChildElement(rootElement, "energy_cost"))) != null)
             this.energyCost = tempValue;
 
+        if (XmlUtils.hasChildElements(rootElement, "items"))
+            updateItems(rootElement);
+
+        // Gates must be updated after items, because an item with the last part will set gate to completed
         updateGates(document.getElementsByTagName("gate"));
 
         if (XmlUtils.hasChildElements(rootElement, "multipliers"))
             updateMultipliers(XmlUtils.getChildElement(rootElement, "multipliers"));
-
-        if (XmlUtils.hasChildElements(rootElement, "items"))
-            updateItems(rootElement);
 
         if (XmlUtils.hasChildElements(rootElement, "setup")) {
             Optional.ofNullable(XmlUtils.attrToInt(XmlUtils.getChildElement(rootElement, "setup"), "gate_id"))
