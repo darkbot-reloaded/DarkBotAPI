@@ -178,8 +178,12 @@ public class CollectorModule implements Module {
         return box.getInfo().shouldCollect()
                 && !box.isCollected()
                 && movement.canMove(box)
-                && (!box.getTypeName().equals("FROM_SHIP") || stats.getCargo() < stats.getMaxCargo())
+                && (!isResource(box.getTypeName()) || stats.getCargo() < stats.getMaxCargo())
                 && !isContested(box);
+    }
+
+    protected boolean isResource(String type) {
+        return type.equals("FROM_SHIP") || type.equals("PROSPEROUS_CARGO");
     }
 
     public boolean tryCollectNearestBox() {
