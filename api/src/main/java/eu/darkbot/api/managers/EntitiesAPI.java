@@ -117,6 +117,7 @@ public interface EntitiesAPI extends API.Singleton {
      * @return All {@link StaticEntity}s visible on the map
      * @see StaticEntity
      */
+    @UnmodifiableView
     Collection<? extends StaticEntity> getStaticEntities();
 
     /**
