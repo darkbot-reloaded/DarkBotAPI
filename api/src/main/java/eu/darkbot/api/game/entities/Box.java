@@ -62,4 +62,9 @@ public interface Box extends Entity {
     @Nullable
     Instant isCollectedUntil();
 
+    /**
+     * Beacon box during `Capture the Beacon` event on x-2 map
+     */
+    interface BeaconBox extends Box {
+    }
 }
