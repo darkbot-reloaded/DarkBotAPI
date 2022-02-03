@@ -26,7 +26,7 @@ allprojects {
     }
 
     dependencies {
-        compileOnly("org.jetbrains:annotations:22.0.0")
+        compileOnly("org.jetbrains:annotations:23.0.0")
     }
 
     val javadocOpts = tasks.javadoc.get().options as StandardJavadocDocletOptions
