@@ -5,11 +5,14 @@ package eu.darkbot.api.game.entities;
  */
 public interface StaticEntity extends Entity {
 
+    /**
+     * Pod heal dropped by aegis, hammerclaw, and other ships with special abilities
+     */
     interface PodHeal extends StaticEntity {
     }
 
     /**
-     * Probably dropped by emperor sibeleon in-game
+     * Capsules picked up by emperor sibelon in the hades galaxy gate
      */
     interface BuffCapsule extends StaticEntity {
     }
@@ -20,6 +23,9 @@ public interface StaticEntity extends Entity {
     interface BurningTrail extends StaticEntity {
     }
 
+    /**
+     * Part of the plutus experiments event. When shot down, spawns a boss npc.
+     */
     interface PlutusGenerator extends StaticEntity {
     }
 }
