@@ -52,7 +52,7 @@ public interface OreAPI extends API.Singleton {
      */
     enum Ore {
         PROMETIUM(0),
-        ENDRIUM(1),
+        ENDURIUM(1),
         TERBIUM(2),
         XENOMIT(3, false),
         PROMETID(4),
