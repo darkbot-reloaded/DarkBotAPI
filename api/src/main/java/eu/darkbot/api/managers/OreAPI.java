@@ -51,25 +51,31 @@ public interface OreAPI extends API.Singleton {
      * Types of Ores visible in refinery window
      */
     enum Ore {
-        PROMETIUM,
-        ENDRIUM,
-        TERBIUM,
-        PROMETID,
-        DURANIUM,
-        PROMERIUM,
-        SEPROM,
-        PALLADIUM,
-        OSMIUM,
-        XENOMIT(false);
+        PROMETIUM(0),
+        ENDRIUM(1),
+        TERBIUM(2),
+        XENOMIT(3, false),
+        PROMETID(4),
+        DURANIUM(5),
+        PROMERIUM(6),
+        SEPROM(7),
+        PALLADIUM(8),
+        OSMIUM(28);
 
+        private final int id;
         private final boolean sellable;
 
-        Ore() {
-            this(true);
+        Ore(int id) {
+            this(id, true);
         }
 
-        Ore(boolean sellable) {
+        Ore(int id, boolean sellable) {
+            this.id = id;
             this.sellable = sellable;
+        }
+
+        public int getId() {
+            return id;
         }
 
         public String getName() {
