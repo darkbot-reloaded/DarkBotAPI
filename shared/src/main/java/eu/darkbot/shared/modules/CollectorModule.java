@@ -177,7 +177,7 @@ public class CollectorModule implements Module {
     protected boolean canCollect(Box box) {
         return box.getInfo().shouldCollect()
                 && !box.isCollected()
-                && movement.canMove(box)
+                && movement.getClosestDistance(box) < 200
                 && (!isResource(box.getTypeName()) || stats.getCargo() < stats.getMaxCargo())
                 && !isContested(box);
     }
@@ -198,7 +198,7 @@ public class CollectorModule implements Module {
     protected void collectBox() {
         double distance = hero.distanceTo(currentBox);
 
-        if (distance < 200) {
+        if (distance < 250) {
             //movement.stop(false);
             if (!hero.hasEffect(EntityEffect.BOX_COLLECTING) || hero.distanceTo(currentBox) == 0)
                 currentBox.tryCollect();
