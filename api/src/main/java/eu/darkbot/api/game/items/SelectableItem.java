@@ -132,7 +132,8 @@ public interface SelectableItem {
         SR_5(true),
         K_300M(true),
         SP_100X(true),
-        AGT_500;
+        AGT_500,
+        RC_100(true);
 
         private static final String PREFIX = "ammunition_rocket_",
                 PREFIX_SPECIAL = "ammunition_specialammo_";
@@ -310,7 +311,8 @@ public interface SelectableItem {
         EAT_TURKEY,
         SNOWMAN_BRR,
         SNOWMAN_ROLLEYES,
-        SNOWMAN_THINKING;
+        SNOWMAN_THINKING,
+        LIKE_TURKEY;
 
         private static final String PREFIX = "ammunition_specialammo_emote_";
         private final String id;
@@ -409,7 +411,8 @@ public interface SelectableItem {
      */
     enum CpuType {
         CPU("equipment_extra_cpu_"),
-        ROBOT("equipment_extra_robot_"),
+        EXTRA("equipment_extra_"),
+        ROBOT("equipment_extra_repbot_"),
         SPECIAL_AMMO("ammunition_specialammo_"),
         PORTAL("ammunition_ggportal_");
         final String prefix;
@@ -437,7 +440,7 @@ public interface SelectableItem {
         /** Repair robot */
         REP(CpuType.ROBOT),
         /** Trade cpu to sell ores */
-        HMD_07(CpuType.CPU),
+        HMD_07(CpuType.EXTRA),
         /** Automatic laser buyer */
         ALB_X(CpuType.CPU),
         /** Automatically shoots rocket launcher rockets */
@@ -613,7 +616,9 @@ public interface SelectableItem {
         RETIARUS_CHS,
         ORCUS_ASSIMILATE,
         HOLO_SELF_REVERSAL,
-        HOLO_ENEMY_REVERSAL;
+        HOLO_ENEMY_REVERSAL,
+        CITADEL_PLUS_PRISMATIC_ENDURANCE("ability_citadel-plus_prismatic-endurance"),
+        LIBERATOR_PLUS_SELF_REPAIR("ability_liberator-plus_self-repair");
 
 
         private static final String PREFIX = "ability_";
