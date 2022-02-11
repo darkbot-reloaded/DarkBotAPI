@@ -6,6 +6,8 @@ import eu.darkbot.api.game.other.Locatable;
 import eu.darkbot.api.game.other.Location;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 /**
  * Provides access to hero movement, allows seeing where we are and define where to go.
  */
@@ -22,6 +24,12 @@ public interface MovementAPI extends API.Singleton {
      * If no path is being taken the current hero location will be the destination.
      */
     Location getDestination();
+
+    /**
+     * @return the current path the ship is following to navigate around barriers to the destination.
+     * If no path is being taken the list will be empty.
+     */
+    @NotNull List<? extends Locatable> getPath();
 
     /**
      * @return true if the hero is moving or trying to move in a path, false otherwise.
