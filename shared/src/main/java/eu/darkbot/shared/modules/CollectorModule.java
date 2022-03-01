@@ -118,7 +118,7 @@ public class CollectorModule implements Module {
     public String getStatus() {
         if (currentBox == null) return "Roaming";
 
-        return currentBox.isCollected() ?
+        return !isNotWaiting() ?
                 "Collecting " + currentBox.getTypeName() + " " + (waitingUntil - System.currentTimeMillis()) + "ms"
                 : "Moving to " + currentBox.getTypeName();
     }
@@ -139,9 +139,12 @@ public class CollectorModule implements Module {
     }
 
     protected boolean isNotWaiting() {
-        return System.currentTimeMillis() > waitingUntil ||
-                currentBox == null ||
-                !currentBox.isValid();
+        if (currentBox == null || !currentBox.isValid()) {
+            waitingUntil = 0;
+            return true;
+        }
+
+        return System.currentTimeMillis() > waitingUntil;
     }
 
     protected boolean checkDangerousAndCurrentMap() {
