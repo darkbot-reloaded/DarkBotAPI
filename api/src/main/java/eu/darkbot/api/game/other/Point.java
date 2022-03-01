@@ -24,6 +24,14 @@ public interface Point {
      */
     double getY();
 
+    default int x() {
+        return (int) getX();
+    }
+
+    default int y() {
+        return (int) getY();
+    }
+
     //Point implementation
     class PointImpl implements Point {
         private final double x;
