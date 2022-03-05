@@ -12,6 +12,6 @@ public interface Zone extends Entity {
     /**
      * @return {@link Area} of the {@link Zone}
      */
-    Area getArea();
+    Area getZoneArea();
 
 }

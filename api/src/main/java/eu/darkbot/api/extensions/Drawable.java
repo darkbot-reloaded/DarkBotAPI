@@ -2,5 +2,5 @@ package eu.darkbot.api.extensions;
 
 public interface Drawable {
 
-    void onDraw(MapGraphics graphics);
+    void onDraw(MapGraphics mg);
 }

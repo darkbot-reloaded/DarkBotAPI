@@ -146,6 +146,10 @@ public interface HeroAPI extends Player, API.Singleton {
             return config == 1 ? FIRST :
                     config == 2 ? SECOND : UNKNOWN;
         }
-    }
 
+        @Override
+        public String toString() {
+            return ordinal() + "C";
+        }
+    }
 }

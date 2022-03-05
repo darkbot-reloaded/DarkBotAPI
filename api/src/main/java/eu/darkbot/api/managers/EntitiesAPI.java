@@ -2,10 +2,12 @@ package eu.darkbot.api.managers;
 
 import eu.darkbot.api.API;
 import eu.darkbot.api.events.Event;
+import eu.darkbot.api.game.entities.Barrier;
 import eu.darkbot.api.game.entities.BattleStation;
 import eu.darkbot.api.game.entities.Box;
 import eu.darkbot.api.game.entities.Entity;
 import eu.darkbot.api.game.entities.Mine;
+import eu.darkbot.api.game.entities.Mist;
 import eu.darkbot.api.game.entities.Npc;
 import eu.darkbot.api.game.entities.Ore;
 import eu.darkbot.api.game.entities.Pet;
@@ -138,6 +140,18 @@ public interface EntitiesAPI extends API.Singleton {
      */
     @UnmodifiableView
     Collection<? extends Obstacle> getObstacles();
+
+    /**
+     * @return All {@link Mist}s
+     */
+    @UnmodifiableView
+    Collection<? extends Mist> getMists();
+
+    /**
+     * @return All {@link Barrier}s
+     */
+    @UnmodifiableView
+    Collection<? extends Barrier> getBarriers();
 
     /**
      * Keep in mind this is a special case in this API, as this list is NOT
