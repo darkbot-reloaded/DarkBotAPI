@@ -2,124 +2,164 @@ package eu.darkbot.api.extensions;
 
 import eu.darkbot.api.game.other.Locatable;
 import eu.darkbot.api.game.other.Point;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
-import java.util.function.Function;
+import java.util.Collection;
 
 /**
  * Bot map graphics
  */
 public interface MapGraphics {
 
-    int getWidth();
-    int getHeight();
-
-    /**
-     * @return x-axis middle of bot map
-     */
-    int getMiddle();
-
     /**
      * @return {@link Graphics2D}
      */
     Graphics2D getGraphics2D();
 
-    /**
-     * Translates given in-game coordinates to {@link Point} on bot map
-     *
-     * @param x coordinate to translate
-     * @param y coordinate to translate
-     * @return position on bot map of given in-game coordinates
-     */
-    Point translate(double x, double y);
+    int getWidth();
+    int getHeight();
+    int getWidthMiddle();
+    int getHeightMiddle();
 
-    default Point translate(Locatable pos) {
-        return translate(pos.getX(), pos.getY());
-    }
-
-    /**
-     * @param x coordinate to translate
-     * @param y coordinate to translate
-     * @return position in-game of given bot map coordinates
-     */
-    Locatable undoTranslate(double x, double y);
-
-    default Locatable undoTranslate(Point point) {
-        return undoTranslate(point.getX(), point.getY());
-    }
-
-    /**
-     * Sets predefined color to use by user
-     *
-     * @param color new rendering color
-     */
-    void setColor(String color, Function<Color, Color> modifiers);
+    Color getColor(String color);
 
     default void setColor(String color) {
-        setColor(color, null);
+        setColor(getColor(color));
     }
 
     default void setColor(Color color) {
         getGraphics2D().setColor(color);
     }
 
-    void setFont(String font, Function<Font, Font> modifiers);
+    Font getFont(String font);
 
-    /**
-     * Sets font to use
-     *
-     * @param font new rendering font
-     */
     default void setFont(String font) {
-        setFont(font, null);
+        setFont(getFont(font));
     }
 
     default void setFont(Font font) {
         getGraphics2D().setFont(font);
     }
 
-    default void drawRect(Point pos, boolean fill, int width, int height) {
-        if (fill) getGraphics2D().fillRect(pos.x(), pos.y(), width, height);
-        else getGraphics2D().drawRect(pos.x(), pos.y(), width, height);
+    int toScreenPointX(double gameX);
+    int toScreenPointY(double gameY);
+
+    double toGameLocationX(int screenX);
+    double toGameLocationY(int screenY);
+
+    default Point toScreenPoint(double gameX, double gameY) {
+        return Point.of(toScreenPointX(gameX), toScreenPointY(gameY));
     }
 
-    default void drawRect(Locatable pos, boolean fill, int width, int height) {
-        Point p = translate(pos);
-        p = Point.of(p.x() - Math.round(width / 2d), p.y() - Math.round(height / 2d));
-
-        drawRect(p, fill, width, height);
+    default Point toScreenPoint(Locatable pos) {
+        return toScreenPoint(pos.getX(), pos.getY());
     }
 
-    default void drawRect(Locatable pos, boolean fill, int size) {
-        drawRect(pos, fill, size, size);
+    default Locatable toGameLocation(int screenX, int screenY) {
+        return Locatable.of(toGameLocationX(screenX), toGameLocationY(screenY));
     }
 
-    default void drawOval(Point pos, boolean fill, int width, int height) {
-        if (fill) getGraphics2D().fillOval(pos.x(), pos.y(), width, height);
-        else getGraphics2D().drawOval(pos.x(), pos.y(), width, height);
+    default Locatable toGameLocation(Point point) {
+        return toGameLocation(point.x(), point.y());
     }
 
-    default void drawOval(Locatable pos, boolean fill, int size) {
-        drawOval(pos, fill, size, size);
+    /**
+     * Draws Rect
+     */
+    default void drawRect(int x, int y, int width, int height, boolean fill) {
+        if (fill) getGraphics2D().fillRect(x, y, width, height);
+        else getGraphics2D().drawRect(x, y, width, height);
     }
 
-    default void drawOval(Locatable pos, boolean fill, int width, int height) {
-        Point p = translate(pos);
-        p = Point.of(p.x() - Math.round(width / 2d), p.y() - Math.round(height / 2d));
+    default void drawRect(int x, int y, int size, boolean fill) {
+        drawRect(x, y, size, size, fill);
+    }
 
-        drawOval(p, fill, width, height);
+    default void drawRect(Point point, int width, int height, boolean fill) {
+        drawRect(point.x(), point.y(), width, height, fill);
+    }
+
+    default void drawRect(Locatable loc, int width, int height, boolean fill) {
+        drawRect((int) (toScreenPointX(loc.getX()) - Math.round(width / 2d)),
+                (int) (toScreenPointY(loc.getY()) - Math.round(height / 2d)), width, height, fill);
+    }
+
+    default void drawRect(Locatable loc, int size, boolean fill) {
+        drawRect(loc, size, size, fill);
+    }
+
+    /**
+     * Draws Oval
+     */
+    default void drawOval(int x, int y, int width, int height, boolean fill) {
+        if (fill) getGraphics2D().fillOval(x, y, width, height);
+        else getGraphics2D().drawOval(x, y, width, height);
+    }
+
+    default void drawOval(int x, int y, int size, boolean fill) {
+        drawOval(x, y, size, size, fill);
+    }
+
+    default void drawOval(Point point, int width, int height, boolean fill) {
+        drawOval(point.x(), point.y(), width, height, fill);
+    }
+
+    default void drawOval(Locatable loc, int width, int height, boolean fill) {
+        drawOval((int) (toScreenPointX(loc.getX()) - Math.round(width / 2d)),
+                (int) (toScreenPointY(loc.getY()) - Math.round(height / 2d)), width, height, fill);
+    }
+
+    default void drawOval(Locatable loc, int size, boolean fill) {
+        drawOval(loc, size, size, fill);
+    }
+
+    /**
+     * Draws polygon
+     */
+    default void drawPoly(PolyType type, @NotNull Point... points) {
+        int[] xPoints = new int[points.length];
+        int[] yPoints = new int[points.length];
+        for (int i = 0; i < points.length; i++) {
+            xPoints[i] = points[i].x();
+            yPoints[i] = points[i].y();
+        }
+
+        if (type == PolyType.DRAW_POLYGON) getGraphics2D().drawPolygon(xPoints, yPoints, points.length);
+        else if (type == PolyType.FILL_POLYGON) getGraphics2D().fillPolygon(xPoints, yPoints, points.length);
+        else if (type == PolyType.DRAW_POLYLINE) getGraphics2D().drawPolyline(xPoints, yPoints, points.length);
+    }
+
+    default void drawPoly(PolyType type, @NotNull Locatable... positions) {
+        Point[] points = new Point[positions.length];
+        for (int i = 0; i < positions.length; i++)
+            points[i] = toScreenPoint(positions[i]);
+
+        drawPoly(type, points);
+    }
+
+    @SuppressWarnings("SuspiciousToArrayCall")
+    default void drawPoly(PolyType type, @NotNull Collection<?> positions) {
+        if (positions.isEmpty()) return;
+
+        if (positions.iterator().next() instanceof Point)
+            drawPoly(type, positions.toArray(new Point[0]));
+        else if (positions.iterator().next() instanceof Locatable)
+            drawPoly(type, positions.toArray(new Locatable[0]));
     }
 
     /**
      * Draws a line
      *
-     * @param a start
-     * @param b end
+     * @param x1 the first point's <i>x</i> coordinate.
+     * @param y1 the first point's <i>y</i> coordinate.
+     * @param x2 the second point's <i>x</i> coordinate.
+     * @param y2 the second point's <i>y</i> coordinate.
      */
-    default void drawLine(Locatable a, Locatable b) {
-        drawLine(translate(a), translate(b));
+    default void drawLine(int x1, int y1, int x2, int y2) {
+        getGraphics2D().drawLine(x1, y1, x2, y2);
     }
 
     /**
@@ -129,47 +169,109 @@ public interface MapGraphics {
      * @param b end
      */
     default void drawLine(Point a, Point b) {
-        getGraphics2D().drawLine(a.x(), a.y(), b.x(), b.y());
+        drawLine(a.x(), a.y(), b.x(), b.y());
+    }
+
+    /**
+     * Draws a line
+     *
+     * @param a start
+     * @param b end
+     */
+    default void drawLine(Locatable a, Locatable b) {
+        drawLine(toScreenPoint(a), toScreenPoint(b));
+    }
+
+    /**
+     * @return string width using current font
+     */
+    default int getStringWidth(String str) {
+        return getGraphics2D().getFontMetrics().stringWidth(str);
     }
 
     /**
      * Draws a String at given position
      *
      * @param str         String to draw
-     * @param pos         where string will be drawn
+     * @param loc         where string will be drawn
      * @param heightAlign height align added after translate
-     * @param align       String align
+     * @param stringAlign String align
      */
-    default void drawString(String str, Locatable pos, int heightAlign, Align align) {
-        Point p = translate(pos);
-        drawString(str, Point.of(p.x(), p.y() + heightAlign), align);
+    default void drawString(Locatable loc, String str, int heightAlign, StringAlign stringAlign) {
+        drawString(toScreenPointX(loc.getX()), toScreenPointY(loc.getY()) + heightAlign, str, stringAlign);
     }
 
     /**
      * Draws a String at given position
      *
-     * @param str   String to draw
-     * @param pos   where string will be drawn
-     * @param align String align
+     * @param str         String to draw
+     * @param point       where string will be drawn
+     * @param stringAlign String align
      */
-    default void drawString(String str, Point pos, Align align) {
-        drawString(str, pos.x(), pos.y(), align);
+    default void drawString(Point point, String str, StringAlign stringAlign) {
+        drawString(point.x(), point.y(), str, stringAlign);
     }
 
-    default void drawString(String str, int x, int y, Align align) {
+    default void drawString(int x, int y, String str, StringAlign stringAlign) {
         if (str == null || str.isEmpty()) return;
 
-        if (align != Align.LEFT) {
-            int strWidth = getGraphics2D().getFontMetrics().stringWidth(str);
-            x -= strWidth >> (align == Align.MID ? 1 : 0);
-        }
+        if (stringAlign != StringAlign.LEFT)
+            x -= getStringWidth(str) >> (stringAlign == StringAlign.MID ? 1 : 0);
+
         getGraphics2D().drawString(str, x, y);
+    }
+
+    default void drawBackgroundedText(int x, int y, String str, Color backgroundColor, StringAlign stringAlign) {
+        if (str == null || str.isEmpty()) return;
+
+        int strWidth = getStringWidth(str);
+        int strHeight = getGraphics2D().getFontMetrics().getMaxAscent();
+
+        if (stringAlign != StringAlign.LEFT)
+            x -= strWidth >> (stringAlign == StringAlign.MID ? 1 : 0);
+
+        Color textColor = getGraphics2D().getColor();
+
+        setColor(backgroundColor);
+        drawRect(x, y - strHeight, strWidth, strHeight + getGraphics2D().getFontMetrics().getMaxDescent(), true);
+
+        setColor(textColor);
+        getGraphics2D().drawString(str, x, y);
+    }
+
+    default void drawBackgroundedText(Point point, String str, Color backgroundColor, StringAlign stringAlign) {
+        drawBackgroundedText(point.x(), point.y(), str, backgroundColor, stringAlign);
+    }
+
+    default void drawBackgroundedText(Point point, String str, StringAlign stringAlign) {
+        drawBackgroundedText(point, str, getColor("texts_background"), stringAlign);
+    }
+
+    default void drawBackgroundedText(Locatable loc, String str, Color backgroundColor, int heightAlign, StringAlign stringAlign) {
+        drawBackgroundedText(toScreenPointX(loc.getX()),
+                toScreenPointY(loc.getY()) + heightAlign, str, backgroundColor, stringAlign);
+    }
+
+    default void drawBackgroundedText(Locatable loc, String str, int heightAlign, StringAlign stringAlign) {
+        drawBackgroundedText(loc, str, getColor("texts_background"), heightAlign, stringAlign);
+    }
+
+    default void drawBackgroundedText(Locatable loc, String str, Color backgroundColor, StringAlign stringAlign) {
+        drawBackgroundedText(loc, str, backgroundColor, 0, stringAlign);
+    }
+
+    default void drawBackgroundedText(Locatable loc, String str, StringAlign stringAlign) {
+        drawBackgroundedText(loc, str, 0, stringAlign);
     }
 
     /**
      * String align
      */
-    enum Align {
+    enum StringAlign {
         LEFT, MID, RIGHT
+    }
+
+    enum PolyType {
+        DRAW_POLYGON, FILL_POLYGON, DRAW_POLYLINE;
     }
 }
