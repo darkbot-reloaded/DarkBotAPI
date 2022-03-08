@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.util.Collection;
 
@@ -83,12 +84,20 @@ public interface MapGraphics {
     }
 
     default void drawRect(Locatable loc, int width, int height, boolean fill) {
-        drawRect((int) (toScreenPointX(loc.getX()) - Math.round(width / 2d)),
-                (int) (toScreenPointY(loc.getY()) - Math.round(height / 2d)), width, height, fill);
+        drawRect(toScreenPointX(loc.getX()), toScreenPointY(loc.getY()), width, height, fill);
     }
 
     default void drawRect(Locatable loc, int size, boolean fill) {
         drawRect(loc, size, size, fill);
+    }
+
+    default void drawRectCentered(Locatable loc, int width, int height, boolean fill) {
+        drawRect((int) (toScreenPointX(loc.getX()) - Math.round(width / 2d)),
+                (int) (toScreenPointY(loc.getY()) - Math.round(height / 2d)), width, height, fill);
+    }
+
+    default void drawRectCentered(Locatable loc, int size, boolean fill) {
+        drawRectCentered(loc, size, size, fill);
     }
 
     /**
@@ -108,12 +117,20 @@ public interface MapGraphics {
     }
 
     default void drawOval(Locatable loc, int width, int height, boolean fill) {
-        drawOval((int) (toScreenPointX(loc.getX()) - Math.round(width / 2d)),
-                (int) (toScreenPointY(loc.getY()) - Math.round(height / 2d)), width, height, fill);
+        drawOval(toScreenPointX(loc.getX()), toScreenPointY(loc.getY()), width, height, fill);
     }
 
     default void drawOval(Locatable loc, int size, boolean fill) {
         drawOval(loc, size, size, fill);
+    }
+
+    default void drawOvalCentered(Locatable loc, int width, int height, boolean fill) {
+        drawOval((int) (toScreenPointX(loc.getX()) - Math.round(width / 2d)),
+                (int) (toScreenPointY(loc.getY()) - Math.round(height / 2d)), width, height, fill);
+    }
+
+    default void drawOvalCentered(Locatable loc, int size, boolean fill) {
+        drawOvalCentered(loc, size, size, fill);
     }
 
     /**
@@ -224,8 +241,10 @@ public interface MapGraphics {
     default void drawBackgroundedText(int x, int y, String str, Color backgroundColor, StringAlign stringAlign) {
         if (str == null || str.isEmpty()) return;
 
+        FontMetrics fontMetrics = getGraphics2D().getFontMetrics();
+
         int strWidth = getStringWidth(str);
-        int strHeight = getGraphics2D().getFontMetrics().getMaxAscent();
+        int strHeight = fontMetrics.getMaxAscent();
 
         if (stringAlign != StringAlign.LEFT)
             x -= strWidth >> (stringAlign == StringAlign.MID ? 1 : 0);
@@ -233,7 +252,7 @@ public interface MapGraphics {
         Color textColor = getGraphics2D().getColor();
 
         setColor(backgroundColor);
-        drawRect(x, y - strHeight, strWidth, strHeight + getGraphics2D().getFontMetrics().getMaxDescent(), true);
+        drawRect(x, y - strHeight, strWidth, strHeight + fontMetrics.getMaxDescent(), true);
 
         setColor(textColor);
         getGraphics2D().drawString(str, x, y);
