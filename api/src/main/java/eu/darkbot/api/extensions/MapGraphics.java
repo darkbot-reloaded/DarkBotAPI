@@ -6,8 +6,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.font.TextAttribute;
+import java.text.AttributedString;
 import java.util.Collection;
 
 /**
@@ -137,6 +138,8 @@ public interface MapGraphics {
      * Draws polygon
      */
     default void drawPoly(PolyType type, @NotNull Point... points) {
+        if (points.length == 0) return;
+
         int[] xPoints = new int[points.length];
         int[] yPoints = new int[points.length];
         for (int i = 0; i < points.length; i++) {
@@ -157,14 +160,12 @@ public interface MapGraphics {
         drawPoly(type, points);
     }
 
-    @SuppressWarnings("SuspiciousToArrayCall")
-    default void drawPoly(PolyType type, @NotNull Collection<?> positions) {
-        if (positions.isEmpty()) return;
+    default void drawPoly(PolyType type, Collection<Point> points) {
+        drawPoly(type, points.toArray(new Point[0]));
+    }
 
-        if (positions.iterator().next() instanceof Point)
-            drawPoly(type, positions.toArray(new Point[0]));
-        else if (positions.iterator().next() instanceof Locatable)
-            drawPoly(type, positions.toArray(new Locatable[0]));
+    default void drawPoly(Collection<Locatable> positions, PolyType type) {
+        drawPoly(type, positions.toArray(new Locatable[0]));
     }
 
     /**
@@ -211,11 +212,11 @@ public interface MapGraphics {
      *
      * @param str         String to draw
      * @param loc         where string will be drawn
-     * @param heightAlign height align added after translate
+     * @param yOffset     y offset added after translate to screen point
      * @param stringAlign String align
      */
-    default void drawString(Locatable loc, String str, int heightAlign, StringAlign stringAlign) {
-        drawString(toScreenPointX(loc.getX()), toScreenPointY(loc.getY()) + heightAlign, str, stringAlign);
+    default void drawString(Locatable loc, String str, int yOffset, StringAlign stringAlign) {
+        drawString(toScreenPointX(loc.getX()), toScreenPointY(loc.getY()) + yOffset, str, stringAlign);
     }
 
     /**
@@ -241,21 +242,14 @@ public interface MapGraphics {
     default void drawBackgroundedText(int x, int y, String str, Color backgroundColor, StringAlign stringAlign) {
         if (str == null || str.isEmpty()) return;
 
-        FontMetrics fontMetrics = getGraphics2D().getFontMetrics();
-
-        int strWidth = getStringWidth(str);
-        int strHeight = fontMetrics.getMaxAscent();
-
         if (stringAlign != StringAlign.LEFT)
-            x -= strWidth >> (stringAlign == StringAlign.MID ? 1 : 0);
+            x -= getStringWidth(str) << (stringAlign == StringAlign.MID ? 1 : 0);
 
-        Color textColor = getGraphics2D().getColor();
+        AttributedString attrString = new AttributedString(str);
+        attrString.addAttribute(TextAttribute.BACKGROUND, backgroundColor);
+        attrString.addAttribute(TextAttribute.FONT, getGraphics2D().getFont());
 
-        setColor(backgroundColor);
-        drawRect(x, y - strHeight, strWidth, strHeight + fontMetrics.getMaxDescent(), true);
-
-        setColor(textColor);
-        getGraphics2D().drawString(str, x, y);
+        getGraphics2D().drawString(attrString.getIterator(), x, y);
     }
 
     default void drawBackgroundedText(Point point, String str, Color backgroundColor, StringAlign stringAlign) {
