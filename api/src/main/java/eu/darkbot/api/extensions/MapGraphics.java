@@ -160,11 +160,11 @@ public interface MapGraphics {
         drawPoly(type, points);
     }
 
-    default void drawPoly(PolyType type, Collection<Point> points) {
+    default void drawPolyPoints(PolyType type, Collection<? extends Point> points) {
         drawPoly(type, points.toArray(new Point[0]));
     }
 
-    default void drawPoly(Collection<Locatable> positions, PolyType type) {
+    default void drawPolyLocs(PolyType type, Collection<? extends Locatable> positions) {
         drawPoly(type, positions.toArray(new Locatable[0]));
     }
 
@@ -243,7 +243,7 @@ public interface MapGraphics {
         if (str == null || str.isEmpty()) return;
 
         if (stringAlign != StringAlign.LEFT)
-            x -= getStringWidth(str) << (stringAlign == StringAlign.MID ? 1 : 0);
+            x -= getStringWidth(str) >> (stringAlign == StringAlign.MID ? 1 : 0);
 
         AttributedString attrString = new AttributedString(str);
         attrString.addAttribute(TextAttribute.BACKGROUND, backgroundColor);
@@ -260,13 +260,13 @@ public interface MapGraphics {
         drawBackgroundedText(point, str, getColor("texts_background"), stringAlign);
     }
 
-    default void drawBackgroundedText(Locatable loc, String str, Color backgroundColor, int heightAlign, StringAlign stringAlign) {
+    default void drawBackgroundedText(Locatable loc, String str, Color backgroundColor, int yOffset, StringAlign stringAlign) {
         drawBackgroundedText(toScreenPointX(loc.getX()),
-                toScreenPointY(loc.getY()) + heightAlign, str, backgroundColor, stringAlign);
+                toScreenPointY(loc.getY()) + yOffset, str, backgroundColor, stringAlign);
     }
 
-    default void drawBackgroundedText(Locatable loc, String str, int heightAlign, StringAlign stringAlign) {
-        drawBackgroundedText(loc, str, getColor("texts_background"), heightAlign, stringAlign);
+    default void drawBackgroundedText(Locatable loc, String str, int yOffset, StringAlign stringAlign) {
+        drawBackgroundedText(loc, str, getColor("texts_background"), yOffset, stringAlign);
     }
 
     default void drawBackgroundedText(Locatable loc, String str, Color backgroundColor, StringAlign stringAlign) {
