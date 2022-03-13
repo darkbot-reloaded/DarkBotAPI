@@ -1,5 +1,7 @@
 package eu.darkbot.api.extensions;
 
+import eu.darkbot.api.config.types.DisplayFlag;
+import eu.darkbot.api.game.other.Area;
 import eu.darkbot.api.game.other.Locatable;
 import eu.darkbot.api.game.other.Point;
 import org.jetbrains.annotations.NotNull;
@@ -25,6 +27,8 @@ public interface MapGraphics {
     int getHeight();
     int getWidthMiddle();
     int getHeightMiddle();
+
+    boolean hasDisplayFlag(DisplayFlag displayFlag);
 
     Color getColor(String color);
 
@@ -166,6 +170,21 @@ public interface MapGraphics {
 
     default void drawPolyLocs(PolyType type, Collection<? extends Locatable> positions) {
         drawPoly(type, positions.toArray(new Locatable[0]));
+    }
+
+    default void drawArea(Area area, boolean fill) {
+        if (area instanceof Area.Circle) {
+            Area.Circle circle = (Area.Circle) area;
+            int size = (int) (circle.getRadius() * 2);
+
+            drawOval(circle, toScreenPointX(size), toScreenPointY(size), fill);
+        } else if (area instanceof Area.Polygon) {
+            Area.Polygon polygon = (Area.Polygon) area;
+            drawPolyLocs(fill ? PolyType.FILL_POLYGON : PolyType.DRAW_POLYGON, polygon.getVertices());
+        } else {
+            Area.Rectangle rect = area.getBounds();
+            drawRect(rect, toScreenPointX(rect.getWidth()), toScreenPointY(rect.getHeight()), fill);
+        }
     }
 
     /**

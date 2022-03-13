@@ -4,6 +4,7 @@ import eu.darkbot.api.utils.PathFinder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * A geometric area that covers some 2D space on the map.
@@ -124,5 +125,16 @@ public interface Area {
                     getY() <= y && y <= getY2());
         }
 
+    }
+
+    /**
+     * {@link Polygon} area object
+     */
+    interface Polygon extends Area {
+
+        /**
+         * @return list of in-game vertices
+         */
+        List<? extends Locatable> getVertices();
     }
 }
