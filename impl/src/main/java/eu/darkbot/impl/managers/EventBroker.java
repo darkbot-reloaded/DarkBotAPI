@@ -35,13 +35,16 @@ public class EventBroker implements EventBrokerAPI {
             eventsBeingSent--;
         }
         if (eventsBeingSent == 0) {
-            toAdd.forEach(this::registerListener);
             toRemove.forEach(dispatchers::remove);
+            toRemove.clear();
+            toAdd.forEach(this::registerListener);
+            toAdd.clear();
         }
     }
 
     @Override
     public synchronized void registerListener(@NotNull Listener listener) {
+        if (dispatchers.containsKey(listener)) unregisterListener(listener);
         if (eventsBeingSent == 0) dispatchers.put(listener, new EventDispatcher(listener.getClass()));
         else toAdd.add(listener);
     }
