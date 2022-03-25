@@ -9,11 +9,11 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface Draw {
 
-    DrawStage value();
+    Stage value();
 
-    Stage stage() default Stage.AFTER;
+    Attach attach() default Attach.AFTER;
 
-    enum DrawStage {
+    enum Stage {
         ZONES,
         INFO_AND_HEALTH,
         HERO_TRAIL,
@@ -21,10 +21,10 @@ public @interface Draw {
         DYNAMIC_ENTITIES,
         HERO_AND_PET,
         DEV_STUFF,
-        STATS
+        OVERLAY
     }
 
-    enum Stage {
+    enum Attach {
         BEFORE,
         REPLACE,
         AFTER
