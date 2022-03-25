@@ -38,6 +38,8 @@ public interface EventBrokerAPI extends API.Singleton {
      * The listener will only be weakly referenced, and will be eventually
      * unregistered if there are no other strong references to it.
      *
+     * If the listener was already registered, it will be unregistered first.
+     *
      * @param listener the listener provided
      */
     void registerListener(@NotNull Listener listener);
