@@ -1,10 +1,11 @@
 package eu.darkbot.api.managers;
 
 import eu.darkbot.api.API;
+import eu.darkbot.api.game.enums.ReviveLocation;
+import eu.darkbot.api.game.other.Locatable;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.Instant;
-import java.util.Collection;
 
 /**
  * Provides access to repair options, checking amount of deaths, or get what destroyed you.
@@ -22,19 +23,18 @@ public interface RepairAPI extends API.Singleton {
     boolean isDestroyed();
 
     /**
-     * Tries to repair ship with given repair option
-     *
-     * TODO: Add enum with repair options in-game
-     *
-     * @param repairOption int of the repair option to use, these are defined in in-game constants
-     * @throws IllegalStateException if ship is already repaired
+     * @param reviveLocation revive location to check
+     * @return time in seconds until becomes available, 0 - ready, -1 - not available at all
      */
-    void tryRevive(int repairOption) throws IllegalStateException;
+    int isAvailableIn(ReviveLocation reviveLocation);
 
-    /**
-     * @return the list of available repairing options
-     */
-    Collection<Integer> getAvailableRepairOptions();
+    default boolean isAvailable(ReviveLocation reviveLocation) {
+        return isAvailableIn(reviveLocation) != -1;
+    }
+
+    default boolean isReady(ReviveLocation reviveLocation) {
+        return isAvailableIn(reviveLocation) == 0;
+    }
 
     /**
      * @return The name of the last thing that destroyed you.
@@ -46,4 +46,9 @@ public interface RepairAPI extends API.Singleton {
      * @return Instant when the hero last died
      */
     @Nullable Instant getLastDeathTime();
+
+    /**
+     * @return The location where the hero last died
+     */
+    @Nullable Locatable getLastDeathLocation();
 }
