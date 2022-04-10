@@ -141,4 +141,19 @@ public interface PetAPI extends Pet, API.Singleton {
         HP, SHIELD, FUEL, XP, HEAT
     }
 
+    
+    /**
+     * Event of changing list in locator mechanism
+     */
+    class LocatorNpcChangeListEvent implements Event {
+        private final List<Gear> locatorList;
+
+        public LocatorNpcChangeListEvent(List<Gear> locatorList) {
+            this.locatorList = locatorList;
+        }
+
+        public List<Gear> getGears() {
+            return locatorList;
+        }
+    }
 }
