@@ -97,8 +97,7 @@ public interface MapGraphics {
     }
 
     default void drawRectCentered(Locatable loc, int width, int height, boolean fill) {
-        drawRect((int) (toScreenPointX(loc.getX()) - Math.round(width / 2d)),
-                (int) (toScreenPointY(loc.getY()) - Math.round(height / 2d)), width, height, fill);
+        drawRect(toScreenPointX(loc.getX()) - (width >> 1), toScreenPointY(loc.getY()) - (height >> 1), width, height, fill);
     }
 
     default void drawRectCentered(Locatable loc, int size, boolean fill) {
@@ -130,8 +129,7 @@ public interface MapGraphics {
     }
 
     default void drawOvalCentered(Locatable loc, int width, int height, boolean fill) {
-        drawOval((int) (toScreenPointX(loc.getX()) - Math.round(width / 2d)),
-                (int) (toScreenPointY(loc.getY()) - Math.round(height / 2d)), width, height, fill);
+        drawOval(toScreenPointX(loc.getX()) - (width >> 1), toScreenPointY(loc.getY()) - (height >> 1), width, height, fill);
     }
 
     default void drawOvalCentered(Locatable loc, int size, boolean fill) {
