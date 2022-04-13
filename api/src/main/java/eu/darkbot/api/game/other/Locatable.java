@@ -78,8 +78,32 @@ public interface Locatable {
             this.y = y;
         }
 
-        public double getX() { return x; }
+        public double getX() {
+            return x;
+        }
 
-        public double getY() { return y; }
+        public double getY() {
+            return y;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Locatable)) return false;
+
+            Locatable locatable = (Locatable) o;
+            return locatable.getX() == getX() && locatable.getY() == getY();
+        }
+
+        @Override
+        public int hashCode() {
+            int result;
+            long temp;
+            temp = Double.doubleToLongBits(getX());
+            result = (int) (temp ^ (temp >>> 32));
+            temp = Double.doubleToLongBits(getY());
+            result = 31 * result + (int) (temp ^ (temp >>> 32));
+            return result;
+        }
     }
 }
