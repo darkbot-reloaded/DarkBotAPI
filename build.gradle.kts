@@ -3,7 +3,7 @@ plugins {
     `maven-publish`
 }
 
-val apiVersion = "0.3.2"
+val apiVersion = "0.4.0"
 
 allprojects {
     group = "eu.darkbot"
