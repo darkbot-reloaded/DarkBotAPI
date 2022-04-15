@@ -37,7 +37,7 @@ public enum GalaxyGate {
             if (gate.name.equals(gateName))
                 return gate;
 
-            return null;
+        return null;
     }
 
     public static GalaxyGate of(int gateId) {
