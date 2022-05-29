@@ -24,7 +24,7 @@ public interface Item extends SelectableItem {
     <T extends Enum<T> & SelectableItem> @Nullable T getAs(Class<T> type);
 
     /**
-     * Checks if item can be used in-game & by the API, you should check quantity.
+     * Checks if item can be used in-game &amp; by the API, you should check quantity.
      */
     default boolean isReadyToUse() {
         return isReady() && isActivatable() && isUsable();
