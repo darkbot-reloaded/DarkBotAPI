@@ -54,13 +54,14 @@ public interface OreAPI extends API.Singleton {
         PROMETIUM(0),
         ENDURIUM(1),
         TERBIUM(2),
-        XENOMIT(3, false),
         PROMETID(4),
         DURANIUM(5),
         PROMERIUM(6),
         SEPROM(7),
         PALLADIUM(8),
-        OSMIUM(28);
+        OSMIUM(28),
+        // Must keep at the end, otherwise selling code leaves a gap for it.
+        XENOMIT(3, false);
 
         private final int id;
         private final boolean sellable;
