@@ -203,9 +203,11 @@ public class CollectorModule implements Module {
 
         if (distance < 250) {
             //movement.stop(false);
-            if (!hero.hasEffect(EntityEffect.BOX_COLLECTING) || hero.distanceTo(currentBox) == 0)
-                currentBox.tryCollect();
-            else return;
+            if (!currentBox.tryCollect())
+                return;
+//            if (!hero.hasEffect(EntityEffect.BOX_COLLECTING) || hero.distanceTo(currentBox) == 0)
+//                currentBox.tryCollect();
+//            else return;
 
             waitingUntil = System.currentTimeMillis()
                     + currentBox.getInfo().getWaitTime()
