@@ -202,7 +202,7 @@ public class CollectorModule implements Module {
         double distance = hero.distanceTo(currentBox);
 
         if (distance < 250) {
-            //movement.stop(false);
+            movement.stop(false);
             if (!currentBox.tryCollect())
                 return;
 //            if (!hero.hasEffect(EntityEffect.BOX_COLLECTING) || hero.distanceTo(currentBox) == 0)
