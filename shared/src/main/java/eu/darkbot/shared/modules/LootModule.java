@@ -106,7 +106,7 @@ public class LootModule implements Module {
                 attack.tryLockAndAttack();
             } else {
                 hero.setRoamMode();
-                if (!movement.isMoving()) movement.moveRandom();
+                if (hero.distanceTo(movement.getDestination()) < 20 || movement.isOutOfMap()) movement.moveRandom();
             }
         }
     }
@@ -181,7 +181,7 @@ public class LootModule implements Module {
         Lockable target = attack.getTarget();
 
         Location direction = movement.getDestination();
-        Location targetLoc = target.getLocationInfo().destinationInTime(400);
+        Location targetLoc = target.getLocationInfo().destinationInTime(250);
 
         double distance = hero.distanceTo(attack.getTarget());
         double angle = targetLoc.angleTo(hero);

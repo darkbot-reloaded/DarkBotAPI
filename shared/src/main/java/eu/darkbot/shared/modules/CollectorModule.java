@@ -126,13 +126,14 @@ public class CollectorModule implements Module {
     @Override
     public void onTickModule() {
         if (isNotWaiting() && checkDangerousAndCurrentMap()) {
+            hero.setRoamMode();
             pet.setEnabled(true);
             checkInvisibility();
             checkDangerous();
 
             findBox();
 
-            if (!tryCollectNearestBox() && (!movement.isMoving() || movement.isOutOfMap())) {
+            if (!tryCollectNearestBox() && (hero.distanceTo(movement.getDestination()) < 20 || movement.isOutOfMap())) {
                 movement.moveRandom();
             }
         }
