@@ -33,6 +33,11 @@ public interface HeroAPI extends Player, API.Singleton {
      */
     @Nullable Lockable getLocalTarget();
 
+    default <T extends Lockable> @Nullable T getLocalTargetAs(Class<T> type) {
+        Lockable target = getLocalTarget();
+        return type.isInstance(target) ? type.cast(target) : null;
+    }
+
     /**
      * @param target the local target to use
      * @see #getLocalTarget

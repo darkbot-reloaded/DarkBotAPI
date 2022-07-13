@@ -10,15 +10,17 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractAttackImpl implements AttackAPI {
 
-    protected static final int DELAY_BETWEEN_ATTACK_ATTEMPTS = 750;
+    protected static int DELAY_BETWEEN_ATTACK_ATTEMPTS = 500;
 
     protected final HeroItemsAPI heroItems;
     protected final HeroAPI hero;
 
     protected Lockable target;
 
-    protected Timer lockTry = Timer.get(),
+    protected Timer lockTry = Timer.get(500),
             attackTry = Timer.get(DELAY_BETWEEN_ATTACK_ATTEMPTS);
+
+    protected boolean attacked;
 
     protected AbstractAttackImpl(HeroItemsAPI heroItems, HeroAPI hero) {
         this.heroItems = heroItems;
@@ -44,9 +46,11 @@ public abstract class AbstractAttackImpl implements AttackAPI {
     public void tryLockTarget() {
         if (isLocked()) return;
 
-        if (lockTry.tryActivate(500)) {
-            if (target.trySelect(false))
+        if (lockTry.tryActivate()) {
+            if (target.trySelect(false)) {
                 hero.setLocalTarget(target);
+                attacked = false;
+            }
         }
     }
 
@@ -61,19 +65,23 @@ public abstract class AbstractAttackImpl implements AttackAPI {
             SelectableItem.Laser laser = getBestLaserAmmo();
             if (laser == null) return;//should only attack if laser ammo is not null?
 
-            if (hero.getLaser() != laser) {
-                heroItems.useItem(laser, 500);
-                if (isAttackViaSlotBarEnabled())
+            if (hero.getLaser() != laser && heroItems.useItem(laser, 500).isSuccessful()) {
+                if (isAttackViaSlotBarEnabled()) {
                     attackTry.activate();
+                    attacked = true;
+                }
             }
 
             attack();
         } else tryLockTarget();
     }
 
-    private void attack() {
-        if (isAttacking() || attackTry.isActive()) return;
-        if (hero.triggerLaserAttack()) attackTry.activate();
+    protected void attack() {
+        if (isAttacking() || (attacked && attackTry.isActive())) return;
+        if (hero.triggerLaserAttack()) {
+            attackTry.activate();
+            attacked = true;
+        }
     }
 
     @Override
