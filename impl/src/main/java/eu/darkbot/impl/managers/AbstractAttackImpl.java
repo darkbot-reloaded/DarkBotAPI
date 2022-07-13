@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractAttackImpl implements AttackAPI {
 
-    private static final int DELAY_BETWEEN_ATTACK_ATTEMPTS = 750;
+    protected static final int DELAY_BETWEEN_ATTACK_ATTEMPTS = 750;
 
     protected final HeroItemsAPI heroItems;
     protected final HeroAPI hero;
@@ -42,11 +42,11 @@ public abstract class AbstractAttackImpl implements AttackAPI {
 
     @Override
     public void tryLockTarget() {
-        if (isLocked() || lockTry.isActive()) return;
+        if (isLocked()) return;
 
         if (lockTry.tryActivate(500)) {
-            hero.setLocalTarget(this.target);
-            target.trySelect(false);
+            if (target.trySelect(false))
+                hero.setLocalTarget(target);
         }
     }
 
@@ -72,13 +72,13 @@ public abstract class AbstractAttackImpl implements AttackAPI {
     }
 
     private void attack() {
-        if (hero.isAttacking() || attackTry.isActive()) return;
+        if (isAttacking() || attackTry.isActive()) return;
         if (hero.triggerLaserAttack()) attackTry.activate();
     }
 
     @Override
     public void stopAttack() {
-        if (!hero.isAttacking() || attackTry.isActive()) return;
+        if (!isAttacking() || attackTry.isActive()) return;
         if (hero.triggerLaserAttack()) attackTry.activate();
     }
 

@@ -126,13 +126,14 @@ public class CollectorModule implements Module {
     @Override
     public void onTickModule() {
         if (isNotWaiting() && checkDangerousAndCurrentMap()) {
+            hero.setRoamMode();
             pet.setEnabled(true);
             checkInvisibility();
             checkDangerous();
 
             findBox();
 
-            if (!tryCollectNearestBox() && (!movement.isMoving() || movement.isOutOfMap())) {
+            if (!tryCollectNearestBox() && (hero.distanceTo(movement.getDestination()) < 20 || movement.isOutOfMap())) {
                 movement.moveRandom();
             }
         }
@@ -202,10 +203,12 @@ public class CollectorModule implements Module {
         double distance = hero.distanceTo(currentBox);
 
         if (distance < 250) {
-            //movement.stop(false);
-            if (!hero.hasEffect(EntityEffect.BOX_COLLECTING) || hero.distanceTo(currentBox) == 0)
-                currentBox.tryCollect();
-            else return;
+            movement.stop(false);
+            if (!currentBox.tryCollect())
+                return;
+//            if (!hero.hasEffect(EntityEffect.BOX_COLLECTING) || hero.distanceTo(currentBox) == 0)
+//                currentBox.tryCollect();
+//            else return;
 
             waitingUntil = System.currentTimeMillis()
                     + currentBox.getInfo().getWaitTime()

@@ -50,34 +50,37 @@ public class LootCollectorModule implements Module {
 
     @Override
     public void onTickModule() {
-        if (collector.isNotWaiting() && loot.checkDangerousAndCurrentMap()) {
+        if (loot.checkDangerousAndCurrentMap()) {
             pet.setEnabled(true);
 
             if (loot.findTarget()) {
-                collector.findBox();
+                if (collector.isNotWaiting()) {
+                    collector.findBox();
 
-                Box box = collector.currentBox;
-                Npc npc = loot.getAttacker().getTargetAs(Npc.class);
+                    Box box = collector.currentBox;
+                    Npc npc = loot.getAttacker().getTargetAs(Npc.class);
 
-                if (box == null || !box.isValid()
-                        || box.distanceTo(hero) > collectRadius.getValue()
-                        || (npc.getInfo().hasExtraFlag(NpcFlag.IGNORE_BOXES)
-                        && npc.distanceTo(box) > Math.min(800, npc.getInfo().getRadius() * 2))
-                        || npc.getHealth().hpPercent() < 0.25) {
-                    loot.moveToAnSafePosition();
-                } else {
-                    loot.setConfig(box);
-                    collector.tryCollectNearestBox();
+                    if (box == null || !box.isValid()
+                            || box.distanceTo(hero) > collectRadius.getValue()
+                            || (npc.getInfo().hasExtraFlag(NpcFlag.IGNORE_BOXES)
+                            && npc.distanceTo(box) > Math.min(800, npc.getInfo().getRadius() * 2))
+                            || npc.getHealth().hpPercent() < 0.25) {
+                        loot.moveToAnSafePosition();
+                    } else {
+                        loot.setConfig(box);
+                        collector.tryCollectNearestBox();
+                    }
                 }
 
                 loot.ignoreInvalidTarget();
                 loot.attack.tryLockAndAttack();
 
-            } else {
+            } else if (collector.isNotWaiting()) {
                 hero.setRoamMode();
                 collector.findBox();
 
-                if (!collector.tryCollectNearestBox() && (!movement.isMoving() || movement.isOutOfMap())) {
+                if (!collector.tryCollectNearestBox()
+                        && (hero.distanceTo(movement.getDestination()) < 20 || movement.isOutOfMap())) {
                     movement.moveRandom();
                 }
             }
