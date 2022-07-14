@@ -13,10 +13,28 @@ public interface OptionEditor<T> {
      * This must discard anything related to the previous value, if any,
      * and set up the editor for the new setting.
      *
+     * If {@link OptionEditor#getEditorComponent(ConfigSetting, boolean)} is defined, this method will not be called.
+     *
      * @param setting the setting to be edited
      * @return a component that allows user to edit the setting
      */
     JComponent getEditorComponent(ConfigSetting<T> setting);
+
+    /**
+     * Sets the current value for the editor.
+     * This must discard anything related to the previous value, if any,
+     * and set up the editor for the new setting.
+     *
+     * Because editors are used for both editing and rendering, this method
+     * includes a way to distinguish between the two use-cases, usually not needed.
+     *
+     * @param setting the setting to be edited
+     * @param isEditor true if this is an editor, false if it's a renderer
+     * @return a component that allows user to edit the setting
+     */
+    default JComponent getEditorComponent(ConfigSetting<T> setting, boolean isEditor) {
+        return this.getEditorComponent(setting);
+    }
 
     /**
      * @return current value in the editor
