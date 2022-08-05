@@ -1,6 +1,8 @@
 package eu.darkbot.api.managers;
 
 import eu.darkbot.api.API;
+import eu.darkbot.api.config.types.NpcInfo;
+import eu.darkbot.api.events.Event;
 import eu.darkbot.api.game.entities.Pet;
 import eu.darkbot.api.game.enums.PetGear;
 import eu.darkbot.api.game.other.Location;
@@ -8,6 +10,7 @@ import eu.darkbot.api.utils.ItemNotEquippedException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.Optional;
 
 /**
@@ -112,6 +115,11 @@ public interface PetAPI extends Pet, API.Singleton {
     Optional<Location> getLocatorNpcLoc();
 
     /**
+     * @return a collection of the current {@link NpcInfo} on pet locator, empty collection if unavailable.
+     */
+    @NotNull Collection<? extends NpcInfo> getLocatorNpcs();
+
+    /**
      * Get fuel, xp, and other pet stats available in the window
      *
      * @param stat PET stat to search for
@@ -139,6 +147,21 @@ public interface PetAPI extends Pet, API.Singleton {
      */
     enum Stat {
         HP, SHIELD, FUEL, XP, HEAT
+    }
+
+    /**
+     * Event when npc list in current map changes in the pet locator module
+     */
+    class LocatorNpcListChangeEvent implements Event {
+        private final Collection<? extends NpcInfo> locatorNpcs;
+
+        public LocatorNpcListChangeEvent(Collection<? extends NpcInfo> locatorNpcs) {
+            this.locatorNpcs = locatorNpcs;
+        }
+
+        public @NotNull Collection<? extends NpcInfo> getLocatorNpcs() {
+            return locatorNpcs;
+        }
     }
 
 }
