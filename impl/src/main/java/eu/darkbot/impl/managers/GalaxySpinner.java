@@ -55,7 +55,8 @@ public class GalaxySpinner implements GalaxySpinnerAPI {
         Optional<SpinResult> spinResult = Boolean.TRUE.equals(handleRequest(params, -1, minWait))
                 ? Optional.of(galaxyInfo.getSpinResult()) : Optional.empty();
 
-        eventBroker.sendEvent(new SpinGateEvent(spinResult, spinAmount));
+        if (!spinResult.isEmpty())
+            eventBroker.sendEvent(new SpinGateEvent(spinResult.get(), spinAmount));
 
         return spinResult;
     }

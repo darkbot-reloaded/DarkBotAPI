@@ -71,18 +71,15 @@ public interface GalaxySpinnerAPI extends API.Singleton {
     boolean buyLife(@NotNull GalaxyGate gate, int minWait);
 
     class SpinGateEvent implements Event {
-        private final Optional<SpinResult> spinResult;
+        private final SpinResult spinResult;
         private final int spinAmount;
 
-        public SpinGateEvent(Optional<SpinResult> spinResult, int spinAmount) {
+        public SpinGateEvent(SpinResult spinResult, int spinAmount) {
             this.spinResult = spinResult;
             this.spinAmount = spinAmount;
         }
 
-        /**
-         * @return non-empty optional of {@link SpinResult} if request was filled successfully
-         */
-        public Optional<SpinResult> getSpinResult() {
+        public SpinResult getSpinResult() {
             return spinResult;
         }
 
