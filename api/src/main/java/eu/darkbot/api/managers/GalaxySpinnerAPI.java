@@ -1,6 +1,7 @@
 package eu.darkbot.api.managers;
 
 import eu.darkbot.api.API;
+import eu.darkbot.api.events.Event;
 import eu.darkbot.api.game.galaxy.GalaxyGate;
 import eu.darkbot.api.game.galaxy.GalaxyInfo;
 import eu.darkbot.api.game.galaxy.GateInfo;
@@ -68,4 +69,37 @@ public interface GalaxySpinnerAPI extends API.Singleton {
      * @return if the request was filled successfully
      */
     boolean buyLife(@NotNull GalaxyGate gate, int minWait);
+
+    class SpinGateEvent implements Event {
+        private final Optional<SpinResult> spinResult;
+        private final int spinAmount;
+
+        public SpinGateEvent(Optional<SpinResult> spinResult, int spinAmount) {
+            this.spinResult = spinResult;
+            this.spinAmount = spinAmount;
+        }
+
+        /**
+         * @return non-empty optional of {@link SpinResult} if request was filled successfully
+         */
+        public Optional<SpinResult> getSpinResult() {
+            return spinResult;
+        }
+
+        public int getSpinAmount() {
+            return spinAmount;
+        }
+    }
+
+    class PlaceGateEvent implements Event {
+        private final GalaxyGate gate;
+
+        public PlaceGateEvent(GalaxyGate gate) {
+            this.gate = gate;
+        }
+
+        public GalaxyGate getGate() {
+            return gate;
+        }
+    }
 }
