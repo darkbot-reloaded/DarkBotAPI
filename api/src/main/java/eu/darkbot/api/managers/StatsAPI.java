@@ -1,6 +1,7 @@
 package eu.darkbot.api.managers;
 
 import eu.darkbot.api.API;
+import eu.darkbot.api.events.Event;
 
 import java.time.Duration;
 
@@ -80,4 +81,9 @@ public interface StatsAPI extends API.Singleton {
      * @return earned amount of honor while bot was working
      */
     double getEarnedHonor();
+
+    class StatsResetEvent implements Event
+    {
+        public StatsResetEvent() {};
+    }
 }
