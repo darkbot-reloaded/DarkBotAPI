@@ -8,6 +8,7 @@ import eu.darkbot.api.game.other.Point;
  *
  * Plugins should not rely on sending click events, and should use other APIs like {@link HeroItemsAPI} instead.
  */
+@Deprecated
 public interface WindowAPI extends API.Singleton {
 
     /**

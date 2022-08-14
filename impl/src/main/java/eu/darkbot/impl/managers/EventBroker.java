@@ -10,9 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.stream.Collectors;
@@ -31,6 +29,8 @@ public class EventBroker implements EventBrokerAPI {
         try {
             eventsBeingSent++;
             dispatchers.forEach((l, d) -> d.handle(l, event));
+        } catch (Throwable t) {
+            t.printStackTrace();
         } finally {
             eventsBeingSent--;
         }
