@@ -4,6 +4,7 @@ import eu.darkbot.api.game.galaxy.GalaxyGate;
 import eu.darkbot.api.game.galaxy.GalaxyInfo;
 import eu.darkbot.api.game.galaxy.SpinResult;
 import eu.darkbot.api.managers.BackpageAPI;
+import eu.darkbot.api.managers.EventBrokerAPI;
 import eu.darkbot.api.managers.GalaxySpinnerAPI;
 import eu.darkbot.api.managers.HeroAPI;
 import eu.darkbot.impl.galaxy.GalaxyInfoImpl;
@@ -22,12 +23,14 @@ public class GalaxySpinner implements GalaxySpinnerAPI {
     private final HeroAPI hero;
     private final BackpageAPI backpage;
     private final GalaxyInfoImpl galaxyInfo;
+    private final EventBrokerAPI eventBroker;
 
     private long lastUpdate;
 
-    public GalaxySpinner(HeroAPI hero, BackpageAPI backpage) {
+    public GalaxySpinner(HeroAPI hero, BackpageAPI backpage, EventBrokerAPI eventBroker) {
         this.hero = hero;
         this.backpage = backpage;
+        this.eventBroker = eventBroker;
         this.galaxyInfo = new GalaxyInfoImpl();
     }
 
@@ -49,13 +52,21 @@ public class GalaxySpinner implements GalaxySpinnerAPI {
         if (multiplier) params += "&multiplier=1";
         if (spinAmount > 4) params += "&spinamount=" + spinAmount;
 
-        return Boolean.TRUE.equals(handleRequest(params, -1, minWait))
-                ? Optional.of(galaxyInfo.getSpinResult()) : Optional.empty();
+        boolean success = Boolean.TRUE.equals(handleRequest(params, -1, minWait));
+
+        if (success)
+            eventBroker.sendEvent(new SpinGateEvent(galaxyInfo.getSpinResult(), spinAmount));
+
+        return success ? Optional.of(galaxyInfo.getSpinResult()) : Optional.empty();
     }
 
     @Override
     public boolean placeGate(@NotNull GalaxyGate gate, int minWait) {
-        return Boolean.TRUE.equals(handleRequest(getParam("setupGate") + gate.getIdParam(), -1, minWait));
+        boolean success = Boolean.TRUE.equals(handleRequest(getParam("setupGate") + gate.getIdParam(), -1, minWait));
+        if (success)
+            eventBroker.sendEvent(new PlaceGateEvent(gate));
+
+        return success;
     }
 
     @Override
