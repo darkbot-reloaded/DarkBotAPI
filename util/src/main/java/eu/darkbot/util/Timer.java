@@ -111,6 +111,19 @@ public class Timer {
     }
 
     /**
+     * Trying to disarm timer only when is armed and is inactive
+     *
+     * @return true if timer was successfully disarmed, false otherwise
+     */
+    public boolean tryDisarm() {
+        if (isArmed() && isInactive()) {
+            disarm();
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Reset the time completely to 0
      */
     public void disarm() {

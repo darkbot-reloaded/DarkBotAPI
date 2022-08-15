@@ -6,13 +6,10 @@ import eu.darkbot.api.events.Listener;
 import eu.darkbot.api.managers.EventBrokerAPI;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.stream.Collectors;
@@ -86,14 +83,12 @@ public class EventBroker implements EventBrokerAPI {
             if (!clazz.isInstance(event)) return;
             try {
                 method.invoke(listener, event);
-            } catch (IllegalAccessException | InvocationTargetException e) {
+            } catch (Throwable e) {
                 System.out.println("Exception passing " +
-                        event.getClass().getName() + "to " +
+                        event.getClass().getName() + " to " +
                         listener.getClass().toString() + "#" + method.getName());
                 e.printStackTrace();
             }
         }
     }
-
-
 }
