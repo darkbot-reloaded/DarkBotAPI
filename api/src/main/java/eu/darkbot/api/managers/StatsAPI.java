@@ -82,8 +82,7 @@ public interface StatsAPI extends API.Singleton {
      */
     double getEarnedHonor();
 
-    class StatsResetEvent implements Event
-    {
+    class StatsResetEvent implements Event {
         public StatsResetEvent() {};
     }
 }

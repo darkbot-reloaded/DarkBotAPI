@@ -52,23 +52,21 @@ public class GalaxySpinner implements GalaxySpinnerAPI {
         if (multiplier) params += "&multiplier=1";
         if (spinAmount > 4) params += "&spinamount=" + spinAmount;
 
-        Optional<SpinResult> spinResult = Boolean.TRUE.equals(handleRequest(params, -1, minWait))
-                ? Optional.of(galaxyInfo.getSpinResult()) : Optional.empty();
+        boolean success = Boolean.TRUE.equals(handleRequest(params, -1, minWait));
 
-        if (!spinResult.isEmpty())
-            eventBroker.sendEvent(new SpinGateEvent(spinResult.get(), spinAmount));
+        if (success)
+            eventBroker.sendEvent(new SpinGateEvent(galaxyInfo.getSpinResult(), spinAmount));
 
-        return spinResult;
+        return success ? Optional.of(galaxyInfo.getSpinResult()) : Optional.empty();
     }
 
     @Override
     public boolean placeGate(@NotNull GalaxyGate gate, int minWait) {
-        boolean successfullyPlaced = Boolean.TRUE.equals(handleRequest(getParam("setupGate") + gate.getIdParam(), -1, minWait));
-
-        if (successfullyPlaced)
+        boolean success = Boolean.TRUE.equals(handleRequest(getParam("setupGate") + gate.getIdParam(), -1, minWait));
+        if (success)
             eventBroker.sendEvent(new PlaceGateEvent(gate));
 
-        return successfullyPlaced;
+        return success;
     }
 
     @Override
