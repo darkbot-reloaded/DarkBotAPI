@@ -19,12 +19,16 @@ public class MapModule extends TemporalModule {
     protected Consumer<Object> mapChangeListener;
     protected ConfigSetting<Object> mapChangeSetting;
 
+    protected boolean mapChanged;
+
     public MapModule(PluginAPI api, boolean backOnConfigChange) {
         this(api.requireAPI(BotAPI.class), api.requireInstance(MapTraveler.class), api.requireAPI(I18nAPI.class));
 
         if (backOnConfigChange) {
             this.mapChangeSetting = api.requireAPI(ConfigAPI.class).requireConfig("general.working_map");
-            this.mapChangeSetting.addListener(mapChangeListener = (a -> goBack()));
+
+            this.mapChangeListener = (map -> mapChanged = (map != traveler.target));
+            this.mapChangeSetting.addListener(mapChangeListener);
         }
     }
 
@@ -59,7 +63,6 @@ public class MapModule extends TemporalModule {
     @Override
     public void onTickModule() {
         if (!traveler.isDone()) traveler.tick();
-        if (traveler.isDone()) goBack();
+        if (mapChanged || traveler.isDone()) goBack();
     }
-
 }
