@@ -6,6 +6,7 @@ import eu.darkbot.api.game.other.Location;
 import eu.darkbot.api.managers.GroupAPI;
 import eu.darkbot.api.managers.MovementAPI;
 import eu.darkbot.api.utils.Inject;
+import eu.darkbot.util.Timer;
 
 public class PortalJumper {
 
@@ -14,6 +15,8 @@ public class PortalJumper {
 
     protected Portal last;
     protected long nextMoveClick;
+
+    protected Timer nextTravelMove = Timer.get(1_000);
 
     @Inject
     public PortalJumper(MovementAPI movement, GroupAPI group) {
@@ -31,11 +34,14 @@ public class PortalJumper {
 
     public boolean travel(Portal target) {
         double leniency = Math.min(200 + movement.getClosestDistance(target), 600);
-        if (target.getLocationInfo().isInitialized() && movement.getDestination().distanceTo(target) > leniency) {
+        if (target.getLocationInfo().isInitialized()
+                // move to random position around portal every 1s to fix desyncs even more
+                && (nextTravelMove.tryActivate() || movement.getDestination().distanceTo(target) > leniency)) {
             movement.moveTo(Location.of(target, Math.random() * Math.PI * 2, Math.random() * 200));
             return false;
         }
-        return movement.getCurrentLocation().distanceTo(target) <= leniency && !movement.isMoving();
+        return movement.getCurrentLocation().distanceTo(target) <= leniency
+                && (!movement.isMoving() || target.isSelectable());
     }
 
     public void jump(Portal target) {
