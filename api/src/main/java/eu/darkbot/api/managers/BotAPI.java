@@ -1,6 +1,7 @@
 package eu.darkbot.api.managers;
 
 import eu.darkbot.api.API;
+import eu.darkbot.api.events.Event;
 import eu.darkbot.api.extensions.Behavior;
 import eu.darkbot.api.extensions.Module;
 import eu.darkbot.api.utils.Version;
@@ -58,4 +59,19 @@ public interface BotAPI extends API.Singleton {
      * @return The same module that was passed in, useful to chain methods.
      */
     <M extends Module> M setModule(@Nullable M module);
+
+    /**
+     * Event fired when running value changed
+     */
+    class RunningToggleEvent implements Event {
+        private final boolean running;
+
+        public RunningToggleEvent(boolean running) {
+            this.running = running;
+        }
+
+        public boolean isRunning() {
+            return running;
+        }
+    }
 }
