@@ -617,6 +617,7 @@ public interface SelectableItem {
         ORCUS_ASSIMILATE,
         HOLO_SELF_REVERSAL,
         HOLO_ENEMY_REVERSAL,
+        SOLACE_PLUS_NANO_CLUSTER_REPAIRER_PLUS("ability_solace-plus_nano-cluster-repairer-plus"),
         CITADEL_PLUS_PRISMATIC_ENDURANCE("ability_citadel-plus_prismatic-endurance"),
         LIBERATOR_PLUS_SELF_REPAIR("ability_liberator-plus_self-repair");
 
