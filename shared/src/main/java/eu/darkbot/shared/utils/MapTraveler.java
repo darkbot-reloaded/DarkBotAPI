@@ -51,6 +51,7 @@ public class MapTraveler implements Listener {
     public void setTarget(GameMap target) {
         shipTpWait = mapChangeWait = -1;
         this.target = target;
+        this.current = null;
         this.done = false;
     }
 
