@@ -59,7 +59,7 @@ public class PortalJumper {
                This movement should go straight, not use pathfinding like it is right now
                This is supposed to fix client-server de-syncs, and this movement will not fix them.
                The intentional method would be drive.clickCenter(target), making a real click on that location*/
-            movement.moveTo(target);
+            movement.moveTo(Location.of(target, Math.random() * Math.PI * 2, Math.random() * 200));
             nextMoveClick = System.currentTimeMillis() + 10000;
         }
     }
