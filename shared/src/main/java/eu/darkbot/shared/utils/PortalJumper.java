@@ -6,6 +6,7 @@ import eu.darkbot.api.game.other.Location;
 import eu.darkbot.api.managers.GroupAPI;
 import eu.darkbot.api.managers.MovementAPI;
 import eu.darkbot.api.utils.Inject;
+import eu.darkbot.util.Timer;
 
 public class PortalJumper {
 
@@ -13,7 +14,10 @@ public class PortalJumper {
     protected final GroupAPI group;
 
     protected Portal last;
+    @Deprecated
     protected long nextMoveClick;
+
+    protected Timer nextTravelMove = Timer.get();
 
     @Inject
     public PortalJumper(MovementAPI movement, GroupAPI group) {
@@ -30,12 +34,23 @@ public class PortalJumper {
     }
 
     public boolean travel(Portal target) {
+        // if location is not initialized, cannot travel there
+        if (!target.getLocationInfo().isInitialized()) return true;
         double leniency = Math.min(200 + movement.getClosestDistance(target), 600);
-        if (target.getLocationInfo().isInitialized() && movement.getDestination().distanceTo(target) > leniency) {
+
+        if (movement.getDestination().distanceTo(target) > leniency
+                || (movement.getCurrentLocation().distanceTo(target) > leniency
+                && nextTravelMove.isInactive())) {
             movement.moveTo(Location.of(target, Math.random() * Math.PI * 2, Math.random() * 200));
-            return false;
+            nextTravelMove.activate(2_000); // move to a little different location near to port every 2 seconds
+
+        } else if (movement.getCurrentLocation().distanceTo(target) <= leniency
+                && nextTravelMove.tryActivate(target.isJumping() ? 8_000 : 5_000)) {
+            movement.moveTo(Location.of(target, Math.random() * Math.PI * 2, Math.random() * 200));
         }
-        return movement.getCurrentLocation().distanceTo(target) <= leniency && !movement.isMoving();
+
+        return movement.getCurrentLocation().distanceTo(target) <= leniency
+                && (!movement.isMoving() || target.isSelectable());
     }
 
     public void jump(Portal target) {
@@ -53,14 +68,7 @@ public class PortalJumper {
 
         if (target != last) {
             last = target;
-            nextMoveClick = System.currentTimeMillis() + 5000;
-        } else if (System.currentTimeMillis() > nextMoveClick && !target.isSelectable()) {
-            /*TODO:
-               This movement should go straight, not use pathfinding like it is right now
-               This is supposed to fix client-server de-syncs, and this movement will not fix them.
-               The intentional method would be drive.clickCenter(target), making a real click on that location*/
-            movement.moveTo(target);
-            nextMoveClick = System.currentTimeMillis() + 10000;
+            nextTravelMove.activate(10_000); // first jump attempt, it may take a while
         }
     }
 
