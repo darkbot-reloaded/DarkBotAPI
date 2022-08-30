@@ -188,7 +188,7 @@ public class SafetyFinder implements Listener {
             case JUMPING:
                 prevMap = starSystem.getCurrentMap();
                 safety.getEntity()
-                        .ifPresent(e -> jumper.jump((Portal) e));
+                        .ifPresent(e -> jumper.travelAndJump((Portal) e));
                 return false;
             case JUMPED:
                 if (hero.getHealth().hpDecreasedIn(100) || safety.getJumpMode() != SafetyInfo.JumpMode.ALWAYS_OTHER_SIDE
