@@ -1,5 +1,7 @@
 package eu.darkbot.api.config.legacy;
 
+import eu.darkbot.api.config.types.BoxInfo;
+import eu.darkbot.api.config.types.NpcInfo;
 import eu.darkbot.api.config.types.PlayerInfo;
 import eu.darkbot.api.config.types.SafetyInfo;
 import eu.darkbot.api.config.types.ZoneInfo;
@@ -8,8 +10,26 @@ import eu.darkbot.api.game.other.GameMap;
 import java.util.Collection;
 import java.util.Map;
 
-@Deprecated
+/**
+ * Methods to interact with legacy configurations that are not easy to manage from new api.
+ */
 public interface Config {
+
+    /**
+     * Will get or create BoxInfo with given box name
+     *
+     * @param name of the box
+     * @return BoxInfo of given box name
+     */
+    BoxInfo getOrCreateBoxInfo(String name);
+
+    /**
+     * Will get or create NpcInfo with given npc name
+     *
+     * @param name of the npc
+     * @return NpcInfo of given npc name
+     */
+    NpcInfo getOrCreateNpcInfo(String name);
 
     /**
      * @param map the map to get infos for

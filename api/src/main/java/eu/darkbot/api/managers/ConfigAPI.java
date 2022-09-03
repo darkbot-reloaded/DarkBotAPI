@@ -16,7 +16,12 @@ import java.util.Set;
  */
 public interface ConfigAPI extends API.Singleton {
 
-    @Deprecated
+    /**
+     * Allows direct interfacing with some complex types in the config.
+     * Always prefer using other methods in this interface over this if possible, but if you need to manipulate
+     * npcs, boxes, safeties, or players, those are not part of the config tree, and cannot be found elsewhere.
+     * @return an instance of config allowing interfacing with more direct methods.
+     */
     default Config getLegacy() {
         ConfigSetting<Config> cfg = getConfigRoot();
         return cfg.getValue();
@@ -165,18 +170,17 @@ public interface ConfigAPI extends API.Singleton {
     }
 
     /**
-     * Will get or create BoxInfo with given box name
-     *
-     * @param name of the box
-     * @return BoxInfo of given box name
+     * @deprecated Use {@link #getLegacy()}
      */
-    BoxInfo getOrCreateBoxInfo(String name);
+    @Deprecated
+    default BoxInfo getOrCreateBoxInfo(String name) {
+        return getLegacy().getOrCreateBoxInfo(name);
+    }
 
     /**
-     * Will get or create NpcInfo with given npc name
-     *
-     * @param name of the npc
-     * @return NpcInfo of given npc name
+     * @deprecated Use {@link #getLegacy()}
      */
-    NpcInfo getOrCreateNpcInfo(String name);
+    default NpcInfo getOrCreateNpcInfo(String name) {
+        return getLegacy().getOrCreateNpcInfo(name);
+    }
 }
