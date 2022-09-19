@@ -3,6 +3,13 @@ plugins {
     `maven-publish`
 }
 
+tasks.wrapper {
+    gradleVersion = "7.5.1"
+
+    // without gradle javadocs and sources
+    distributionType = Wrapper.DistributionType.BIN
+}
+
 val apiVersion = "0.5.1"
 
 allprojects {
