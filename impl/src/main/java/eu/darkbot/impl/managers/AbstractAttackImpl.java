@@ -34,6 +34,11 @@ public abstract class AbstractAttackImpl implements AttackAPI {
 
     @Override
     public void setTarget(@Nullable Lockable target) {
+        // target changes so disarm timers
+        if (this.target != target) {
+            lockTry.disarm();
+            attackTry.disarm();
+        }
         this.target = target;
     }
 
