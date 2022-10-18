@@ -66,7 +66,6 @@ public abstract class AbstractAttackImpl implements AttackAPI {
     public void tryLockAndAttack() {
         if (isLocked()) {
             SelectableItem.Laser laser = getBestLaserAmmo();
-            //if (laser == null) return;//should only attack if laser ammo is not null?
 
             if (laser != null && hero.getLaser() != laser && heroItems.useItem(laser, 500).isSuccessful()) {
                 if (isAttackViaSlotBarEnabled()) {
