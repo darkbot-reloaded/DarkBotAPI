@@ -476,7 +476,9 @@ public interface SelectableItem {
         /** Saturn Ship spawner, pve exclusive */
         SS_CPU(CpuType.SPECIAL_AMMO),
         /** PVP immunity CPU, pve exclusive */
-        PA_X(CpuType.CPU);
+        PA_X(CpuType.CPU),
+        /** Opens the Astral galaxy gate */
+        ASTRAL_CPU(CpuType.PORTAL);
 
         private final String id;
 
