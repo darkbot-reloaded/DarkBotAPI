@@ -27,6 +27,12 @@ public interface BackpageAPI extends API.Singleton {
      */
     boolean isInstanceValid();
 
+    /**
+     * Returns the value returned by the SID status request. 
+     * 200 = SID is working correctly
+     */
+    String getSidStatus();
+
     @UnknownNullability("Check #isInstanceValid")
     String getSid();
 
