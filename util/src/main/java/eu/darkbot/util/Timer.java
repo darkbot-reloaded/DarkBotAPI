@@ -9,7 +9,7 @@ package eu.darkbot.util;
  */
 public class Timer {
     private long time = 0;
-    private final long defaultFuse;
+    private final long defaultFuse, randomRange;
 
     /**
      * Get a default instance of timer, with no default fuse
@@ -17,7 +17,7 @@ public class Timer {
      * @return A new timer with no default fuse
      */
     public static Timer get() {
-        return new Timer(-1);
+        return new Timer(-1, -1);
     }
 
     /**
@@ -30,11 +30,36 @@ public class Timer {
     public static Timer get(long defaultFuse) {
         if (defaultFuse <= 0)
             throw new IllegalArgumentException("defaultFuse must be greater than 0");
-        return new Timer(defaultFuse);
+        return new Timer(defaultFuse, -1);
     }
 
-    private Timer(long defaultFuse) {
+    /**
+     * Get a default instance of timer, with specified additional random range fuse.
+     * -> time = currentTime + fuse + random() * randomRange
+     *
+     * @param randomRange range of additional random fuse
+     * @return A new timer with a specified random range
+     * @throws IllegalArgumentException if randomRange is negative or 0
+     */
+    public static Timer getRandom(long randomRange) {
+        if (randomRange <= 0)
+            throw new IllegalArgumentException("randomRange must be greater than 0");
+
+        return new Timer(-1, randomRange);
+    }
+
+    public static Timer getRandom(long defaultFuse, long randomRange) {
+        if (defaultFuse <= 0)
+            throw new IllegalArgumentException("defaultFuse must be greater than 0");
+        if (randomRange <= 0)
+            throw new IllegalArgumentException("randomRange must be greater than 0");
+
+        return new Timer(defaultFuse, randomRange);
+    }
+
+    private Timer(long defaultFuse, long randomRange) {
         this.defaultFuse = defaultFuse;
+        this.randomRange = randomRange;
     }
 
     /**
@@ -45,8 +70,7 @@ public class Timer {
      */
     public boolean tryActivate(long fuse) {
         if (isActive()) return false;
-
-        this.time = System.currentTimeMillis() + fuse;
+        setTime(fuse);
         return true;
     }
 
@@ -70,7 +94,7 @@ public class Timer {
      */
     public boolean activate(long fuse) {
         boolean isInactive = isInactive();
-        this.time = System.currentTimeMillis() + fuse;
+        setTime(fuse);
         return isInactive;
     }
 
@@ -138,4 +162,8 @@ public class Timer {
         return time - System.currentTimeMillis();
     }
 
+    private void setTime(long fuse) {
+        long random = randomRange <= 0 ? 0 : (long) (Math.random() * randomRange);
+        this.time = System.currentTimeMillis() + fuse + random;
+    }
 }

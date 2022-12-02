@@ -20,6 +20,8 @@ import eu.darkbot.api.managers.HeroAPI;
 import eu.darkbot.api.managers.HeroItemsAPI;
 import eu.darkbot.api.managers.MovementAPI;
 import eu.darkbot.api.managers.StarSystemAPI;
+import eu.darkbot.util.TimeUtils;
+import eu.darkbot.util.Timer;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -60,6 +62,8 @@ public class SafetyFinder implements Listener {
     protected boolean refreshing;
     protected long escapingSince = -1;
     protected long lastTick;
+
+    protected final Timer lastMoveTimer = Timer.getRandom(3 * TimeUtils.SECOND, TimeUtils.SECOND);
 
     public enum Escaping {
         ENEMY, SIGHT, REPAIR, REFRESH, WAITING, NONE;
@@ -170,8 +174,7 @@ public class SafetyFinder implements Listener {
             if (escape == Escaping.NONE || safety == null) return true;
 
             if (hero.getLocationInfo().distanceTo(safety) > safety.getRadius()) {
-                moveToSafety();
-                hero.setRunMode();
+                moveToSafety(safety);
                 return false;
             }
         }
@@ -191,6 +194,7 @@ public class SafetyFinder implements Listener {
                         .ifPresent(e -> jumper.travelAndJump((Portal) e));
                 return false;
             case JUMPED:
+                moveToSafety(getSafety());
                 if (hero.getHealth().hpDecreasedIn(100) || safety.getJumpMode() != SafetyInfo.JumpMode.ALWAYS_OTHER_SIDE
                         || (!refreshing && doneRepairing())) {
                     jumpState = JumpState.RETURNING;
@@ -201,6 +205,9 @@ public class SafetyFinder implements Listener {
                 if (mapTraveler.isDone()) mapTraveler.setTarget(prevMap);
                 mapTraveler.tick();
                 return false;
+
+            case RETURNED:
+                moveToSafety(safety);
         }
 
         if (jumpState == JumpState.CURRENT_MAP || jumpState == JumpState.RETURNED) {
@@ -270,13 +277,15 @@ public class SafetyFinder implements Listener {
                 .orElse(best);
     }
 
-    protected void moveToSafety() {
-        if ((jumpState != JumpState.CURRENT_MAP && jumpState != JumpState.JUMPING)
-                || movement.getDestination().distanceTo(safety) < safety.getRadius()
-                || !safety.getEntity().map(Entity::isValid).orElse(false)) return;
+    protected void moveToSafety(SafetyInfo safety) {
+        if (safety == null || !safety.getEntity().map(Entity::isValid).orElse(false)
+                || (movement.getDestination().distanceTo(safety) < safety.getRadius() && lastMoveTimer.isActive())) return;
+
+        hero.setRunMode();
 
         double angle = safety.angleTo(hero) + Math.random() * 0.2 - 0.1;
         movement.moveTo(Location.of(safety, angle, -safety.getRadius() * (0.3 + (0.60 * Math.random())))); // 30%-90% radius
+        lastMoveTimer.activate();
     }
 
     protected void castDefensiveAbility() {
