@@ -476,7 +476,9 @@ public interface SelectableItem {
         /** Saturn Ship spawner, pve exclusive */
         SS_CPU(CpuType.SPECIAL_AMMO),
         /** PVP immunity CPU, pve exclusive */
-        PA_X(CpuType.CPU);
+        PA_X(CpuType.CPU),
+        /** Opens the Astral galaxy gate */
+        ASTRAL_CPU(CpuType.PORTAL);
 
         private final String id;
 
@@ -620,7 +622,10 @@ public interface SelectableItem {
         SOLACE_PLUS_NANO_CLUSTER_REPAIRER_PLUS("ability_solace-plus_nano-cluster-repairer-plus"),
         CITADEL_PLUS_PRISMATIC_ENDURANCE("ability_citadel-plus_prismatic-endurance"),
         LIBERATOR_PLUS_SELF_REPAIR("ability_liberator-plus_self-repair"),
-        PUSAT_PLUS_SPEED_SAP("ability_pusat-plus_speed-sap");
+        PUSAT_PLUS_SPEED_SAP("ability_pusat-plus_speed-sap"),
+        TEMPEST_VOLTAGE_LINK("ability_tempest_voltage-link"),
+        TEMPEST_VOLT_DISCHARGE("ability_tempest_volt-discharge"),
+        TEMPEST_VOLT_BACKUP("ability_tempest_volt-backup");
 
 
         private static final String PREFIX = "ability_";
