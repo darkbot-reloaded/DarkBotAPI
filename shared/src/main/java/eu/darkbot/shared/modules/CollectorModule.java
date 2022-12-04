@@ -160,7 +160,7 @@ public class CollectorModule implements Module {
     protected boolean checkMap() {
         GameMap map = getWorkingMap();
         if (!portals.isEmpty() && map != starSystem.getCurrentMap()) {
-            this.bot.setModule(api.requireInstance(MapModule.class)).setTarget(map);
+            this.bot.setModule(new MapModule(api, true)).setTarget(map);
             return false;
         }
 
