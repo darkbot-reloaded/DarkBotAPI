@@ -17,6 +17,7 @@ public @interface Visibility {
     enum Level {
         BASIC,
         INTERMEDIATE,
-        ADVANCED
+        ADVANCED,
+        DEVELOPER;
     }
 }
