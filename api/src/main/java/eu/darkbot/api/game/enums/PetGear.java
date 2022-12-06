@@ -1,6 +1,7 @@
 package eu.darkbot.api.game.enums;
 
 import eu.darkbot.api.utils.EquippableItem;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents pet gears which can be used by {@link eu.darkbot.api.managers.PetAPI}
@@ -25,6 +26,7 @@ public enum PetGear implements EquippableItem {
     MEGA_MINE("Mega-Mine Gear", Cooldown.MEGA_MINE),
     BEACON_COMBAT("Beacon-Combat Gear", Cooldown.BEACON_COMBAT),
     BEACON_HP("Beacon-HP Gear", Cooldown.BEACON_HP),
+    HEAT_RELEASE("Heat Release Gear", Cooldown.HEAT_RELEASE),
     UNKNOWN("Unknown Gear");
 
     private final String name;
@@ -67,7 +69,7 @@ public enum PetGear implements EquippableItem {
     /**
      * @return The cooldown associated with this particular gear, null if no cooldown applies
      */
-    public Cooldown getCooldown() {
+    public @Nullable Cooldown getCooldown() {
         return cooldown;
     }
 
@@ -86,7 +88,8 @@ public enum PetGear implements EquippableItem {
         HP_LINK,
         MEGA_MINE,
         BEACON_COMBAT,
-        BEACON_HP;
+        BEACON_HP,
+        HEAT_RELEASE;
 
         /**
          * @return The in-game id of this pet cooldown

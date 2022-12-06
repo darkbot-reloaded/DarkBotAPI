@@ -625,8 +625,13 @@ public interface SelectableItem {
         PUSAT_PLUS_SPEED_SAP("ability_pusat-plus_speed-sap"),
         TEMPEST_VOLTAGE_LINK("ability_tempest_voltage-link"),
         TEMPEST_VOLT_DISCHARGE("ability_tempest_volt-discharge"),
-        TEMPEST_VOLT_BACKUP("ability_tempest_volt-backup");
-
+        TEMPEST_VOLT_BACKUP("ability_tempest_volt-backup"),
+        SOLARIS_PLUS_INCINERATE_PLUS("ability_solaris-plus_incinerate-plus"),
+        HECATE_PLUS_PARTICLE_BEAM_PLUS("ability_hecate-plus_particle-beam-plus"),
+        HECATE_PLUS_STOCKPILE("ability_hecate-plus_stockpile"),
+        HAMMERCLAW_PLUS_REALLOCATE("ability_hammerclaw-plus_reallocate"),
+        SPEARHEAD_PLUS_JAMX_CREED("ability_spearhead-plus_jamx-creed"),
+        SPEARHEAD_PLUS_NEUTRALIZING_MARKER("ability_spearhead-plus_neutralizing-marker");
 
         private static final String PREFIX = "ability_";
         private final String id;
@@ -784,7 +789,9 @@ public interface SelectableItem {
         /** Enables {@link PetGear#BEACON_HP} gear */
         G_BH1(PetGear.BEACON_HP),
         /** Enables {@link PetGear#BEACON_COMBAT} gear */
-        G_BC1(PetGear.BEACON_COMBAT);
+        G_BC1(PetGear.BEACON_COMBAT),
+        /** Enables {@link PetGear#HEAT_RELEASE} gear */
+        G_HR1(PetGear.HEAT_RELEASE);
 
         private static final String PREFIX = "equipment_petgear_";
         private final String id;

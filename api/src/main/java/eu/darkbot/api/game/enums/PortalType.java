@@ -1,9 +1,10 @@
 package eu.darkbot.api.game.enums;
 
 /**
- * In-game type of a {@link eu.darkbot.api.game.entities.Portal}.
+ * In-game type of {@link eu.darkbot.api.game.entities.Portal}.
  */
 public enum PortalType {
+    UNKNOWN(-1),
 
     STANDARD(1),
     TUTORIAL(55),
@@ -23,6 +24,16 @@ public enum PortalType {
     PAYLOAD(85), DOMINATION(75),
     GOP(24), GOP_EASY(235),  //Gauntlet of Plutus
     TOT(81), ZETA_FROST(83), //Tunnel of Terror
+
+    ROUGE_LITE(86),
+    ROUGE_LITE_WEAPON(87), ROUGE_LITE_WEAPON_BRUTAL(88),
+    ROUGE_LITE_GENERATOR(89), ROUGE_LITE_GENERATOR_BRUTAL(90),
+    ROUGE_LITE_AMMUNITION(91), ROUGE_LITE_AMMUNITION_BRUTAL(92),
+    ROUGE_LITE_BOOSTER(93), ROUGE_LITE_BOOSTER_BRUTAL(94),
+    ROUGE_LITE_MODULE(95), ROUGE_LITE_MODULE_BRUTAL(96),
+    ROUGE_LITE_RESOURCE(97), ROUGE_LITE_RESOURCE_BRUTAL(98),
+    ROUGE_LITE_HP_RECOVER(99),
+    ROUGE_LITE_FINAL_BOSS(100),
 
     //?
     INVISIBLE(18), //4-5 center portal?
@@ -51,6 +62,6 @@ public enum PortalType {
     public static PortalType of(int typeId) {
         for (PortalType type : values())
             if (type.id == typeId) return type;
-        return null;
+        return UNKNOWN;
     }
 }
