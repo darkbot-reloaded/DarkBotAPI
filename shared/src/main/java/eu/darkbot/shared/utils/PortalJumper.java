@@ -1,10 +1,12 @@
 package eu.darkbot.shared.utils;
 
+import eu.darkbot.api.PluginAPI;
 import eu.darkbot.api.game.entities.Portal;
 import eu.darkbot.api.game.other.GameMap;
 import eu.darkbot.api.game.other.Location;
 import eu.darkbot.api.managers.GroupAPI;
 import eu.darkbot.api.managers.MovementAPI;
+import eu.darkbot.api.managers.WindowAPI;
 import eu.darkbot.api.utils.Inject;
 import eu.darkbot.util.Timer;
 
@@ -13,20 +15,28 @@ public class PortalJumper {
     protected final MovementAPI movement;
     protected final GroupAPI group;
 
+    protected WindowAPI window;
+
     protected Portal last;
     @Deprecated
     protected long nextMoveClick;
 
-    protected Timer nextTravelMove = Timer.get();
-
-    @Inject
+    protected Timer nextTravelMove = Timer.get(), tryingToJumpSince = Timer.get(90_000);
     public PortalJumper(MovementAPI movement, GroupAPI group) {
         this.movement = movement;
         this.group = group;
     }
 
+    @Inject
+    public PortalJumper(PluginAPI api) {
+        this(api.requireAPI(MovementAPI.class), api.requireAPI(GroupAPI.class));
+
+        this.window = api.getAPI(WindowAPI.class);
+    }
+
     public void reset() {
         this.last = null;
+        this.tryingToJumpSince.disarm();
     }
 
     public void travelAndJump(Portal target) {
@@ -69,7 +79,12 @@ public class PortalJumper {
         if (target != last) {
             last = target;
             nextTravelMove.activate(10_000); // first jump attempt, it may take a while
+            tryingToJumpSince.activate();
+        }
+
+        if (window != null && tryingToJumpSince.tryDisarm()) {
+            System.out.println("Triggering refresh: jumping portal took too long");
+            window.handleRefresh();
         }
     }
-
 }
