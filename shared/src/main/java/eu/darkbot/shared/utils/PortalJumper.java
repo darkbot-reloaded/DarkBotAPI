@@ -22,13 +22,13 @@ public class PortalJumper {
 
     protected Timer nextTravelMove = Timer.get(), tryingToJumpSince = Timer.get(90_000);
 
+    @Inject
     public PortalJumper(MovementAPI movement, GroupAPI group, WindowAPI window) {
         this.movement = movement;
         this.group = group;
         this.window = window;
     }
 
-    @Inject
     public PortalJumper(PluginAPI api) {
         this(api.requireAPI(MovementAPI.class), api.requireAPI(GroupAPI.class), api.requireAPI(WindowAPI.class));
     }
