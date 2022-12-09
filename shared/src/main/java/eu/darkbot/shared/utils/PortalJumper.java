@@ -22,6 +22,7 @@ public class PortalJumper {
     protected long nextMoveClick;
 
     protected Timer nextTravelMove = Timer.get(), tryingToJumpSince = Timer.get(90_000);
+
     public PortalJumper(MovementAPI movement, GroupAPI group) {
         this.movement = movement;
         this.group = group;
