@@ -14,8 +14,7 @@ public class PortalJumper {
 
     protected final MovementAPI movement;
     protected final GroupAPI group;
-
-    protected WindowAPI window;
+    protected final WindowAPI window;
 
     protected Portal last;
     @Deprecated
@@ -23,16 +22,15 @@ public class PortalJumper {
 
     protected Timer nextTravelMove = Timer.get(), tryingToJumpSince = Timer.get(90_000);
 
-    public PortalJumper(MovementAPI movement, GroupAPI group) {
+    public PortalJumper(MovementAPI movement, GroupAPI group, WindowAPI window) {
         this.movement = movement;
         this.group = group;
+        this.window = window;
     }
 
     @Inject
     public PortalJumper(PluginAPI api) {
-        this(api.requireAPI(MovementAPI.class), api.requireAPI(GroupAPI.class));
-
-        this.window = api.getAPI(WindowAPI.class);
+        this(api.requireAPI(MovementAPI.class), api.requireAPI(GroupAPI.class), api.requireAPI(WindowAPI.class));
     }
 
     public void reset() {
