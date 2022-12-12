@@ -11,6 +11,17 @@ import java.util.Optional;
 public interface Movable extends Entity {
 
     /**
+     * @return true if {@link Movable} is moving in-game
+     */
+    boolean isMoving();
+
+    /**
+     * @param inTime time in milliseconds
+     * @return true if {@link Movable} is moving or was moving in given time
+     */
+    boolean isMoving(long inTime);
+
+    /**
      * @return speed of the {@link Movable} in-game.
      */
     int getSpeed();

@@ -39,7 +39,6 @@ public interface Locatable {
      */
     double getY();
 
-
     /**
      * @param ox x coordinate of the other location
      * @param oy y coordinate of the other location

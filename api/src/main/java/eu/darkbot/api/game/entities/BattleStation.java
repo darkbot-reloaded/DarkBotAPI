@@ -1,29 +1,82 @@
 package eu.darkbot.api.game.entities;
 
+import eu.darkbot.api.game.other.Attacker;
 import eu.darkbot.api.game.other.Lockable;
 import eu.darkbot.api.game.other.Obstacle;
 
+import java.util.Locale;
+
 /**
- * In-game clan base station or meteoroid
+ * Default battle station entity
  */
-public interface BattleStation extends Obstacle, Lockable {
+public interface BattleStation extends Obstacle, /*deprecated*/ Lockable {
 
     /**
-     * In-game id for the visual hull type.
-     * Id 0 is an empty meteoroid, values 1 to 255 are built bases, other values are invalid.
-     *
-     * @return the in-game hull id for this meteoroid
+     * @deprecated use {@link Hull#getHullId()} instead
      */
-    int getHullId();
+    @Deprecated int getHullId();
+
+    /**
+     * Asteroid station - empty, non built
+     */
+    interface Asteroid extends BattleStation {
+    }
+
+    /**
+     * Main battle station entity, known as CBS
+     */
+    interface Hull extends BattleStation, Lockable {
+
+        int getHullId();
+        double getHullExpansion();
+
+        int getDeflectorShieldId();
+        double getDeflectorShieldExpansion();
+    }
 
     /**
      * In-game battle station modules around the main battle station
      */
-    interface Module extends Obstacle, Lockable /*should be attacker but...*/ {
+    interface Module extends BattleStation, Attacker {
 
         /**
          * @return the in-game id of the module
          */
         String getModuleId();
+
+        Type getType();
+
+        enum Type {
+            WRECK(),
+            HULL(),
+            DEFLECTOR(),
+            REPAIR("rep"),
+            LASER_HR("laserhigh"),
+            LASER_MR("lasermid"),
+            LASER_LR("laserlow"),
+            ROCKET_LA("rocketlow"),
+            ROCKET_MA("rocketmid"),
+            HONOR_BOOSTER("hon"),
+            DAMAGE_BOOSTER("dama"),
+            EXPERIENCE_BOOSTER("xp");
+
+            private final String id;
+
+            Type(String id) {
+                this.id = id == null ? name().toLowerCase(Locale.ROOT) : id;
+            }
+
+            Type() {
+                this(null);
+            }
+
+            public static Type of(String moduleId) {
+                for (Type value : values()) {
+                    if (moduleId.contains(value.id))
+                        return value;
+                }
+                return null;
+            }
+        }
     }
 }
