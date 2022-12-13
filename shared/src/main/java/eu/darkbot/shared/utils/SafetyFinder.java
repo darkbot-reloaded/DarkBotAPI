@@ -1,7 +1,10 @@
 package eu.darkbot.shared.utils;
 
 import eu.darkbot.api.config.ConfigSetting;
+import eu.darkbot.api.config.legacy.Config;
 import eu.darkbot.api.config.types.PercentRange;
+import eu.darkbot.api.config.types.PlayerInfo;
+import eu.darkbot.api.config.types.PlayerTag;
 import eu.darkbot.api.config.types.SafetyInfo;
 import eu.darkbot.api.config.types.ShipMode;
 import eu.darkbot.api.events.EventHandler;
@@ -37,6 +40,7 @@ public class SafetyFinder implements Listener {
     protected final StarSystemAPI starSystem;
 
     protected final ConfigAPI config;
+    protected final Config legacyConfig;
 
     protected final ConfigSetting<PercentRange> repairHpRange;
     protected final ConfigSetting<Double> repairRoamingHp;
@@ -44,6 +48,7 @@ public class SafetyFinder implements Listener {
     protected final ConfigSetting<ShipMode> repairMode;
 
     protected final ConfigSetting<Boolean> runFromEnemy;
+    protected final ConfigSetting<PlayerTag> enemiesTag;
     protected final ConfigSetting<Integer> rememberEnemySeconds;
     protected final ConfigSetting<Boolean> runInSight;
     protected final ConfigSetting<Boolean> stopRunningNoSight;
@@ -103,6 +108,7 @@ public class SafetyFinder implements Listener {
         this.starSystem = starSystem;
 
         this.config = config;
+        this.legacyConfig = config.getLegacy();
 
         this.repairHpRange = config.requireConfig("general.safety.repair_hp_range");
         this.repairRoamingHp = config.requireConfig("general.safety.repair_hp_no_npc");
@@ -110,6 +116,7 @@ public class SafetyFinder implements Listener {
         this.repairMode = config.requireConfig("general.safety.repair");
 
         this.runFromEnemy = config.requireConfig("general.running.run_from_enemies");
+        this.enemiesTag = config.requireConfig("general.running.enemies_tag");
         this.rememberEnemySeconds = config.requireConfig("general.running.remember_enemies_for");
         this.runInSight = config.requireConfig("general.running.run_from_enemies_sight");
         this.stopRunningNoSight = config.requireConfig("general.running.stop_running_no_sight");
@@ -314,6 +321,13 @@ public class SafetyFinder implements Listener {
     }
 
     protected boolean runFrom(Ship ship) {
+        if (enemiesTag.getValue() != null) {
+            PlayerInfo playerInfo = legacyConfig.getPlayerInfos().get(ship.getId());
+            if (playerInfo != null) {
+                if (enemiesTag.getValue().hasTag(playerInfo)) return true;
+            }
+        }
+
         return ship.getEntityInfo().isEnemy() && (isAttackingOrBlacklisted(ship) ||
                 (runInSight.getValue() && ship.distanceTo(hero) < maxSightDistance.getValue()));
     }
