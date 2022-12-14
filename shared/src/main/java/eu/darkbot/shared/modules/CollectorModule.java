@@ -272,10 +272,11 @@ public class CollectorModule implements Module {
     protected boolean isContested(Box box) {
         if (!ignoreContestedBoxes.getValue()) return false;
 
-        double heroTimeTo = hero.timeTo(box);
+        // Pessimistic estimate: assume hero takes twice as long as others, cause speed is unstable.
+        double heroTimeTo = hero.timeTo(box) * 2;
         return players.stream()
                 .filter(ship -> ship.getDestination().isPresent())
                 .filter(ship -> ship.getDestination().get().distanceTo(box) == 0)
-                .anyMatch(ship -> heroTimeTo < ship.timeTo(box));
+                .anyMatch(ship -> heroTimeTo > ship.timeTo(box));
     }
 }
