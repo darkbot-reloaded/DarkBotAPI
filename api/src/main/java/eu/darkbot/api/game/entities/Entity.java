@@ -91,7 +91,7 @@ public interface Entity extends Locatable {
 
     /**
      * @param key the key to search for
-     * @return value for the key or {@code null} if key doesnt exists.
+     * @return value for the key or {@code null} if key doesn't exist.
      */
     @Nullable Object getMetadata(@NotNull String key);
 

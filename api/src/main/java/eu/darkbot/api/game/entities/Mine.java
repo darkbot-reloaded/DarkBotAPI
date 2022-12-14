@@ -31,7 +31,9 @@ public interface Mine extends Entity {
         SLOWDOWN(7),
         INFECTION(17),
         MEGA(19), //pet's mega mine
-        CURCUBITOR(20);
+        CURCUBITOR(20),
+        ICE(21), // ICE_MINE
+        AGATUS_LURE(26);
 
         private final int[] ids;
 
