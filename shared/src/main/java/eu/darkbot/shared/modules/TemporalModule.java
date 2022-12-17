@@ -16,14 +16,16 @@ public abstract class TemporalModule implements Module, eu.darkbot.api.extension
 
     @Override
     public void install(PluginAPI api) {
-        this.back = bot.getModule();
-
-        if (back instanceof TemporalModule)
-            this.back = ((TemporalModule) this.back).back;
+        this.back = bot.getNonTemporalModule();
     }
 
     @Override
     public void uninstall() {}
+
+    @Override
+    public Module getBack() {
+        return back;
+    }
 
     public void goBack() {
         this.bot.setModule(back);

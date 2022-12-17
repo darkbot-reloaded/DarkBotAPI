@@ -4,6 +4,7 @@ import eu.darkbot.api.API;
 import eu.darkbot.api.events.Event;
 import eu.darkbot.api.extensions.Behavior;
 import eu.darkbot.api.extensions.Module;
+import eu.darkbot.api.extensions.TemporalModule;
 import eu.darkbot.api.utils.Version;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,19 +44,30 @@ public interface BotAPI extends API.Singleton {
     Module getModule();
 
     /**
+     * Returns the currently used module if it's not a {@link eu.darkbot.api.extensions.TemporalModule},
+     * otherwise returns the TemporalModule's previous module.
+     * @return current used non-temporal {@link Module}
+     */
+    default Module getNonTemporalModule() {
+        Module module = getModule();
+        if (module instanceof TemporalModule) return ((TemporalModule) module).getBack();
+        return module;
+    }
+
+    /**
      * Sets the currently running module in the bot.
      * Keep in mind that any pause &amp; restart will wipe this module and re-set the user defined module.
-     *
+     * <br>
      * This is mainly useful to install {@link eu.darkbot.api.extensions.TemporalModule}s that
      * will take over the control of the bot for a small amount of time before delegating back
      * to the {@link Module} set by the user.
-     *
+     * <br>
      * Examples:
      *  - A normal module may set a map traveling module to go to the working map
      *  - A behavior wanting temporal control over movement can install a temporal module that does that
      *
      * @param module The module to set, often a {@link eu.darkbot.api.extensions.TemporalModule}
-     * @param <M>     type of module
+     * @param <M> type of module
      * @return The same module that was passed in, useful to chain methods.
      */
     <M extends Module> M setModule(@Nullable M module);
