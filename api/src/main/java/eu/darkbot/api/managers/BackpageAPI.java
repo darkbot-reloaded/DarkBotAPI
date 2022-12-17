@@ -23,7 +23,7 @@ public interface BackpageAPI extends API.Singleton {
      * Check if any instance connection can be made,
      * however this doesn't ensure you that SID is valid/alive
      *
-     * @return true if sid and instance uri are usable
+     * @return true if sid, user id and instance uri are usable
      */
     boolean isInstanceValid();
 
@@ -35,6 +35,12 @@ public interface BackpageAPI extends API.Singleton {
 
     @UnknownNullability("Check #isInstanceValid")
     String getSid();
+
+    /**
+     * Returns the ID of the current user. A value of 0 indicates that the user ID has not been initialized.
+     * {@link #isInstanceValid()} checks if user ID is not 0
+     */
+    int getUserId();
 
     /**
      * Returns instance {@link URI}
