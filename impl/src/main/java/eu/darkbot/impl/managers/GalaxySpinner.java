@@ -26,7 +26,7 @@ public class GalaxySpinner implements GalaxySpinnerAPI {
 
     private long lastUpdate;
 
-    public GalaxySpinner(/*keep it?*/HeroAPI hero, BackpageAPI backpage, EventBrokerAPI eventBroker) {
+    public GalaxySpinner(BackpageAPI backpage, EventBrokerAPI eventBroker) {
         this.backpage = backpage;
         this.eventBroker = eventBroker;
         this.galaxyInfo = new GalaxyInfoImpl();
