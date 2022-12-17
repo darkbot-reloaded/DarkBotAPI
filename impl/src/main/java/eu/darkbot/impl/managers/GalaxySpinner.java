@@ -20,15 +20,13 @@ import java.util.Optional;
 public class GalaxySpinner implements GalaxySpinnerAPI {
     private final byte[] BUFFER = new byte[1024];
 
-    private final HeroAPI hero;
     private final BackpageAPI backpage;
     private final GalaxyInfoImpl galaxyInfo;
     private final EventBrokerAPI eventBroker;
 
     private long lastUpdate;
 
-    public GalaxySpinner(HeroAPI hero, BackpageAPI backpage, EventBrokerAPI eventBroker) {
-        this.hero = hero;
+    public GalaxySpinner(BackpageAPI backpage, EventBrokerAPI eventBroker) {
         this.backpage = backpage;
         this.eventBroker = eventBroker;
         this.galaxyInfo = new GalaxyInfoImpl();
@@ -75,7 +73,7 @@ public class GalaxySpinner implements GalaxySpinnerAPI {
     }
 
     private String getParam(String action) {
-        return "flashinput/galaxyGates.php?userID=" + hero.getId() +
+        return "flashinput/galaxyGates.php?userID=" + backpage.getUserId() +
                 "&sid=" + backpage.getSid() +
                 "&action=" + action;
     }
