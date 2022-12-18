@@ -6,15 +6,14 @@ import eu.darkbot.api.game.galaxy.SpinResult;
 import eu.darkbot.api.managers.BackpageAPI;
 import eu.darkbot.api.managers.EventBrokerAPI;
 import eu.darkbot.api.managers.GalaxySpinnerAPI;
-import eu.darkbot.api.managers.HeroAPI;
 import eu.darkbot.impl.galaxy.GalaxyInfoImpl;
+import eu.darkbot.util.http.Http;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.BufferedInputStream;
-import java.net.HttpURLConnection;
 import java.util.Optional;
 
 public class GalaxySpinner implements GalaxySpinnerAPI {
@@ -39,18 +38,18 @@ public class GalaxySpinner implements GalaxySpinnerAPI {
 
     @Override
     public @Nullable Boolean updateGalaxyInfos(int expiryTime) {
-        return handleRequest(getParam("init"), expiryTime, 1000);
+        return handleRequest(buildHttp("init", 1000, expiryTime));
     }
 
     @Override
     public Optional<SpinResult> spinGate(@NotNull GalaxyGate gate, boolean multiplier, int spinAmount, int minWait) {
-        String params = getParam("multiEnergy") + gate.getParam();
+        Http http = buildHttp("multiEnergy" + gate.getParam(), minWait);
 
-        if (getGalaxyInfo().getFreeEnergy() > 0) params += "&sample=1";
-        if (multiplier) params += "&multiplier=1";
-        if (spinAmount > 4) params += "&spinamount=" + spinAmount;
+        if (getGalaxyInfo().getFreeEnergy() > 0) http.setParam("sample", 1);
+        if (multiplier) http.setParam("multiplier", 1);
+        if (spinAmount > 4) http.setParam("spinamount", spinAmount);
 
-        boolean success = Boolean.TRUE.equals(handleRequest(params, -1, minWait));
+        boolean success = Boolean.TRUE.equals(handleRequest(http));
 
         if (success)
             eventBroker.sendEvent(new SpinGateEvent(galaxyInfo.getSpinResult(), spinAmount));
@@ -60,7 +59,7 @@ public class GalaxySpinner implements GalaxySpinnerAPI {
 
     @Override
     public boolean placeGate(@NotNull GalaxyGate gate, int minWait) {
-        boolean success = Boolean.TRUE.equals(handleRequest(getParam("setupGate") + gate.getIdParam(), -1, minWait));
+        boolean success = Boolean.TRUE.equals(handleRequest(buildHttp("setupGate" + gate.getIdParam(), minWait)));
         if (success)
             eventBroker.sendEvent(new PlaceGateEvent(gate));
 
@@ -69,19 +68,25 @@ public class GalaxySpinner implements GalaxySpinnerAPI {
 
     @Override
     public boolean buyLife(@NotNull GalaxyGate gate, int minWait) {
-        return Boolean.TRUE.equals(handleRequest(getParam("buyLife") + gate.getIdParam(), -1, minWait));
+        return Boolean.TRUE.equals(handleRequest(buildHttp("buyLife" + gate.getIdParam(), minWait)));
     }
 
-    private String getParam(String action) {
-        return "flashinput/galaxyGates.php?userID=" + backpage.getUserId() +
-                "&sid=" + backpage.getSid() +
-                "&action=" + action;
+    private Http buildHttp(String action, int minWait) {
+        return backpage.getHttp("flashinput/galaxyGates.php", minWait)
+                .setParam("userID", backpage.getUserId())
+                .setParam("sid", backpage.getSid())
+                .setParam("action", action);
     }
 
-    private Boolean handleRequest(String params, int expiryTime, int minWait) {
+    private Http buildHttp(String action, int expiryTime, int minWait) {
         if (!backpage.isInstanceValid() || System.currentTimeMillis() <= lastUpdate + expiryTime) return null;
+        return buildHttp(action, minWait);
+    }
+
+    private Boolean handleRequest(Http request) {
+        if (request == null) return null;
         try {
-            Document document = getDocument(backpage.getConnection(params, minWait));
+            Document document = getDocument(request);
             if (document == null) return false;
 
             galaxyInfo.update(document);
@@ -93,19 +98,21 @@ public class GalaxySpinner implements GalaxySpinnerAPI {
         }
     }
 
-    private Document getDocument(HttpURLConnection conn) throws Exception {
-        try (BufferedInputStream bis = new BufferedInputStream(conn.getInputStream())) {
-            bis.mark(1024);
+    private Document getDocument(Http http) throws Exception {
+        return http.consumeInputStream(is -> {
+            try (BufferedInputStream bis = new BufferedInputStream(is)) {
+                bis.mark(1024);
 
-            String start = new String(BUFFER, 0, bis.read(BUFFER));
-            if (start.equals("materializer locked")) return null;
+                String start = new String(BUFFER, 0, bis.read(BUFFER));
+                if (start.equals("materializer locked")) return null;
 
-            bis.reset();
+                bis.reset();
 
-            return DocumentBuilderFactory
-                    .newInstance()
-                    .newDocumentBuilder()
-                    .parse(bis);
-        }
+                return DocumentBuilderFactory
+                        .newInstance()
+                        .newDocumentBuilder()
+                        .parse(bis);
+            }
+        });
     }
 }
