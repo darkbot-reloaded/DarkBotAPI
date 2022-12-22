@@ -290,6 +290,16 @@ public interface MapGraphics {
     //deprecated functions
 
     @Deprecated
+    default double toGameLocationX(int screenX) {
+        return toGameLocationX((double) screenX);
+    }
+
+    @Deprecated
+    default double toGameLocationY(int screenY) {
+        return toGameLocationY((double) screenY);
+    }
+
+    @Deprecated
     default Locatable toGameLocation(int screenX, int screenY) {
         return toGameLocation((double) screenX, screenY);
     }
