@@ -48,14 +48,6 @@ public enum GalaxyGate {
         return null;
     }
 
-    public String getParam() {
-        return "&gateID=" + getId() + "&" + getName() + "=1";
-    }
-
-    public String getIdParam() {
-        return "&gateID=" + getId();
-    }
-
     public String getName() {
         return name;
     }

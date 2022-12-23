@@ -17,6 +17,7 @@ import java.io.BufferedInputStream;
 import java.util.Optional;
 
 public class GalaxySpinner implements GalaxySpinnerAPI {
+    private static final long EXPIRY_TIME = 1000L;
     private final byte[] BUFFER = new byte[1024];
 
     private final BackpageAPI backpage;
@@ -38,12 +39,12 @@ public class GalaxySpinner implements GalaxySpinnerAPI {
 
     @Override
     public @Nullable Boolean updateGalaxyInfos(int expiryTime) {
-        return handleRequest(buildHttp("init", 1000, expiryTime));
+        return handleRequest(buildInit(expiryTime));
     }
 
     @Override
     public Optional<SpinResult> spinGate(@NotNull GalaxyGate gate, boolean multiplier, int spinAmount, int minWait) {
-        Http http = buildHttp("multiEnergy" + gate.getParam(), minWait);
+        Http http = buildHttp("multiEnergy", gate, minWait).setParam(gate.getName(), "1");
 
         if (getGalaxyInfo().getFreeEnergy() > 0) http.setParam("sample", 1);
         if (multiplier) http.setParam("multiplier", 1);
@@ -59,7 +60,7 @@ public class GalaxySpinner implements GalaxySpinnerAPI {
 
     @Override
     public boolean placeGate(@NotNull GalaxyGate gate, int minWait) {
-        boolean success = Boolean.TRUE.equals(handleRequest(buildHttp("setupGate" + gate.getIdParam(), minWait)));
+        boolean success = Boolean.TRUE.equals(handleRequest(buildHttp("setupGate", gate, minWait)));
         if (success)
             eventBroker.sendEvent(new PlaceGateEvent(gate));
 
@@ -68,19 +69,23 @@ public class GalaxySpinner implements GalaxySpinnerAPI {
 
     @Override
     public boolean buyLife(@NotNull GalaxyGate gate, int minWait) {
-        return Boolean.TRUE.equals(handleRequest(buildHttp("buyLife" + gate.getIdParam(), minWait)));
+        return Boolean.TRUE.equals(handleRequest(buildHttp("buyLife", gate, minWait)));
     }
 
-    private Http buildHttp(String action, int minWait) {
+    private Http buildHttp(@NotNull String action, int minWait) {
         return backpage.getHttp("flashinput/galaxyGates.php", minWait)
                 .setParam("userID", backpage.getUserId())
                 .setParam("sid", backpage.getSid())
                 .setParam("action", action);
     }
 
-    private Http buildHttp(String action, int expiryTime, int minWait) {
-        if (!backpage.isInstanceValid() || System.currentTimeMillis() <= lastUpdate + expiryTime) return null;
-        return buildHttp(action, minWait);
+    private Http buildHttp(@NotNull String action, @NotNull GalaxyGate gate, int minWait) {
+        return buildHttp(action, minWait).setParam("gateID", gate.getId());
+    }
+
+    private Http buildInit(int minWait) {
+        if (!backpage.isInstanceValid() || System.currentTimeMillis() <= lastUpdate + EXPIRY_TIME) return null;
+        return buildHttp("init", minWait);
     }
 
     private Boolean handleRequest(Http request) {
