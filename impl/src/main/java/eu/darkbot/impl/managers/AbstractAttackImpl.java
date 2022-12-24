@@ -71,11 +71,12 @@ public abstract class AbstractAttackImpl implements AttackAPI {
                 if (isAttackViaSlotBarEnabled()) {
                     attackTry.activate();
                     attacked = true;
+                    return;
                 }
             }
 
             // Always try to attack valid target, even with unknown ammo
-            if (!attacked) attack();
+            attack();
         } else tryLockTarget();
     }
 
