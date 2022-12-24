@@ -47,7 +47,7 @@ public abstract class AbstractAttackImpl implements AttackAPI {
 
     @Override
     public void tryLockTarget() {
-        if (isLocked()) return;
+        if (!hasTarget() || isLocked()) return;
 
         if (lockTry.tryActivate()) {
             if (target.trySelect(false)) {
@@ -74,8 +74,8 @@ public abstract class AbstractAttackImpl implements AttackAPI {
                 }
             }
 
-            //always try to attack valid target, even with unknown ammo
-            attack();
+            // Always try to attack valid target, even with unknown ammo
+            if (!attacked) attack();
         } else tryLockTarget();
     }
 
