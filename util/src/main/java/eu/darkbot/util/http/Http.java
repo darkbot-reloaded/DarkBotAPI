@@ -29,7 +29,7 @@ public class Http {
         DEFAULT_USER_AGENT = defaultUserAgent;
     }
 
-    protected String url;
+    protected final String baseUrl;
     protected final Method method;
     protected final boolean followRedirects;
 
@@ -40,8 +40,8 @@ public class Http {
     protected List<Runnable> suppliers;
     protected Map<String, String> headers = new LinkedHashMap<>();
 
-    protected Http(String url, Method method, boolean followRedirects) {
-        this.url = url;
+    protected Http(String baseUrl, Method method, boolean followRedirects) {
+        this.baseUrl = baseUrl;
         this.method = method;
         this.followRedirects = followRedirects;
     }
@@ -194,6 +194,14 @@ public class Http {
         return this;
     }
 
+    public URL getUrl() throws IOException {
+        String url = baseUrl;
+        if (method == Method.GET && params != null)
+            url += (!url.contains("?") ? "?" : "") + params;
+
+        return new URL(url);
+    }
+
     /**
      * Connects, gets and converts InputStream to String then closes stream.
      * <b>Creates new connection on each call</b>
@@ -277,10 +285,7 @@ public class Http {
      * @throws IOException of connection
      */
     public HttpURLConnection getConnection(Consumer<HttpURLConnection> customSettings) throws IOException {
-        if (method == Method.GET && params != null && !url.contains("?"))
-            url += "?" + params.toString();
-
-        HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+        HttpURLConnection conn = (HttpURLConnection) getUrl().openConnection();
         conn.setConnectTimeout(30_000);
         conn.setReadTimeout(30_000);
         if (customSettings != null) customSettings.accept(conn);
@@ -301,4 +306,5 @@ public class Http {
 
         return conn;
     }
+
 }
