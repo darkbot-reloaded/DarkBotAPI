@@ -10,7 +10,7 @@ tasks.wrapper {
     distributionType = Wrapper.DistributionType.BIN
 }
 
-val apiVersion = "0.6.1"
+val apiVersion = "0.6.2"
 
 allprojects {
     group = "eu.darkbot"
