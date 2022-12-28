@@ -42,6 +42,7 @@ public class I18n implements I18nAPI, Listener {
         if (this.locale == locale) return;
         this.locale = locale;
         reloadResources();
+        formatCache.clear();
     }
 
     public Locale getLocale() {
