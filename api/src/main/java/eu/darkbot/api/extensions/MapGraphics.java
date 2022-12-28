@@ -50,11 +50,17 @@ public interface MapGraphics {
         getGraphics2D().setFont(font);
     }
 
-    int toScreenPointX(double gameX);
-    int toScreenPointY(double gameY);
+    double getScaleX();
+    double getScaleY();
 
-    double toGameLocationX(int screenX);
-    double toGameLocationY(int screenY);
+    double toScreenPointX(double gameX);
+    double toScreenPointY(double gameY);
+
+    double toScreenSizeW(double gameW);
+    double toScreenSizeH(double gameH);
+
+    double toGameLocationX(double screenX);
+    double toGameLocationY(double screenY);
 
     default Point toScreenPoint(double gameX, double gameY) {
         return Point.of(toScreenPointX(gameX), toScreenPointY(gameY));
@@ -64,95 +70,76 @@ public interface MapGraphics {
         return toScreenPoint(pos.getX(), pos.getY());
     }
 
-    default Locatable toGameLocation(int screenX, int screenY) {
+    default Locatable toGameLocation(double screenX, double screenY) {
         return Locatable.of(toGameLocationX(screenX), toGameLocationY(screenY));
     }
 
     default Locatable toGameLocation(Point point) {
-        return toGameLocation(point.x(), point.y());
+        return toGameLocation(point.getX(), point.getY());
     }
 
     /**
      * Draws Rect
      */
-    default void drawRect(int x, int y, int width, int height, boolean fill) {
-        if (fill) getGraphics2D().fillRect(x, y, width, height);
-        else getGraphics2D().drawRect(x, y, width, height);
-    }
+    void drawRect(double x, double y, double width, double height, boolean fill);
 
-    default void drawRect(int x, int y, int size, boolean fill) {
+    default void drawRect(double x, double y, double size, boolean fill) {
         drawRect(x, y, size, size, fill);
     }
 
-    default void drawRect(Point point, int width, int height, boolean fill) {
-        drawRect(point.x(), point.y(), width, height, fill);
+    default void drawRect(Point point, double width, double height, boolean fill) {
+        drawRect(point.getX(), point.getY(), width, height, fill);
     }
 
-    default void drawRect(Locatable loc, int width, int height, boolean fill) {
+    default void drawRect(Locatable loc, double width, double height, boolean fill) {
         drawRect(toScreenPointX(loc.getX()), toScreenPointY(loc.getY()), width, height, fill);
     }
 
-    default void drawRect(Locatable loc, int size, boolean fill) {
+    default void drawRect(Locatable loc, double size, boolean fill) {
         drawRect(loc, size, size, fill);
     }
 
-    default void drawRectCentered(Locatable loc, int width, int height, boolean fill) {
-        drawRect(toScreenPointX(loc.getX()) - (width >> 1), toScreenPointY(loc.getY()) - (height >> 1), width, height, fill);
+    default void drawRectCentered(Locatable loc, double width, double height, boolean fill) {
+        drawRect(toScreenPointX(loc.getX()) - (width / 2), toScreenPointY(loc.getY()) - (height / 2), width, height, fill);
     }
 
-    default void drawRectCentered(Locatable loc, int size, boolean fill) {
+    default void drawRectCentered(Locatable loc, double size, boolean fill) {
         drawRectCentered(loc, size, size, fill);
     }
 
     /**
      * Draws Oval
      */
-    default void drawOval(int x, int y, int width, int height, boolean fill) {
-        if (fill) getGraphics2D().fillOval(x, y, width, height);
-        else getGraphics2D().drawOval(x, y, width, height);
-    }
+    void drawOval(double x, double y, double width, double height, boolean fill);
 
-    default void drawOval(int x, int y, int size, boolean fill) {
+    default void drawOval(double x, double y, double size, boolean fill) {
         drawOval(x, y, size, size, fill);
     }
 
-    default void drawOval(Point point, int width, int height, boolean fill) {
-        drawOval(point.x(), point.y(), width, height, fill);
+    default void drawOval(Point point, double width, double height, boolean fill) {
+        drawOval(point.getX(), point.getY(), width, height, fill);
     }
 
-    default void drawOval(Locatable loc, int width, int height, boolean fill) {
+    default void drawOval(Locatable loc, double width, double height, boolean fill) {
         drawOval(toScreenPointX(loc.getX()), toScreenPointY(loc.getY()), width, height, fill);
     }
 
-    default void drawOval(Locatable loc, int size, boolean fill) {
+    default void drawOval(Locatable loc, double size, boolean fill) {
         drawOval(loc, size, size, fill);
     }
 
-    default void drawOvalCentered(Locatable loc, int width, int height, boolean fill) {
-        drawOval(toScreenPointX(loc.getX()) - (width >> 1), toScreenPointY(loc.getY()) - (height >> 1), width, height, fill);
+    default void drawOvalCentered(Locatable loc, double width, double height, boolean fill) {
+        drawOval(toScreenPointX(loc.getX()) - (width / 2), toScreenPointY(loc.getY()) - (height / 2), width, height, fill);
     }
 
-    default void drawOvalCentered(Locatable loc, int size, boolean fill) {
+    default void drawOvalCentered(Locatable loc, double size, boolean fill) {
         drawOvalCentered(loc, size, size, fill);
     }
 
     /**
      * Draws polygon
      */
-    default void drawPoly(PolyType type, @NotNull Point... points) {
-        if (points.length == 0) return;
-
-        int[] xPoints = new int[points.length];
-        int[] yPoints = new int[points.length];
-        for (int i = 0; i < points.length; i++) {
-            xPoints[i] = points[i].x();
-            yPoints[i] = points[i].y();
-        }
-
-        if (type == PolyType.DRAW_POLYGON) getGraphics2D().drawPolygon(xPoints, yPoints, points.length);
-        else if (type == PolyType.FILL_POLYGON) getGraphics2D().fillPolygon(xPoints, yPoints, points.length);
-        else if (type == PolyType.DRAW_POLYLINE) getGraphics2D().drawPolyline(xPoints, yPoints, points.length);
-    }
+    void drawPoly(PolyType type, @NotNull Point... points);
 
     default void drawPoly(PolyType type, @NotNull Locatable... positions) {
         Point[] points = new Point[positions.length];
@@ -173,15 +160,15 @@ public interface MapGraphics {
     default void drawArea(Area area, boolean fill) {
         if (area instanceof Area.Circle) {
             Area.Circle circle = (Area.Circle) area;
-            int size = (int) (circle.getRadius() * 2);
+            double size = (circle.getRadius() * 2);
 
-            drawOval(circle, toScreenPointX(size), toScreenPointY(size), fill);
+            drawOval(circle, toScreenSizeW(size), toScreenSizeH(size), fill);
         } else if (area instanceof Area.Polygon) {
             Area.Polygon polygon = (Area.Polygon) area;
             drawPolyLocs(fill ? PolyType.FILL_POLYGON : PolyType.DRAW_POLYGON, polygon.getVertices());
         } else {
             Area.Rectangle rect = area.getBounds();
-            drawRect(rect, toScreenPointX(rect.getWidth()), toScreenPointY(rect.getHeight()), fill);
+            drawRect(rect, toScreenSizeW(rect.getWidth()), toScreenSizeH(rect.getHeight()), fill);
         }
     }
 
@@ -193,9 +180,7 @@ public interface MapGraphics {
      * @param x2 the second point's <i>x</i> coordinate.
      * @param y2 the second point's <i>y</i> coordinate.
      */
-    default void drawLine(int x1, int y1, int x2, int y2) {
-        getGraphics2D().drawLine(x1, y1, x2, y2);
-    }
+    void drawLine(double x1, double y1, double x2, double y2);
 
     /**
      * Draws a line
@@ -204,7 +189,7 @@ public interface MapGraphics {
      * @param b end
      */
     default void drawLine(Point a, Point b) {
-        drawLine(a.x(), a.y(), b.x(), b.y());
+        drawLine(a.getX(), a.getY(), b.getX(), b.getY());
     }
 
     /**
@@ -244,19 +229,19 @@ public interface MapGraphics {
      * @param stringAlign String align
      */
     default void drawString(Point point, String str, StringAlign stringAlign) {
-        drawString(point.x(), point.y(), str, stringAlign);
+        drawString(point.getX(), point.getY(), str, stringAlign);
     }
 
-    default void drawString(int x, int y, String str, StringAlign stringAlign) {
+    default void drawString(double x, double y, String str, StringAlign stringAlign) {
         if (str == null || str.isEmpty()) return;
 
         if (stringAlign != StringAlign.LEFT)
             x -= getStringWidth(str) >> (stringAlign == StringAlign.MID ? 1 : 0);
 
-        getGraphics2D().drawString(str, x, y);
+        getGraphics2D().drawString(str, (float) x, (float) y);
     }
 
-    default void drawBackgroundedText(int x, int y, String str, Color backgroundColor, StringAlign stringAlign) {
+    default void drawBackgroundedText(double x, double y, String str, Color backgroundColor, StringAlign stringAlign) {
         if (str == null || str.isEmpty()) return;
 
         if (stringAlign != StringAlign.LEFT)
@@ -266,11 +251,11 @@ public interface MapGraphics {
         attrString.addAttribute(TextAttribute.BACKGROUND, backgroundColor);
         attrString.addAttribute(TextAttribute.FONT, getGraphics2D().getFont());
 
-        getGraphics2D().drawString(attrString.getIterator(), x, y);
+        getGraphics2D().drawString(attrString.getIterator(), (float) x, (float) y);
     }
 
     default void drawBackgroundedText(Point point, String str, Color backgroundColor, StringAlign stringAlign) {
-        drawBackgroundedText(point.x(), point.y(), str, backgroundColor, stringAlign);
+        drawBackgroundedText(point.getX(), point.getY(), str, backgroundColor, stringAlign);
     }
 
     default void drawBackgroundedText(Point point, String str, StringAlign stringAlign) {
@@ -303,5 +288,102 @@ public interface MapGraphics {
 
     enum PolyType {
         DRAW_POLYGON, FILL_POLYGON, DRAW_POLYLINE;
+    }
+
+    //deprecated functions
+
+    @Deprecated
+    default double toGameLocationX(int screenX) {
+        return toGameLocationX((double) screenX);
+    }
+
+    @Deprecated
+    default double toGameLocationY(int screenY) {
+        return toGameLocationY((double) screenY);
+    }
+
+    @Deprecated
+    default Locatable toGameLocation(int screenX, int screenY) {
+        return toGameLocation((double) screenX, screenY);
+    }
+
+    @Deprecated
+    default void drawRect(int x, int y, int width, int height, boolean fill) {
+        drawRect((double) x, y, width, height, fill);
+    }
+
+    @Deprecated
+    default void drawRect(Point point, int width, int height, boolean fill) {
+        drawRect(point.getX(), point.getY(), width, height, fill);
+    }
+
+    @Deprecated
+    default void drawRect(Locatable loc, int width, int height, boolean fill) {
+        drawRect(toScreenPointX(loc.getX()), toScreenPointY(loc.getY()), width, height, fill);
+    }
+
+    @Deprecated
+    default void drawRect(Locatable loc, int size, boolean fill) {
+        drawRect(loc, size, size, fill);
+    }
+
+    @Deprecated
+    default void drawRectCentered(Locatable loc, int width, int height, boolean fill) {
+        drawRect(toScreenPointX(loc.getX()) - (width >> 1), toScreenPointY(loc.getY()) - (height >> 1), width, height, fill);
+    }
+
+    @Deprecated
+    default void drawRectCentered(Locatable loc, int size, boolean fill) {
+        drawRectCentered(loc, size, size, fill);
+    }
+
+    @Deprecated
+    default void drawOval(int x, int y, int width, int height, boolean fill) {
+        drawOval((double) x, y, width, height, fill);
+    }
+
+    @Deprecated
+    default void drawOval(int x, int y, int size, boolean fill) {
+        drawOval(x, y, size, size, fill);
+    }
+
+    @Deprecated
+    default void drawOval(Point point, int width, int height, boolean fill) {
+        drawOval(point.getX(), point.getY(), width, height, fill);
+    }
+
+    @Deprecated
+    default void drawOval(Locatable loc, int width, int height, boolean fill) {
+        drawOval(toScreenPointX(loc.getX()), toScreenPointY(loc.getY()), width, height, fill);
+    }
+
+    @Deprecated
+    default void drawOval(Locatable loc, int size, boolean fill) {
+        drawOval(loc, size, size, fill);
+    }
+
+    @Deprecated
+    default void drawOvalCentered(Locatable loc, int width, int height, boolean fill) {
+        drawOval(toScreenPointX(loc.getX()) - (width >> 1), toScreenPointY(loc.getY()) - (height >> 1), width, height, fill);
+    }
+
+    @Deprecated
+    default void drawOvalCentered(Locatable loc, int size, boolean fill) {
+        drawOvalCentered(loc, size, size, fill);
+    }
+
+    @Deprecated
+    default void drawLine(int x1, int y1, int x2, int y2) {
+        drawLine((double) x1, y1, x2, y2);
+    }
+
+    @Deprecated
+    default void drawString(int x, int y, String str, StringAlign stringAlign) {
+        drawString((double) x, y, str, stringAlign);
+    }
+
+    @Deprecated
+    default void drawBackgroundedText(int x, int y, String str, Color backgroundColor, StringAlign stringAlign) {
+        drawBackgroundedText((double) x, y, str, backgroundColor, stringAlign);
     }
 }
