@@ -56,6 +56,9 @@ public interface MapGraphics {
     double toScreenPointX(double gameX);
     double toScreenPointY(double gameY);
 
+    double toScreenSizeW(double gameW);
+    double toScreenSizeH(double gameH);
+
     double toGameLocationX(double screenX);
     double toGameLocationY(double screenY);
 

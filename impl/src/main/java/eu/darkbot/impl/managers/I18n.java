@@ -27,6 +27,8 @@ public class I18n implements I18nAPI, Listener {
 
     private final PropertyContainer props = new PropertyContainer(null);
     private final Map<PluginInfo, PropertyContainer> pluginProps = new HashMap<>();
+    private final Map<String, MessageFormat> formatCache = new HashMap<>();
+
     private Locale locale;
 
     public I18n(PluginAPI pluginAPI) {
@@ -57,6 +59,7 @@ public class I18n implements I18nAPI, Listener {
         ExtensionsAPI.PluginStage stage = ev.getStage();
         switch (stage) {
             case BEFORE_LOAD:
+                formatCache.clear();
                 pluginProps.clear();
                 break;
             case AFTER_LOAD:
@@ -73,6 +76,10 @@ public class I18n implements I18nAPI, Listener {
         return namespace == null ? props : pluginProps.getOrDefault(namespace, props);
     }
 
+    private String format(String text, Object... arguments) {
+        if (text == null || arguments.length == 0) return text;
+        return formatCache.computeIfAbsent(text, MessageFormat::new).format(arguments);
+    }
 
     private String getInternal(PluginInfo namespace, @NotNull String key) {
         if (key == null) throw new IllegalArgumentException("Translation key must not be null");
@@ -87,13 +94,12 @@ public class I18n implements I18nAPI, Listener {
     }
 
     public String get(PluginInfo namespace, @NotNull String key, Object... arguments) {
-        return MessageFormat.format(getInternal(namespace, key), arguments);
+        return format(getInternal(namespace, key), arguments);
     }
 
     public String getOrDefault(PluginInfo namespace, String key, String fallback, Object... arguments) {
         String text = getOrDefaultInternal(namespace, key, fallback);
-        if (text == null) return null;
-        return MessageFormat.format(text, arguments);
+        return format(text, arguments);
     }
 
 
