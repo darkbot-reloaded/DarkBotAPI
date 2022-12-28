@@ -162,13 +162,13 @@ public interface MapGraphics {
             Area.Circle circle = (Area.Circle) area;
             double size = (circle.getRadius() * 2);
 
-            drawOval(circle, size / getScaleX(), size / getScaleY(), fill);
+            drawOval(circle, toScreenSizeW(size), toScreenSizeH(size), fill);
         } else if (area instanceof Area.Polygon) {
             Area.Polygon polygon = (Area.Polygon) area;
             drawPolyLocs(fill ? PolyType.FILL_POLYGON : PolyType.DRAW_POLYGON, polygon.getVertices());
         } else {
             Area.Rectangle rect = area.getBounds();
-            drawRect(rect, rect.getWidth() / getScaleX(), rect.getHeight() / getScaleY(), fill);
+            drawRect(rect, toScreenSizeW(rect.getWidth()), toScreenSizeH(rect.getHeight()), fill);
         }
     }
 
