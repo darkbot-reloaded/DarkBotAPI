@@ -13,6 +13,11 @@ import java.time.Instant;
 public interface RepairAPI extends API.Singleton {
 
     /**
+     * Change death statistics to 0
+     */
+    void resetDeaths();
+
+    /**
      * @return The amount of times you have been killed
      */
     int getDeathAmount();
