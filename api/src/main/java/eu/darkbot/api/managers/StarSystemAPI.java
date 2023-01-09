@@ -17,6 +17,7 @@ import java.util.List;
 public interface StarSystemAPI extends API.Singleton {
     List<String> HOME_MAPS         = ArrayUtils.asImmutableList("1-1", "2-1", "3-1");
     List<String> OUTPOST_HOME_MAPS = ArrayUtils.asImmutableList("1-8", "2-8", "3-8");
+    List<String> BASE_MAPS         = ArrayUtils.asImmutableList("1-1", "2-1", "3-1", "1-8", "2-8", "3-8");
     List<String> PIRATE_MAPS       = ArrayUtils.asImmutableList("5-1", "5-2", "5-3", "5-4");
     List<String> BLACK_LIGHT_MAPS  = ArrayUtils.asImmutableList("1BL", "2BL", "3BL");
 
