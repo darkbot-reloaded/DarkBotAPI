@@ -59,8 +59,7 @@ public interface Box extends Entity {
      *         if the box didn't disappear {@link Entity#isValid()}.
      *         {@code null} if no collection attempt was performed.
      */
-    @Nullable
-    Instant isCollectedUntil();
+    @Nullable Instant isCollectedUntil();
 
     /**
      * Beacon box during `Capture the Beacon` event on x-2 map

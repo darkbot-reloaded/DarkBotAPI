@@ -72,8 +72,7 @@ public interface PetAPI extends Pet, API.Singleton {
      *
      * @return the currently set gear in-game.
      */
-    @Nullable
-    PetGear getGear();
+    @Nullable PetGear getGear();
 
     /**
      * Sets the gear that the pet should be using, overriding what the user has asked for in the settings.

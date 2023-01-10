@@ -41,6 +41,5 @@ public interface AuthAPI extends API.Singleton {
      *
      * @return A unique string representing this user, null if no auth was done.
      */
-    @Nullable
-    String getAuthId();
+    @Nullable String getAuthId();
 }

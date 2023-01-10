@@ -9,6 +9,5 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface ReviveSelector {
 
-    @NotNull
-    PrioritizedSupplier<ReviveLocation> getReviveLocationSupplier();
+    @NotNull PrioritizedSupplier<ReviveLocation> getReviveLocationSupplier();
 }

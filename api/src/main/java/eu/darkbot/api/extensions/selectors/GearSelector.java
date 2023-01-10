@@ -8,6 +8,5 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface GearSelector {
 
-    @NotNull
-    PetGearSupplier getGearSupplier();
+    @NotNull PetGearSupplier getGearSupplier();
 }

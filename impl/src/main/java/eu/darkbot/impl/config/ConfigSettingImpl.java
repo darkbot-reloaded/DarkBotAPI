@@ -7,9 +7,7 @@ import eu.darkbot.util.ReflectionUtils;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
@@ -149,4 +147,3 @@ public class ConfigSettingImpl<T> implements ConfigSetting<T> {
     }
 
 }
-
