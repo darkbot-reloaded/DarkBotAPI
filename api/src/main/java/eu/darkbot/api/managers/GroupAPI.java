@@ -84,8 +84,7 @@ public interface GroupAPI extends API.Singleton {
      * @param ship The player ship entity to search for
      * @return the group member if found, null otherwise.
      */
-    @Nullable
-    default GroupMember getMember(Ship ship) {
+    @Nullable default GroupMember getMember(Ship ship) {
         return getMember(ship.getId());
     }
 

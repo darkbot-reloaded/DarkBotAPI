@@ -15,8 +15,7 @@ public interface PetGearSupplier extends PrioritizedSupplier<PetGear> {
      * @return true to enable, false to disable, null to respect whatever is set by the module
      * @see eu.darkbot.api.managers.PetAPI#setEnabled(boolean)
      */
-    @Nullable
-    default Boolean enablePet() {
+    @Nullable default Boolean enablePet() {
         return null;
     }
 }

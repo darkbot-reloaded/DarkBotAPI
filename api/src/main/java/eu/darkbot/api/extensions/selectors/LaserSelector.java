@@ -9,6 +9,5 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface LaserSelector {
 
-    @NotNull
-    PrioritizedSupplier<SelectableItem.Laser> getLaserSupplier();
+    @NotNull PrioritizedSupplier<SelectableItem.Laser> getLaserSupplier();
 }

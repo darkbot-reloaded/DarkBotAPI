@@ -7,7 +7,6 @@ import eu.darkbot.api.extensions.Module;
 import eu.darkbot.api.game.entities.Box;
 import eu.darkbot.api.game.entities.Player;
 import eu.darkbot.api.game.entities.Portal;
-import eu.darkbot.api.game.enums.EntityEffect;
 import eu.darkbot.api.game.items.ItemFlag;
 import eu.darkbot.api.game.items.SelectableItem;
 import eu.darkbot.api.game.other.GameMap;

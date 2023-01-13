@@ -3,7 +3,6 @@ package eu.darkbot.api.game.other;
 import eu.darkbot.api.game.entities.Entity;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
 
 /**
  * Represents in-game entity which can attack other in-game entities.

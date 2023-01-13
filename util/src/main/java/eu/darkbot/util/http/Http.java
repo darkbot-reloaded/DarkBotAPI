@@ -172,7 +172,7 @@ public class Http {
 
     /**
      * Set the body for POST requests
-     * 
+     *
      * @param body bytes to send as body
      * @return current instance of http
      */
