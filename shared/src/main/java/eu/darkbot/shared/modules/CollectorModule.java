@@ -139,7 +139,7 @@ public class CollectorModule implements Module {
         }
     }
 
-    protected boolean isNotWaiting() {
+    public boolean isNotWaiting() {
         if (currentBox == null || !currentBox.isValid()) {
             waitingUntil = 0;
             return true;
