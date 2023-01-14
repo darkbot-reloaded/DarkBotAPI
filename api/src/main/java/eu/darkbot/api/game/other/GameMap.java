@@ -22,8 +22,7 @@ public interface GameMap {
     /**
      * @return short name of the map.
      */
-    @Nullable
-    String getShortName();
+    @Nullable String getShortName();
 
     /**
      * @return if the map is a PvP zone, eg: 4-x maps.
