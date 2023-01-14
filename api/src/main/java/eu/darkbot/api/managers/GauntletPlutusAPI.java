@@ -3,7 +3,7 @@ package eu.darkbot.api.managers;
 import eu.darkbot.api.API;
 
 /**
- * Provides data for the mimesis mutinity event, escort gate in-game
+ * Provides data for the Gauntlet of Plutus event
  */
 public interface GauntletPlutusAPI extends API.Singleton {
     /**
