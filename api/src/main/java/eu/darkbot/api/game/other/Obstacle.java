@@ -17,11 +17,12 @@ public interface Obstacle extends Entity {
     /**
      * @return true if the obstacle is still valid and in the map, false if it should be discarded
      */
+    @Override
     boolean isValid();
 
     /**
      * If the obstacle should be used in pathfinding, or can be ignored.
-     *
+     * <br>
      * Example: battle station is only a obstacle if it's enemy
      *          (no need to avoid friendly stations) and you aren't invisible.
      *

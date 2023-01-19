@@ -49,7 +49,7 @@ public interface ConfigAPI extends API.Singleton {
      *
      * @param path configuration tree path, each segment is separated by a dot
      * @param <T> the type of the config node
-     * @return the configuration on this path, null if not found
+     * @return the configuration on this path
      * @throws IllegalArgumentException if the config path doesn't exist
      */
     default <T> @NotNull ConfigSetting<T> requireConfig(String path) {
@@ -111,22 +111,22 @@ public interface ConfigAPI extends API.Singleton {
      * @param root configuration root to search on
      * @param path configuration tree path, each segment is separated by a dot
      * @param <T> the type of the config node
-     * @return the configuration on this path, null if not found
+     * @return the configuration on this path
      * @throws IllegalArgumentException if the config path doesn't exist
      */
-    default <T> @NotNull ConfigSetting<T> requireConfig(ConfigSetting<?> root, String path) {
+    default <T> @NotNull ConfigSetting<T> requireConfig(@NotNull ConfigSetting<?> root, String path) {
         String[] paths = path.isEmpty() ? new String[]{} : path.split("\\.");
         for (String s : paths) {
-            if (root instanceof ConfigSetting.Parent)
+            boolean isParent = root instanceof ConfigSetting.Parent;
+            if (isParent)
                 root = ((ConfigSetting.Parent<?>) root).getChildren().get(s);
-            else
-                root = null;
 
-            if (root == null)
+            if (!isParent || root == null)
                 throw new IllegalArgumentException("Configuration not found: " + s + " in " + path);
         }
-        //noinspection unchecked
-        return (ConfigSetting<T>) root;
+        @SuppressWarnings("unchecked")
+        ConfigSetting<T> result = (ConfigSetting<T>) root;
+        return result;
     }
 
     /**
@@ -152,7 +152,7 @@ public interface ConfigAPI extends API.Singleton {
      */
     default <T> T getConfigValue(ConfigSetting<?> root, String path) {
         ConfigSetting<T> config = getConfig(root, path);
-        return config != null ? config.getValue() : null;
+        return config == null ? null : config.getValue();
     }
 
     /**
@@ -180,6 +180,7 @@ public interface ConfigAPI extends API.Singleton {
     /**
      * @deprecated Use {@link #getLegacy()}
      */
+    @Deprecated
     default NpcInfo getOrCreateNpcInfo(String name) {
         return getLegacy().getOrCreateNpcInfo(name);
     }

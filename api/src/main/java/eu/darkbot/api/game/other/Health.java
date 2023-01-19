@@ -15,16 +15,16 @@ public interface Health {
      */
     default double hpPercent() {
         return getMaxHp() == 0 ? 1 :
-                ((double) getHp() / (double) getMaxHp());
+                (double) getHp() / (double) getMaxHp();
     }
 
     default double hullPercent() {
         return getMaxHull() == 0 ? 1 :
-                ((double) getHull() / (double) getMaxHull());
+                (double) getHull() / (double) getMaxHull();
     }
     default double shieldPercent() {
         return getMaxShield() == 0 ? 1 :
-                ((double) getShield() / (double) getMaxShield());
+                (double) getShield() / (double) getMaxShield();
     }
 
     /**

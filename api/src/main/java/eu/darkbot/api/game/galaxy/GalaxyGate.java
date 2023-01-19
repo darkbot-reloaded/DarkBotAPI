@@ -33,17 +33,19 @@ public enum GalaxyGate {
     }
 
     public static GalaxyGate of(String gateName) {
-        for (GalaxyGate gate : values())
+        for (GalaxyGate gate : values()) {
             if (gate.name.equals(gateName))
                 return gate;
+        }
 
         return null;
     }
 
     public static GalaxyGate of(int gateId) {
-        for (GalaxyGate gate : values())
+        for (GalaxyGate gate : values()) {
             if (gate.id == gateId)
                 return gate;
+        }
 
         return null;
     }

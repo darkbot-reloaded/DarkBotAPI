@@ -13,6 +13,7 @@ public interface Movable extends Entity {
     /**
      * @return true if {@link Movable} is moving in-game
      */
+    @Override
     boolean isMoving();
 
     /**

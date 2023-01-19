@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
  * @see Item
  * @see HeroItemsAPI
  */
+@SuppressWarnings("PMD.TooManyFields")
 public interface SelectableItem {
 
     /**
@@ -91,9 +92,10 @@ public interface SelectableItem {
         }
 
         public static Laser of(String laserId) {
-            for (Laser laser : values())
+            for (Laser laser : values()) {
                 if (laser.getId().equals(laserId))
                     return laser;
+            }
             return null;
         }
 
@@ -150,9 +152,10 @@ public interface SelectableItem {
         }
 
         public static Rocket of(String rocketId) {
-            for (Rocket rocket : values())
+            for (Rocket rocket : values()) {
                 if (rocket.getId().equals(rocketId))
                     return rocket;
+            }
 
             return null;
         }
@@ -637,10 +640,11 @@ public interface SelectableItem {
         private final String id;
 
         Ability() {
-            if (!name().contains("_")) this.id = PREFIX + name().toLowerCase(Locale.ROOT);
-            else {
+            if (name().contains("_")) {
                 String[] parts = name().toLowerCase(Locale.ROOT).split("_", 2);
                 this.id = PREFIX + parts[0] + "_" + parts[1].replaceAll("_", "-");
+            } else {
+                this.id = PREFIX + name().toLowerCase(Locale.ROOT);
             }
         }
 
@@ -700,9 +704,13 @@ public interface SelectableItem {
          */
         X2(null);
 
+        private static final int X2_FORMATION_ID = 42;
+
         private static final String PREFIX = "drone_formation_";
         private final String id;
-        private final double hp, sh, sps;
+        private final double hp;
+        private final double shield;
+        private final double shieldRegen;
 
         Formation(String id) {
             this(id, 0);
@@ -712,27 +720,28 @@ public interface SelectableItem {
             this(id, 0, sh, 0);
         }
 
-        Formation(String id, double hp, double sh) {
-            this(id, hp, sh, 0);
+        Formation(String id, double hp, double shield) {
+            this(id, hp, shield, 0);
         }
 
-        Formation(String id, double hp, double sh, double sps) {
+        Formation(String id, double hp, double shield, double shieldRegen) {
             this.id = PREFIX + id;
             this.hp = hp;
-            this.sh = sh;
-            this.sps = sps;
+            this.shield = shield;
+            this.shieldRegen = shieldRegen;
         }
 
         public static Formation of(int formationId) {
-            if (formationId == 42) return X2;
+            if (formationId == X2_FORMATION_ID) return X2;
             if (formationId < 0 || formationId >= values().length) return STANDARD;
             return values()[formationId];
         }
 
         public static Formation of(String id) {
-            for (Formation formation : values())
+            for (Formation formation : values()) {
                 if (formation.getId().equals(id))
                     return formation;
+            }
 
             return null;
         }
@@ -741,7 +750,7 @@ public interface SelectableItem {
          * @return Shield gained or lost when using the formation, in percentage.
          */
         public double getShieldMultiplier() {
-            return sh;
+            return shield;
         }
 
         /**
@@ -755,7 +764,7 @@ public interface SelectableItem {
          * @return Shield regeneration per second in percentage. 5% = 0.005
          */
         public double getShieldRegen() {
-            return sps;
+            return shieldRegen;
         }
 
 

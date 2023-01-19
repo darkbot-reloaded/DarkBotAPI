@@ -15,20 +15,35 @@ public interface ZoneInfo {
     void toggle(int x, int y);
 
     default void set(int x, int y, int x2, int y2) {
-        for (; x < x2; x++) for (int currY = y; currY < y2; currY++) set(x, currY);
+        for (; x < x2; x++) {
+            for (int currY = y; currY < y2; currY++) {
+                set(x, currY);
+            }
+        }
     }
 
     default void remove(int x, int y, int x2, int y2) {
-        for (; x < x2; x++) for (int currY = y; currY < y2; currY++) remove(x, currY);
+        for (; x < x2; x++) {
+            for (int currY = y; currY < y2; currY++) {
+                remove(x, currY);
+            }
+        }
     }
 
     default void toggle(int x, int y, int x2, int y2) {
-        for (; x < x2; x++) for (int currY = y; currY < y2; currY++) toggle(x, currY);
+        for (; x < x2; x++) {
+            for (int currY = y; currY < y2; currY++) {
+                toggle(x, currY);
+            }
+        }
     }
 
     default void set(int x, int y, int x2, int y2, boolean state) {
-        if (state) set(x, y, x2, y2);
-        else remove(x, y, x2, y2);
+        if (state) {
+            set(x, y, x2, y2);
+        } else {
+            remove(x, y, x2, y2);
+        }
     }
 
     default boolean outside(int x, int y) {

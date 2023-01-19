@@ -7,6 +7,7 @@ import eu.darkbot.api.managers.GalaxySpinnerAPI;
 import eu.darkbot.impl.managers.GalaxySpinner;
 import eu.darkbot.util.http.Http;
 import eu.darkbot.util.http.Method;
+import org.jetbrains.annotations.VisibleForTesting;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Answers;
@@ -18,10 +19,11 @@ import java.time.Instant;
 
 import static org.mockito.Mockito.*;
 
-public class GalaxySpinnerTest {
+@VisibleForTesting
+class GalaxySpinnerTest {
 
     @Test
-    public void testSpin() throws IOException {
+    void testSpin() throws IOException {
         Http http = mock(Http.class, withSettings()
                 .useConstructor("https://localhost/flashinput/galaxyGates.php", Method.GET, true)
                 .defaultAnswer(Answers.CALLS_REAL_METHODS));

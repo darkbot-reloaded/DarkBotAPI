@@ -2,6 +2,8 @@ plugins {
     id("java-library")
     id("maven-publish")
     id("com.diffplug.spotless") version "6.12.1"
+    id("pmd")
+    id("io.freefair.lombok") version "6.6.1"
 }
 
 val apiVersion = "0.7.0"
@@ -54,6 +56,18 @@ allprojects {
         }
     }
 
+    apply(plugin="pmd")
+    pmd {
+        isConsoleOutput = true
+
+        rulesMinimumPriority.set(5)
+        ruleSets = listOf() // Remove built-in, we define our own
+        ruleSetFiles = files(rootDir.path + "/config/pmd/pmd-rules.xml")
+
+    }
+
+    apply(plugin="io.freefair.lombok")
+
     apply(plugin = "maven-publish")
     publishing {
         publications {
@@ -65,6 +79,7 @@ allprojects {
 
     dependencies {
         compileOnly("org.jetbrains:annotations:23.1.0")
+        testCompileOnly("org.jetbrains:annotations:23.1.0")
     }
 
     val javadocOpts = tasks.javadoc.get().options as StandardJavadocDocletOptions
@@ -72,9 +87,11 @@ allprojects {
 
     tasks.withType(JavaCompile::class) {
         options.isDeprecation = false // disable deprecation warnings
-        dependsOn(tasks.spotlessCheck)
     }
 
+    tasks.withType(PublishToMavenLocal::class) {
+        dependsOn("check")
+    }
 }
 
 description = "darkbot-common"
