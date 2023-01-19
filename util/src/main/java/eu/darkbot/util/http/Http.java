@@ -1,14 +1,21 @@
 package eu.darkbot.util.http;
 
+import com.google.gson.Gson;
 import eu.darkbot.util.IOUtils;
 import eu.darkbot.util.function.ThrowingFunction;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +26,14 @@ import java.util.function.Consumer;
  * Use it like builder, just one time for instance
  */
 public class Http {
-    private static String DEFAULT_USER_AGENT = "BigpointClient/1.6.3";
+    private static Gson GSON;
+    private static String DEFAULT_USER_AGENT = "BigpointClient/1.6.7";
+
+    public static void setGson(Gson gson) {
+        if (GSON != null)
+            throw new IllegalStateException("GSON already assigned!");
+        GSON = gson;
+    }
 
     public static String getDefaultUserAgent() {
         return DEFAULT_USER_AGENT;
@@ -184,6 +198,34 @@ public class Http {
     }
 
     /**
+     * Serializes the object into JSON and set it as POST body
+     *
+     * @param json object to be serialized into JSON
+     * @return current instance of http
+     */
+    public Http setJsonBody(Object json) throws IOException {
+        return setJsonBody(json, false);
+    }
+
+    /**
+     * Serializes the object into JSON and set it as POST body
+     *
+     * @param json object to be serialized into JSON
+     * @param encodeBase64 should JSON be encoded in Base64
+     * @return current instance of http
+     */
+    public Http setJsonBody(Object json, boolean encodeBase64) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        OutputStream out = encodeBase64 ? Base64.getEncoder().wrap(baos) : baos;
+
+        try (OutputStreamWriter osw = new OutputStreamWriter(out, StandardCharsets.UTF_8)) {
+            GSON.toJson(json, osw);
+        }
+
+        return setBody(baos.toByteArray());
+    }
+
+    /**
      * Sets user agent used in connection.
      *
      * @param userAgent to use.
@@ -211,6 +253,41 @@ public class Http {
      */
     public String getContent() throws IOException {
         return IOUtils.read(getInputStream(), true);
+    }
+
+    /**
+     * Deserializes the JSON response from the input stream into an object of the specified type
+     *
+     * @param type class type to be deserialized to
+     * @return deserialized JSON response
+     */
+    public <T> T fromJson(Class<T> type) throws IOException {
+        return fromJson(type, false);
+    }
+
+    /**
+     * Deserializes the JSON response from the input stream into an object of the specified type
+     *
+     * @param type class type to be deserialized to
+     * @param isBase64 is JSON response base64 encoded
+     * @return deserialized JSON response
+     */
+    public <T> T fromJson(Class<T> type, boolean isBase64) throws IOException {
+        return fromJson((Type) type, isBase64);
+    }
+
+    /**
+     * Deserializes the JSON response from the input stream into an object of the specified type
+     *
+     * @param type type to be deserialized to
+     * @param isBase64 is JSON response base64 encoded
+     * @return deserialized JSON response
+     */
+    public <T> T fromJson(Type type, boolean isBase64) throws IOException {
+        InputStream in = isBase64 ? Base64.getDecoder().wrap(getInputStream()) : getInputStream();
+        try (InputStreamReader reader = new InputStreamReader(in, StandardCharsets.UTF_8)) {
+            return GSON.fromJson(reader, type);
+        }
     }
 
     /**

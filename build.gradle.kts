@@ -4,6 +4,21 @@ plugins {
     id("com.diffplug.spotless") version "6.12.1"
 }
 
+description = "darkbot-common"
+
+tasks.wrapper {
+    gradleVersion = "7.5.1"
+
+    // without gradle javadocs and sources
+    distributionType = Wrapper.DistributionType.BIN
+}
+
+dependencies {
+    api(project(":darkbot-util"))
+    api(project(":darkbot-api"))
+    api(project(":darkbot-shared"))
+}
+
 val apiVersion = "0.7.0"
 
 allprojects {
@@ -65,6 +80,13 @@ allprojects {
 
     dependencies {
         compileOnly("org.jetbrains:annotations:23.1.0")
+
+        testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
+        testImplementation("org.mockito:mockito-core:4.11.0")
+    }
+
+    tasks.test {
+        useJUnitPlatform()
     }
 
     val javadocOpts = tasks.javadoc.get().options as StandardJavadocDocletOptions
@@ -75,19 +97,4 @@ allprojects {
         dependsOn(tasks.spotlessCheck)
     }
 
-}
-
-description = "darkbot-common"
-
-dependencies {
-    api(project(":darkbot-util"))
-    api(project(":darkbot-api"))
-    api(project(":darkbot-shared"))
-}
-
-tasks.wrapper {
-    gradleVersion = "7.5.1"
-
-    // without gradle javadocs and sources
-    distributionType = Wrapper.DistributionType.BIN
 }
