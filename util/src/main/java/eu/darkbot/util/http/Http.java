@@ -331,11 +331,13 @@ public class Http {
      * @throws X if your function throws an exception
      */
     @SuppressWarnings("unchecked")
-    public <R, X extends Throwable> R consumeInputStream(ThrowingFunction<InputStream, R, X> function) throws X {
+    public <R, X extends Throwable> R consumeInputStream(ThrowingFunction<InputStream, R, X> function) throws X, IOException {
         try (InputStream is = getInputStream()) {
-            return function.apply(is);
-        } catch (Throwable t) {
-            throw (X) t;
+            try {
+                return function.apply(is);
+            } catch (Throwable t) {
+                throw (X) t;
+            }
         }
     }
 
