@@ -216,9 +216,9 @@ public class Http {
      */
     public Http setJsonBody(Object json, boolean encodeBase64) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        OutputStream out = encodeBase64 ? Base64.getEncoder().wrap(baos) : baos;
 
-        try (OutputStreamWriter osw = new OutputStreamWriter(out, StandardCharsets.UTF_8)) {
+        try (OutputStream out = encodeBase64 ? Base64.getEncoder().wrap(baos) : baos;
+             OutputStreamWriter osw = new OutputStreamWriter(out, StandardCharsets.UTF_8)) {
             GSON.toJson(json, osw);
         }
 
@@ -284,8 +284,8 @@ public class Http {
      * @return deserialized JSON response
      */
     public <T> T fromJson(Type type, boolean isBase64) throws IOException {
-        InputStream in = isBase64 ? Base64.getDecoder().wrap(getInputStream()) : getInputStream();
-        try (InputStreamReader reader = new InputStreamReader(in, StandardCharsets.UTF_8)) {
+        try (InputStream in = isBase64 ? Base64.getDecoder().wrap(getInputStream()) : getInputStream();
+             InputStreamReader reader = new InputStreamReader(in, StandardCharsets.UTF_8)) {
             return GSON.fromJson(reader, type);
         }
     }
