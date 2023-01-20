@@ -7,12 +7,12 @@ import eu.darkbot.api.managers.BackpageAPI;
 import eu.darkbot.api.managers.EventBrokerAPI;
 import eu.darkbot.api.managers.GalaxySpinnerAPI;
 import eu.darkbot.impl.galaxy.GalaxyInfoImpl;
+import eu.darkbot.util.XmlUtils;
 import eu.darkbot.util.http.Http;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
 
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.BufferedInputStream;
 import java.util.Optional;
 
@@ -120,10 +120,7 @@ public class GalaxySpinner implements GalaxySpinnerAPI {
 
                 bis.reset();
 
-                return DocumentBuilderFactory
-                        .newInstance()
-                        .newDocumentBuilder()
-                        .parse(bis);
+                return XmlUtils.parse(bis);
             }
         });
     }

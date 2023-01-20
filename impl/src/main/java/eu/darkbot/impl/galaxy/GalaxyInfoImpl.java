@@ -7,14 +7,14 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 public class GalaxyInfoImpl implements eu.darkbot.api.game.galaxy.GalaxyInfo {
     private final SpinResultImpl spinResult = new SpinResultImpl(this);
-    private final Map<GalaxyGate, GateInfoImpl> gates = new HashMap<>();
+    private final Map<GalaxyGate, GateInfoImpl> gates = new EnumMap<>(GalaxyGate.class);
 
     private int money, samples, energyCost, spinSalePercentage;
     private boolean spinOnSale, galaxyGateDay, bonusRewardsDay;
