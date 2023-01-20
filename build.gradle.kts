@@ -1,6 +1,7 @@
 plugins {
     id("java-library")
     id("maven-publish")
+    id("io.freefair.lombok") version "6.6.1"
     id("com.diffplug.spotless") version "6.12.1"
 }
 
@@ -25,6 +26,7 @@ allprojects {
     group = "eu.darkbot"
     version = apiVersion
 
+    apply(plugin = "io.freefair.lombok")
     apply(plugin = "java-library")
     java {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -80,6 +82,7 @@ allprojects {
 
     dependencies {
         compileOnly("org.jetbrains:annotations:23.1.0")
+        implementation("com.google.code.gson:gson:2.10.1")
 
         testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
         testImplementation("org.mockito:mockito-core:4.11.0")
