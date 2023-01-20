@@ -82,8 +82,9 @@ allprojects {
 
     dependencies {
         compileOnly("org.jetbrains:annotations:23.1.0")
-        implementation("com.google.code.gson:gson:2.10.1")
+        compileOnly("com.google.code.gson:gson:2.10.1")
 
+        testImplementation("com.google.code.gson:gson:2.10.1")
         testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
         testImplementation("org.mockito:mockito-core:4.11.0")
     }
