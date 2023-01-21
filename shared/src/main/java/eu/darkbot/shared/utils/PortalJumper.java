@@ -4,33 +4,35 @@ import eu.darkbot.api.PluginAPI;
 import eu.darkbot.api.game.entities.Portal;
 import eu.darkbot.api.game.other.GameMap;
 import eu.darkbot.api.game.other.Location;
+import eu.darkbot.api.managers.BotAPI;
 import eu.darkbot.api.managers.GroupAPI;
 import eu.darkbot.api.managers.MovementAPI;
-import eu.darkbot.api.managers.WindowAPI;
 import eu.darkbot.api.utils.Inject;
 import eu.darkbot.util.Timer;
+import lombok.NonNull;
 
 public class PortalJumper {
 
+    protected final BotAPI bot;
     protected final MovementAPI movement;
     protected final GroupAPI group;
-    protected final WindowAPI window;
 
     protected Portal last;
     @Deprecated
     protected long nextMoveClick;
 
-    protected Timer nextTravelMove = Timer.get(), tryingToJumpSince = Timer.get(90_000);
+    protected Timer nextTravelMove = Timer.get();
+    protected Timer tryingToJumpSince = Timer.get(90_000);
 
     @Inject
-    public PortalJumper(MovementAPI movement, GroupAPI group, WindowAPI window) {
+    public PortalJumper(BotAPI bot, MovementAPI movement, GroupAPI group) {
+        this.bot = bot;
         this.movement = movement;
         this.group = group;
-        this.window = window;
     }
 
     public PortalJumper(PluginAPI api) {
-        this(api.requireAPI(MovementAPI.class), api.requireAPI(GroupAPI.class), api.requireAPI(WindowAPI.class));
+        this(api.requireAPI(BotAPI.class), api.requireAPI(MovementAPI.class), api.requireAPI(GroupAPI.class));
     }
 
     public void reset() {
@@ -38,11 +40,11 @@ public class PortalJumper {
         this.tryingToJumpSince.disarm();
     }
 
-    public void travelAndJump(Portal target) {
+    public void travelAndJump(@NonNull Portal target) {
         if (travel(target)) jump(target);
     }
 
-    public boolean travel(Portal target) {
+    public boolean travel(@NonNull Portal target) {
         // if location is not initialized, cannot travel there
         if (!target.getLocationInfo().isInitialized()) return true;
         double leniency = Math.min(200 + movement.getClosestDistance(target), 600);
@@ -62,7 +64,7 @@ public class PortalJumper {
                 && (!movement.isMoving() || target.isSelectable());
     }
 
-    public void jump(Portal target) {
+    public void jump(@NonNull Portal target) {
         // Low & hades, wait for group before trying to jump
         // This prevents the J key being written while typing out player names for invites
         int minGroupSize = target.getTargetMap().map(GameMap::getId)
@@ -75,15 +77,15 @@ public class PortalJumper {
 
         movement.jumpPortal(target);
 
-        if (target != last) {
+        if (!target.equals(last)) {
             last = target;
             nextTravelMove.activate(10_000); // first jump attempt, it may take a while
             tryingToJumpSince.activate();
         }
 
-        if (window != null && tryingToJumpSince.tryDisarm()) {
+        if (tryingToJumpSince.tryDisarm()) {
             System.out.println("Triggering refresh: jumping portal took too long");
-            window.handleRefresh();
+            bot.handleRefresh();
         }
     }
 }

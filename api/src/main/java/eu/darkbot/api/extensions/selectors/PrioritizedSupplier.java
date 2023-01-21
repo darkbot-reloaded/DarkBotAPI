@@ -25,6 +25,7 @@ public interface PrioritizedSupplier<T> extends Supplier<T> {
      * Gets the current result of the supplier
      * @return the result to use
      */
+    @Override
     T get();
 
     enum Priority {

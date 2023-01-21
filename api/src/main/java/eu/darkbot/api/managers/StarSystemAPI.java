@@ -69,7 +69,7 @@ public interface StarSystemAPI extends API.Singleton {
     /**
      * Pathfinding through maps towards a goal, this returns the portal
      * to use to get closer to the target.
-     *
+     * <br>
      * Note: This is a low-level function, use the MapTraveler util instead.
      *
      * @param targetMap target map that you're trying to travel to
@@ -78,6 +78,8 @@ public interface StarSystemAPI extends API.Singleton {
     Portal findNext(@NotNull GameMap targetMap);
 
     class MapNotFoundException extends Exception {
+        public static final long serialVersionUID = 1L;
+
         public MapNotFoundException(int mapId) {
             super("Map with id " + mapId + " was not found");
         }
@@ -88,7 +90,8 @@ public interface StarSystemAPI extends API.Singleton {
     }
 
     class MapChangeEvent implements Event {
-        private final GameMap previous, next;
+        private final GameMap previous;
+        private final GameMap next;
 
         public MapChangeEvent(GameMap previous, GameMap next) {
             this.previous = previous;

@@ -16,8 +16,13 @@ public class GalaxyInfoImpl implements eu.darkbot.api.game.galaxy.GalaxyInfo {
     private final SpinResultImpl spinResult = new SpinResultImpl(this);
     private final Map<GalaxyGate, GateInfoImpl> gates = new EnumMap<>(GalaxyGate.class);
 
-    private int money, samples, energyCost, spinSalePercentage;
-    private boolean spinOnSale, galaxyGateDay, bonusRewardsDay;
+    private int money;
+    private int samples;
+    private int energyCost;
+    private int spinSalePercent;
+    private boolean spinOnSale;
+    private boolean galaxyGateDay;
+    private boolean bonusRewardsDay;
 
     public void update(Document document) {
         Element rootElement = document.getDocumentElement();
@@ -26,7 +31,6 @@ public class GalaxyInfoImpl implements eu.darkbot.api.game.galaxy.GalaxyInfo {
         this.samples = getOrDefault(rootElement, "samples", samples);
         this.energyCost = getOrDefault(rootElement, "energy_cost", energyCost);
         this.spinSalePercentage = getOrDefault(rootElement, "spinSalePercentage", spinSalePercentage);
-
         this.spinOnSale = getOrDefault(rootElement, "spinOnSale", spinOnSale);
         this.galaxyGateDay = getOrDefault(rootElement, "galaxyGateDay", galaxyGateDay);
         this.bonusRewardsDay = getOrDefault(rootElement, "bonusRewardsDay", bonusRewardsDay);
@@ -100,7 +104,7 @@ public class GalaxyInfoImpl implements eu.darkbot.api.game.galaxy.GalaxyInfo {
 
     @Override
     public int getSpinSalePercentage() {
-        return spinSalePercentage;
+        return spinSalePercent;
     }
 
     @Override

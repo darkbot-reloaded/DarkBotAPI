@@ -3,6 +3,8 @@ package eu.darkbot.util.http;
 import com.google.gson.Gson;
 import eu.darkbot.util.IOUtils;
 import eu.darkbot.util.function.ThrowingFunction;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -26,21 +28,15 @@ import java.util.function.Consumer;
  * Use it like builder, just one time for instance
  */
 public class Http {
-    private static Gson GSON;
-    private static String DEFAULT_USER_AGENT = "BigpointClient/1.6.7";
+
+    @Getter @Setter
+    private static String defaultUserAgent = "BigpointClient/1.6.7";
+    private static String gson;
 
     public static void setGson(Gson gson) {
-        if (GSON != null)
+        if (Http.gson != null)
             throw new IllegalStateException("GSON already assigned!");
-        GSON = gson;
-    }
-
-    public static String getDefaultUserAgent() {
-        return DEFAULT_USER_AGENT;
-    }
-
-    public static void setDefaultUserAgent(String defaultUserAgent) {
-        DEFAULT_USER_AGENT = defaultUserAgent;
+        Http.gson = gson;
     }
 
     protected final String baseUrl;
@@ -48,7 +44,7 @@ public class Http {
     protected final boolean followRedirects;
 
     //Discord doesn't handle java's user agent...
-    protected String userAgent = DEFAULT_USER_AGENT;
+    protected String userAgent = defaultUserAgent;
     protected ParamBuilder params;
     protected byte[] body;
     protected List<Runnable> suppliers;
@@ -160,9 +156,11 @@ public class Http {
     public Http setParam(Object key, Object value) {
         if (this.body != null)
             throw new UnsupportedOperationException("Cannot mix body & params");
-        if (this.params == null)
+        if (this.params == null) {
             this.params = ParamBuilder.create(ParamBuilder.encode(key), ParamBuilder.encode(value));
-        else this.params.set(key, value);
+        } else {
+            this.params.set(key, value);
+        }
         return this;
     }
 
@@ -178,9 +176,11 @@ public class Http {
     public Http setRawParam(Object key, Object value) {
         if (this.body != null)
             throw new UnsupportedOperationException("Cannot mix body & params");
-        if (this.params == null)
+        if (this.params == null) {
             this.params = ParamBuilder.create(key, value);
-        else this.params.setRaw(key, value);
+        } else {
+            this.params.setRaw(key, value);
+        }
         return this;
     }
 
@@ -190,6 +190,7 @@ public class Http {
      * @param body bytes to send as body
      * @return current instance of http
      */
+    @SuppressWarnings("PMD.ArrayIsStoredDirectly")
     public Http setBody(byte[] body) {
         if (this.params != null)
             throw new UnsupportedOperationException("Cannot mix body & params");
@@ -219,7 +220,7 @@ public class Http {
 
         try (OutputStream out = encodeBase64 ? Base64.getEncoder().wrap(baos) : baos;
              OutputStreamWriter osw = new OutputStreamWriter(out, StandardCharsets.UTF_8)) {
-            GSON.toJson(json, osw);
+            gson.toJson(json, osw);
         }
 
         return setBody(baos.toByteArray());
@@ -239,7 +240,7 @@ public class Http {
     public URL getUrl() throws IOException {
         String url = baseUrl;
         if (method == Method.GET && params != null)
-            url += (!url.contains("?") ? "?" : "") + params;
+            url += (url.contains("?") ? "" : "?") + params;
 
         return new URL(url);
     }
@@ -286,7 +287,7 @@ public class Http {
     public <T> T fromJson(Type type, boolean isBase64) throws IOException {
         try (InputStream in = isBase64 ? Base64.getDecoder().wrap(getInputStream()) : getInputStream();
              InputStreamReader reader = new InputStreamReader(in, StandardCharsets.UTF_8)) {
-            return GSON.fromJson(reader, type);
+            return gson.fromJson(reader, type);
         }
     }
 
@@ -330,7 +331,7 @@ public class Http {
      * @return the result of calling function with the input stream
      * @throws X if your function throws an exception
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "PMD.AvoidCatchingThrowable"})
     public <R, X extends Throwable> R consumeInputStream(ThrowingFunction<InputStream, R, X> function) throws X, IOException {
         try (InputStream is = getInputStream()) {
             try {
@@ -375,7 +376,7 @@ public class Http {
 
         if (method == Method.POST && (body != null || params != null)) {
             conn.setDoOutput(true);
-            byte[] data = body != null ? body : params.getBytes();
+            byte[] data = body == null ? params.getBytes() : body;
             conn.setRequestProperty("Content-Length", String.valueOf(data.length));
             try (OutputStream os = conn.getOutputStream()) {
                 os.write(data);

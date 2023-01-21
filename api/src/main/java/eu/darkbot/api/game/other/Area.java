@@ -120,9 +120,10 @@ public interface Area {
             return this;
         }
 
+        @Override
         default boolean containsPoint(double x, double y) {
-            return (getX() <= x && x <= getX2() &&
-                    getY() <= y && y <= getY2());
+            return getX() <= x && x <= getX2() &&
+                    getY() <= y && y <= getY2();
         }
 
     }

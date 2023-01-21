@@ -1,5 +1,6 @@
 package eu.darkbot.util;
 
+import lombok.experimental.UtilityClass;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -10,6 +11,7 @@ import java.io.InputStream;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+@UtilityClass
 public class XmlUtils {
     private static DocumentBuilderFactory FACTORY;
 

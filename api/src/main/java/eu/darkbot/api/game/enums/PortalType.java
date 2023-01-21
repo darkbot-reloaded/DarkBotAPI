@@ -60,8 +60,9 @@ public enum PortalType {
      * @return The portal type with the corresponding id, or null if not found
      */
     public static PortalType of(int typeId) {
-        for (PortalType type : values())
+        for (PortalType type : values()) {
             if (type.id == typeId) return type;
+        }
         return UNKNOWN;
     }
 }

@@ -14,6 +14,7 @@ public interface Item extends SelectableItem {
     /**
      * @return id of the {@link Item}
      */
+    @Override
     String getId();
 
     /**

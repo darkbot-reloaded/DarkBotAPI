@@ -6,6 +6,7 @@ import eu.darkbot.api.events.Listener;
 import eu.darkbot.api.extensions.PluginInfo;
 import eu.darkbot.api.managers.ExtensionsAPI;
 import eu.darkbot.api.managers.I18nAPI;
+import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -18,6 +19,7 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 
 public class I18n implements I18nAPI, Listener {
@@ -39,7 +41,7 @@ public class I18n implements I18nAPI, Listener {
     }
 
     public void setLocale(Locale locale) {
-        if (this.locale == locale) return;
+        if (Objects.equals(this.locale, locale)) return;
         this.locale = locale;
         reloadResources();
         formatCache.clear();
@@ -70,6 +72,9 @@ public class I18n implements I18nAPI, Listener {
                         .filter(pi -> pi.getBasePackage() != null)
                         .forEach(pi -> pluginProps.put(pi, new PropertyContainer(props)));
                 reloadResources();
+                break;
+            default:
+                // no-op
         }
     }
 
@@ -82,30 +87,31 @@ public class I18n implements I18nAPI, Listener {
         return formatCache.computeIfAbsent(text, MessageFormat::new).format(arguments);
     }
 
-    private String getInternal(PluginInfo namespace, @NotNull String key) {
-        if (key == null) throw new IllegalArgumentException("Translation key must not be null");
+    private String getInternal(PluginInfo namespace, @NonNull String key) {
         String res = getProps(namespace).getProperty(key);
-        return res != null ? res : "Missing " + key;
+        return res == null ? "Missing " + key : res;
     }
 
     private String getOrDefaultInternal(PluginInfo namespace, String key, String fallback) {
         if (key == null) return fallback;
         String res = getProps(namespace).getProperty(key);
-        return res != null ? res : fallback;
+        return res == null ? fallback : res;
     }
 
+    @Override
     public String get(PluginInfo namespace, @NotNull String key, Object... arguments) {
         return format(getInternal(namespace, key), arguments);
     }
 
+    @Override
     public String getOrDefault(PluginInfo namespace, String key, String fallback, Object... arguments) {
         String text = getOrDefaultInternal(namespace, key, fallback);
         return format(text, arguments);
     }
 
-
     private static class PropertyContainer {
-        private final Properties fallback, props;
+        private final Properties fallback;
+        private final Properties props;
 
         public PropertyContainer(PropertyContainer parent) {
             this.fallback = new Properties(parent == null ? null : parent.props);

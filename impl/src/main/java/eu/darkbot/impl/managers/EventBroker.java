@@ -21,7 +21,7 @@ public class EventBroker implements EventBrokerAPI {
     private final Set<Listener> toAdd = Collections.newSetFromMap(new WeakHashMap<>());
     private final Set<Listener> toRemove = Collections.newSetFromMap(new WeakHashMap<>());
     // Handle concurrent events being sent to listeners
-    private int eventsBeingSent = 0;
+    private int eventsBeingSent;
 
     @Override
     public synchronized void sendEvent(@NotNull Event event) {
@@ -42,14 +42,20 @@ public class EventBroker implements EventBrokerAPI {
     @Override
     public synchronized void registerListener(@NotNull Listener listener) {
         if (dispatchers.containsKey(listener)) unregisterListener(listener);
-        if (eventsBeingSent == 0) dispatchers.put(listener, new EventDispatcher(listener.getClass()));
-        else toAdd.add(listener);
+        if (eventsBeingSent == 0) {
+            dispatchers.put(listener, new EventDispatcher(listener.getClass()));
+        } else {
+            toAdd.add(listener);
+        }
     }
 
     @Override
     public synchronized void unregisterListener(@NotNull Listener listener) {
-        if (eventsBeingSent == 0) dispatchers.remove(listener);
-        else toRemove.add(listener);
+        if (eventsBeingSent == 0) {
+            dispatchers.remove(listener);
+        } else {
+            toRemove.add(listener);
+        }
     }
 
     private static class EventDispatcher {
@@ -79,6 +85,7 @@ public class EventBroker implements EventBrokerAPI {
             this.clazz = method.getParameterTypes()[0];
         }
 
+        @SuppressWarnings("PMD.AvoidCatchingThrowable")
         public void handle(Listener listener, Event event) {
             if (!clazz.isInstance(event)) return;
             try {

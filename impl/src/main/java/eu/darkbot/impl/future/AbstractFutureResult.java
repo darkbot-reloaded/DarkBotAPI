@@ -50,7 +50,8 @@ public abstract class AbstractFutureResult<R> implements FutureResult<R> {
     }
 
     protected void fireListeners() {
-        for (Consumer<FutureResult<R>> futureResult : this.completeListeners)
+        for (Consumer<FutureResult<R>> futureResult : this.completeListeners) {
             futureResult.accept(this);
+        }
     }
 }

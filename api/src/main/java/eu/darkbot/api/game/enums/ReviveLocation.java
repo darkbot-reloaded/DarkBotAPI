@@ -20,9 +20,10 @@ public enum ReviveLocation {
     }
 
     public static ReviveLocation of(int id) {
-        for (ReviveLocation loc : values())
+        for (ReviveLocation loc : values()) {
             if (loc.ids.contains(id))
                 return loc;
+        }
 
         throw new IllegalStateException("Provided unsupported revive location id: " + id);
     }

@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -21,7 +22,8 @@ class SpinResultImpl implements SpinResult {
     private final Map<ItemType, SpinInfoImpl> itemsResult = new EnumMap<>(ItemType.class);
     private final Map<SelectableItem.Laser, SpinInfo> ammoResult;
 
-    private int parts, multipliers;
+    private int parts;
+    private int multipliers;
 
     private Instant date;
     private GalaxyGate gate;
@@ -57,10 +59,11 @@ class SpinResultImpl implements SpinResult {
             Integer amount = XmlUtils.attrToInt(itemElement, "amount");
             Integer spinsUsed = XmlUtils.attrToInt(itemElement, "spins");
 
-            if (itemType.equals("part") && itemElement.getAttribute("duplicate").isEmpty())
+            if (Objects.equals("part", itemType) && itemElement.getAttribute("duplicate").isEmpty()) {
                 parts++;
-            else if (itemType.equals("multiplier") && amount != null)
+            } else if (itemType.equals("multiplier") && amount != null) {
                 multipliers += amount;
+            }
 
             if (!itemId.isEmpty()) itemType += "-" + itemId;
             if (amount != null && spinsUsed != null)
@@ -161,7 +164,8 @@ class SpinResultImpl implements SpinResult {
     }
 
     private static class SpinInfoImpl implements SpinInfo {
-        private int obtained, spinsUsed;
+        private int obtained;
+        private int spinsUsed;
 
         private void set(int obtained, int spinsUsed) {
             this.obtained += obtained;

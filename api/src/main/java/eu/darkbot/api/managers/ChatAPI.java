@@ -29,6 +29,10 @@ public interface ChatAPI extends API.Singleton {
      * Chat message representation for {@link ChatAPI}
      */
     interface Message {
+        DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss.SSS");
+        AtomicInteger MAX_CLAN_LEN = new AtomicInteger(7);
+        AtomicInteger MAX_NAME_LEN = new AtomicInteger(10);
+
         /**
          * @return The id of the user who sent the message
          */
@@ -62,10 +66,6 @@ public interface ChatAPI extends API.Singleton {
          * @return The global Id of the user who sent this message
          */
         String getGlobalId();
-
-        DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss.SSS");
-        AtomicInteger MAX_CLAN_LEN = new AtomicInteger(7);
-        AtomicInteger MAX_NAME_LEN = new AtomicInteger(10);
 
         /**
          * @return A pretty-printed version of the message that can be stored in a log.

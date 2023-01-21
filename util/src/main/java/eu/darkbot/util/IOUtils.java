@@ -1,10 +1,13 @@
 package eu.darkbot.util;
 
+import lombok.experimental.UtilityClass;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
+@UtilityClass
 public class IOUtils {
 
     public static void write(OutputStream output, String str) throws IOException {

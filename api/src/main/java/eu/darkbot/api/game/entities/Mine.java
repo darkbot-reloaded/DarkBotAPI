@@ -42,9 +42,11 @@ public interface Mine extends Entity {
         }
 
         private static Type of(int typeId) {
-            for (Type type : values())
-                for (int id : type.ids)
+            for (Type type : values()) {
+                for (int id : type.ids) {
                     if (id == typeId) return type;
+                }
+            }
 
             return UNKNOWN;
         }

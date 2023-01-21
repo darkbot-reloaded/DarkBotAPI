@@ -3,6 +3,8 @@ plugins {
     id("maven-publish")
     id("io.freefair.lombok") version "6.6.1"
     id("com.diffplug.spotless") version "6.12.1"
+    id("pmd")
+    id("io.freefair.lombok") version "6.6.1"
 }
 
 description = "darkbot-common"
@@ -71,6 +73,18 @@ allprojects {
         }
     }
 
+    apply(plugin="pmd")
+    pmd {
+        isConsoleOutput = true
+
+        rulesMinimumPriority.set(5)
+        ruleSets = listOf() // Remove built-in, we define our own
+        ruleSetFiles = files(rootDir.path + "/config/pmd/pmd-rules.xml")
+
+    }
+
+    apply(plugin="io.freefair.lombok")
+
     apply(plugin = "maven-publish")
     publishing {
         publications {
@@ -82,6 +96,8 @@ allprojects {
 
     dependencies {
         compileOnly("org.jetbrains:annotations:23.1.0")
+        testCompileOnly("org.jetbrains:annotations:23.1.0")
+
         compileOnly("com.google.code.gson:gson:2.10.1")
 
         testImplementation("com.google.code.gson:gson:2.10.1")
@@ -98,7 +114,9 @@ allprojects {
 
     tasks.withType(JavaCompile::class) {
         options.isDeprecation = false // disable deprecation warnings
-        dependsOn(tasks.spotlessCheck)
     }
 
+    tasks.withType(PublishToMavenLocal::class) {
+        dependsOn("check")
+    }
 }
