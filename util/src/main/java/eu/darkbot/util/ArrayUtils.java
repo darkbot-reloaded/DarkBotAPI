@@ -1,10 +1,13 @@
 package eu.darkbot.util;
 
+import lombok.experimental.UtilityClass;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+@UtilityClass
 public class ArrayUtils {
 
     public static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];

@@ -11,6 +11,7 @@ import eu.darkbot.api.API;
  * @deprecated Plugins should not rely on modifying memory to access functions, and should use other APIs instead.
  */
 @Deprecated
+@SuppressWarnings("PMD.TooManyMethods")
 public interface MemoryAPI extends API.Singleton {
 
     /**
@@ -23,8 +24,9 @@ public interface MemoryAPI extends API.Singleton {
 
     default int readInt(long address, int... offsets) {
         int i = 0;
-        for (; i < offsets.length - 1; i++)
+        for (; i < offsets.length - 1; i++) {
             address = readLong(address + offsets[i]);
+        }
 
         return readInt(address + offsets[i]);
     }
@@ -38,8 +40,9 @@ public interface MemoryAPI extends API.Singleton {
     long readLong(long address);
 
     default long readLong(long address, int... offsets) {
-        for (int offset : offsets)
+        for (int offset : offsets) {
             address = readLong(address + offset);
+        }
 
         return address;
     }
@@ -54,8 +57,9 @@ public interface MemoryAPI extends API.Singleton {
 
     default double readDouble(long address, int... offsets) {
         int i = 0;
-        for (; i < offsets.length - 1; i++)
+        for (; i < offsets.length - 1; i++) {
             address = readLong(address + offsets[i]);
+        }
 
         return readDouble(address + offsets[i]);
     }
@@ -70,8 +74,9 @@ public interface MemoryAPI extends API.Singleton {
 
     default boolean readBoolean(long address, int... offsets) {
         int i = 0;
-        for (; i < offsets.length - 1; i++)
+        for (; i < offsets.length - 1; i++) {
             address = readLong(address + offsets[i]);
+        }
 
         return readBoolean(address + offsets[i]);
     }
@@ -115,8 +120,9 @@ public interface MemoryAPI extends API.Singleton {
 
     default byte[] readBytes(long address, int length, int... offsets) {
         int i = 0;
-        for (; i < offsets.length - 1; i++)
+        for (; i < offsets.length - 1; i++) {
             address = readLong(address + offsets[i]);
+        }
 
         return readBytes(address + offsets[i], length);
     }
@@ -133,8 +139,9 @@ public interface MemoryAPI extends API.Singleton {
 
     default void replaceInt(long address, int oldValue, int newValue, int... offsets) {
         int i = 0;
-        for (; i < offsets.length - 1; i++)
+        for (; i < offsets.length - 1; i++) {
             address = readLong(address + offsets[i]);
+        }
 
         replaceInt(address + offsets[i], oldValue, newValue);
     }
@@ -151,8 +158,9 @@ public interface MemoryAPI extends API.Singleton {
 
     default void replaceLong(long address, long oldValue, long newValue, int... offsets) {
         int i = 0;
-        for (; i < offsets.length - 1; i++)
+        for (; i < offsets.length - 1; i++) {
             address = readLong(address + offsets[i]);
+        }
 
         replaceLong(address + offsets[i], oldValue, newValue);
     }
@@ -169,8 +177,9 @@ public interface MemoryAPI extends API.Singleton {
 
     default void replaceDouble(long address, double oldValue, double newValue, int... offsets) {
         int i = 0;
-        for (; i < offsets.length - 1; i++)
+        for (; i < offsets.length - 1; i++) {
             address = readLong(address + offsets[i]);
+        }
 
         replaceDouble(address + offsets[i], oldValue, newValue);
     }
@@ -187,8 +196,9 @@ public interface MemoryAPI extends API.Singleton {
 
     default void replaceBoolean(long address, boolean oldValue, boolean newValue, int... offsets) {
         int i = 0;
-        for (; i < offsets.length - 1; i++)
+        for (; i < offsets.length - 1; i++) {
             address = readLong(address + offsets[i]);
+        }
 
         replaceBoolean(address + offsets[i], oldValue, newValue);
     }
@@ -203,8 +213,9 @@ public interface MemoryAPI extends API.Singleton {
 
     default void writeInt(long address, int value, int... offsets) {
         int i = 0;
-        for (; i < offsets.length - 1; i++)
+        for (; i < offsets.length - 1; i++) {
             address = readLong(address + offsets[i]);
+        }
 
         writeInt(address + offsets[i], value);
     }
@@ -219,8 +230,9 @@ public interface MemoryAPI extends API.Singleton {
 
     default void writeLong(long address, long value, int... offsets) {
         int i = 0;
-        for (; i < offsets.length - 1; i++)
+        for (; i < offsets.length - 1; i++) {
             address = readLong(address + offsets[i]);
+        }
 
         writeLong(address + offsets[i], value);
     }
@@ -235,8 +247,9 @@ public interface MemoryAPI extends API.Singleton {
 
     default void writeDouble(long address, double value, int... offsets) {
         int i = 0;
-        for (; i < offsets.length - 1; i++)
+        for (; i < offsets.length - 1; i++) {
             address = readLong(address + offsets[i]);
+        }
 
         writeDouble(address + offsets[i], value);
     }
@@ -251,8 +264,9 @@ public interface MemoryAPI extends API.Singleton {
 
     default void writeBoolean(long address, boolean value, int... offsets) {
         int i = 0;
-        for (; i < offsets.length - 1; i++)
+        for (; i < offsets.length - 1; i++) {
             address = readLong(address + offsets[i]);
+        }
 
         writeBoolean(address + offsets[i], value);
     }

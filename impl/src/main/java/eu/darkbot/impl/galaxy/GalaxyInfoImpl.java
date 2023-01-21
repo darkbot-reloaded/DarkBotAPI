@@ -16,9 +16,16 @@ public class GalaxyInfoImpl implements eu.darkbot.api.game.galaxy.GalaxyInfo {
     private final SpinResultImpl spinResult = new SpinResultImpl(this);
     private final Map<GalaxyGate, GateInfoImpl> gates = new HashMap<>();
 
-    private int money, samples, energyCost, spinSalePercentage;
-    private boolean spinOnSale, galaxyGateDay, bonusRewardsDay;
+    private int money;
+    private int samples;
+    private int energyCost;
+    private int spinSalePercent;
+    private boolean spinOnSale;
+    private boolean galaxyGateDay;
+    private boolean bonusRewardsDay;
 
+    // FIXME: this method needs to be refactored to remove these
+    @SuppressWarnings({"PMD.AssignmentInOperand", "PMD.CyclomaticComplexity", "PMD.NPathComplexity"})
     public void update(Document document) {
         Element rootElement = document.getDocumentElement();
 
@@ -30,7 +37,7 @@ public class GalaxyInfoImpl implements eu.darkbot.api.game.galaxy.GalaxyInfo {
             this.samples = tempValue;
 
         if ((tempValue = XmlUtils.childValueToInt(rootElement, "spinSalePercentage")) != null)
-            this.spinSalePercentage = tempValue;
+            this.spinSalePercent = tempValue;
 
         if ((tempValue = XmlUtils.childValueToInt(rootElement, "spinOnSale")) != null)
             this.spinOnSale = tempValue == 1;
@@ -103,7 +110,7 @@ public class GalaxyInfoImpl implements eu.darkbot.api.game.galaxy.GalaxyInfo {
 
     @Override
     public int getSpinSalePercentage() {
-        return spinSalePercentage;
+        return spinSalePercent;
     }
 
     @Override

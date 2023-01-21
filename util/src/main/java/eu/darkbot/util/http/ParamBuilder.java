@@ -118,6 +118,7 @@ public class ParamBuilder {
      *
      * @return String of current parameters
      */
+    @Override
     public String toString() {
         return this.params.entrySet().stream()
                 .map(Object::toString)

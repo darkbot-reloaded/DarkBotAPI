@@ -15,6 +15,7 @@ import eu.darkbot.api.managers.PetAPI;
 import eu.darkbot.api.utils.Inject;
 
 @Feature(name = "Kill & Collect", description = "Kills npcs and collects resources at the same time.")
+@SuppressWarnings({"PMD.TooManyMethods", "PMD.TooManyFields", "PMD.ExcessiveParameterList"})
 public class LootCollectorModule implements Module {
 
     protected LootModule loot;
@@ -49,42 +50,45 @@ public class LootCollectorModule implements Module {
     }
 
     @Override
+    @SuppressWarnings("PMD.CyclomaticComplexity")
     public void onTickModule() {
-        if (loot.checkDangerousAndCurrentMap()) {
-            pet.setEnabled(true);
+        if (!loot.checkDangerousAndCurrentMap()) return;
+        pet.setEnabled(true);
 
-            if (loot.findTarget()) {
-                if (collector.isNotWaiting()) {
-                    collector.findBox();
-
-                    Box box = collector.currentBox;
-                    Npc npc = loot.getAttacker().getTargetAs(Npc.class);
-
-                    if (box == null || !box.isValid()
-                            || box.distanceTo(hero) > collectRadius.getValue()
-                            || (npc.getInfo().hasExtraFlag(NpcFlag.IGNORE_BOXES)
-                            && npc.distanceTo(box) > Math.min(800, npc.getInfo().getRadius() * 2))
-                            || npc.getHealth().hpPercent() < 0.25) {
-                        loot.moveToAnSafePosition();
-                    } else {
-                        loot.setConfig(box);
-                        collector.tryCollectNearestBox();
-                    }
-                }
-
-                loot.ignoreInvalidTarget();
-                loot.attack.tryLockAndAttack();
-
-            } else if (collector.isNotWaiting()) {
-                hero.setRoamMode();
+        if (loot.findTarget()) {
+            if (collector.isNotWaiting()) {
                 collector.findBox();
 
-                if (!collector.tryCollectNearestBox()
-                        && (hero.distanceTo(movement.getDestination()) < 20 || movement.isOutOfMap())) {
-                    movement.moveRandom();
+                Box box = collector.currentBox;
+                Npc npc = loot.getAttacker().getTargetAs(Npc.class);
+
+                if (box == null || !box.isValid()
+                        || box.distanceTo(hero) > collectRadius.getValue()
+                        || shouldIgnoreBox(npc, box)
+                        || npc.getHealth().hpPercent() < 0.25) {
+                    loot.moveToAnSafePosition();
+                } else {
+                    loot.setConfig(box);
+                    collector.tryCollectNearestBox();
                 }
             }
+
+            loot.ignoreInvalidTarget();
+            loot.attack.tryLockAndAttack();
+
+        } else if (collector.isNotWaiting()) {
+            hero.setRoamMode();
+            collector.findBox();
+
+            if (!collector.tryCollectNearestBox()
+                    && (hero.distanceTo(movement.getDestination()) < 20 || movement.isOutOfMap())) {
+                movement.moveRandom();
+            }
         }
+    }
+    private static boolean shouldIgnoreBox(Npc npc, Box box) {
+        return npc.getInfo().hasExtraFlag(NpcFlag.IGNORE_BOXES)
+                && npc.distanceTo(box) > Math.min(800, npc.getInfo().getRadius() * 2);
     }
 
     @Override

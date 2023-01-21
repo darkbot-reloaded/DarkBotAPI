@@ -27,6 +27,7 @@ public interface BattleStation extends Obstacle, /*deprecated*/ Lockable {
      */
     interface Hull extends BattleStation, Lockable {
 
+        @Override
         int getHullId();
         double getHullExpansion();
 

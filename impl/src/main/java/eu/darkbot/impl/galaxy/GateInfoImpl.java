@@ -28,8 +28,9 @@ class GateInfoImpl implements GateInfo {
         if (XmlUtils.hasChildElements(e, "bonusGGReward")) {
             if (bonusReward == null) bonusReward = new BonusRewardImpl();
             bonusReward.update(XmlUtils.getChildElement(e, "bonusGGReward"));
-
-        } else bonusReward = null;
+        } else {
+            bonusReward = null;
+        }
     }
 
     void onGatePrepare() {
@@ -109,11 +110,14 @@ class GateInfoImpl implements GateInfo {
         return Optional.ofNullable(bonusReward);
     }
 
+    @SuppressWarnings("PMD.DataClass")
     private static class BonusRewardImpl implements BonusReward {
         private boolean claimed;
-        private int amount, countdown;
+        private int amount;
+        private int countdown;
         private String lootId;
 
+        @SuppressWarnings("PMD.AssignmentInOperand")
         private void update(Element e) {
             Integer temp;
             if ((temp = XmlUtils.attrToInt(e, "claimed")) != null)

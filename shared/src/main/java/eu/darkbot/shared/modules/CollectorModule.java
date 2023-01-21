@@ -26,14 +26,17 @@ import eu.darkbot.shared.utils.SafetyFinder;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Objects;
 
 import static java.lang.Math.cos;
 import static java.lang.StrictMath.sin;
 
 @Feature(name = "Collector", description = "Resource-only collector module. Can cloak.")
+@SuppressWarnings({"PMD.TooManyMethods", "PMD.TooManyFields", "PMD.ExcessiveParameterList"})
 public class CollectorModule implements Module {
 
     protected static final int DISTANCE_FROM_DANGEROUS = 1500;
+    protected static final int COLLECT_DISTANCE = 250;
 
     protected final PluginAPI api;
     protected final BotAPI bot;
@@ -59,7 +62,8 @@ public class CollectorModule implements Module {
     public Box currentBox;
     protected long refreshing;
 
-    protected long invisibleUntil, waitingUntil;
+    protected long invisibleUntil;
+    protected long waitingUntil;
 
     public CollectorModule(PluginAPI api) {
         this(api, api.requireAPI(BotAPI.class),
@@ -117,7 +121,7 @@ public class CollectorModule implements Module {
     public String getStatus() {
         if (currentBox == null) return "Roaming";
 
-        return !isNotWaiting() ?
+        return isWaiting() ?
                 "Collecting " + currentBox.getTypeName() + " " + (waitingUntil - System.currentTimeMillis()) + "ms"
                 : "Moving to " + currentBox.getTypeName();
     }
@@ -138,13 +142,16 @@ public class CollectorModule implements Module {
         }
     }
 
-    protected boolean isNotWaiting() {
+    protected boolean isWaiting() {
         if (currentBox == null || !currentBox.isValid()) {
             waitingUntil = 0;
-            return true;
+            return false;
         }
+        return System.currentTimeMillis() <= waitingUntil;
+    }
 
-        return System.currentTimeMillis() > waitingUntil;
+    protected boolean isNotWaiting() {
+        return !isWaiting();
     }
 
     protected boolean checkDangerousAndCurrentMap() {
@@ -158,7 +165,7 @@ public class CollectorModule implements Module {
 
     protected boolean checkMap() {
         GameMap map = getWorkingMap();
-        if (!portals.isEmpty() && map != starSystem.getCurrentMap()) {
+        if (!portals.isEmpty() && !Objects.equals(map, starSystem.getCurrentMap())) {
             this.bot.setModule(new MapModule(api, true)).setTarget(map);
             return false;
         }
@@ -186,7 +193,7 @@ public class CollectorModule implements Module {
     }
 
     protected boolean isResource(String type) {
-        return type.equals("FROM_SHIP") || type.equals("PROSPEROUS_CARGO");
+        return "FROM_SHIP".equals(type) || "PROSPEROUS_CARGO".equals(type);
     }
 
     public boolean tryCollectNearestBox() {
@@ -201,7 +208,7 @@ public class CollectorModule implements Module {
     protected void collectBox() {
         double distance = hero.distanceTo(currentBox);
 
-        if (distance < 250) {
+        if (distance < COLLECT_DISTANCE) {
             movement.stop(false);
             if (!currentBox.tryCollect())
                 return;

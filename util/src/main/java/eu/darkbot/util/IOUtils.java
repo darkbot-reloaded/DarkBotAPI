@@ -1,11 +1,14 @@
 package eu.darkbot.util;
 
+import lombok.experimental.UtilityClass;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
+@UtilityClass
 public class IOUtils {
 
     public static void write(OutputStream output, String str) throws IOException {
@@ -20,6 +23,7 @@ public class IOUtils {
         return new String(readByteArray(input, closeStream), StandardCharsets.UTF_8);
     }
 
+    @SuppressWarnings("PMD.AssignmentInOperand")
     public static byte[] readByteArray(InputStream input, boolean closeStream) throws IOException {
         ByteArrayOutputStream result = new ByteArrayOutputStream();
         byte[] buffer = new byte[1024];

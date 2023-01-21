@@ -1,5 +1,6 @@
 package eu.darkbot.util;
 
+import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.Desktop;
@@ -7,8 +8,10 @@ import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
+import java.io.IOException;
 import java.net.URI;
 
+@UtilityClass
 public class SystemUtils {
     /**
      * @param url to open via user's default browser
@@ -26,7 +29,7 @@ public class SystemUtils {
         try {
             Desktop.getDesktop().browse(url);
             return true;
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
         }

@@ -39,30 +39,31 @@ public interface FrozenLabyrinthAPI extends API.Singleton {
      * You can convert them to GameMap in {@link StarSystemAPI}
      */
     enum LabMap {
-        Atlas_A  (430),
-        Atlas_B  (431),
-        Atlas_C  (432),
-        Cygni    (433),
-        Helvetios(434),
-        Eridani  (435),
-        Sirius   (436),
-        Sadatoni (437),
-        Persei   (438),
-        Volantis (439),
-        Alcyone  (440),
-        Auriga   (441),
-        Bootes   (442),
-        Aquila   (443),
-        Orion    (444),
-        Maia     (445);
+        ATLAS_A  (430),
+        ATLAS_B  (431),
+        ATLAS_C  (432),
+        CYGNI    (433),
+        HELVETIOS(434),
+        ERIDANI  (435),
+        SIRIUS   (436),
+        SADATONI (437),
+        PERSEI   (438),
+        VOLANTIS (439),
+        ALCYONE  (440),
+        AURIGA   (441),
+        BOOTES   (442),
+        AQUILA   (443),
+        ORION    (444),
+        MAIA     (445);
 
         private final int mapId;
         private final MapZone[] zones = new MapZone[4];
 
         LabMap(int mapId) {
             this.mapId = mapId;
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 4; i++) {
                 zones[i] = new MapZone(this, Zone.values()[i]);
+            }
         }
 
         /**
