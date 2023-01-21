@@ -16,16 +16,16 @@
     <rule ref="category/java/codestyle.xml">
         <exclude name="AtLeastOneConstructor"/>
         <exclude name="BooleanGetMethodName"/>
-        <exclude name="ControlStatementBraces"/> <!-- defined with custom config below -->
         <exclude name="CommentDefaultAccessModifier"/>
         <exclude name="CallSuperInConstructor"/>
         <exclude name="LinguisticNaming"/>
         <exclude name="LocalVariableCouldBeFinal"/>
         <exclude name="MethodArgumentCouldBeFinal"/>
+        <exclude name="OnlyOneReturn"/>
         <exclude name="ShortVariable"/>
         <exclude name="ShortMethodName"/>
         <exclude name="ShortClassName"/>
-        <exclude name="OnlyOneReturn"/>
+        <exclude name="UselessParentheses"/>
     </rule>
 
     <rule ref="category/java/design.xml">
@@ -54,9 +54,27 @@
         </properties>
     </rule>
 
+    <rule ref="category/java/codestyle.xml/ClassNamingConventions">
+        <properties>
+            <property name="utilityClassPattern" value="[A-Z][a-zA-Z0-9]*(Utils?|Helper|Constants|s)" />
+        </properties>
+    </rule>
+
+    <rule ref="category/java/codestyle.xml/ConfusingTernary">
+        <properties>
+            <property name="ignoreElseIf" value="true" />
+        </properties>
+    </rule>
+
     <rule ref="category/java/codestyle.xml/ControlStatementBraces">
         <properties>
             <property name="checkSingleIfStmt" value="false"/>
+        </properties>
+    </rule>
+
+    <rule ref="category/java/codestyle.xml/LongVariable">
+        <properties>
+            <property name="minimum" value="24"/>
         </properties>
     </rule>
 

@@ -73,6 +73,11 @@ public interface BotAPI extends API.Singleton {
     <M extends Module> M setModule(@Nullable M module);
 
     /**
+     * Trigger a bot reload
+     */
+    void handleRefresh();
+
+    /**
      * Event fired when running value changed
      */
     class RunningToggleEvent implements Event {

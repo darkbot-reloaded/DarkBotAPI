@@ -16,19 +16,21 @@ public class MapModule extends TemporalModule {
     protected final MapTraveler traveler;
     protected final I18nAPI i18n;
 
-    protected Consumer<Object> mapChangeListener;
-    protected ConfigSetting<Object> mapChangeSetting;
+    protected Consumer<Integer> mapChangeListener;
+    protected ConfigSetting<Integer> mapChangeSetting;
 
-    protected boolean mapChanged;
+    protected boolean targetChanged;
 
-    public MapModule(PluginAPI api, boolean backOnConfigChange) {
+    public MapModule(PluginAPI api, boolean useWorkingMap) {
+        this(api, useWorkingMap ? api.requireAPI(ConfigAPI.class).requireConfig("general.working_map") : null);
+    }
+
+    public MapModule(PluginAPI api, ConfigSetting<Integer> config) {
         this(api.requireAPI(BotAPI.class), api.requireInstance(MapTraveler.class), api.requireAPI(I18nAPI.class));
 
-        if (backOnConfigChange) {
-            this.mapChangeSetting = api.requireAPI(ConfigAPI.class).requireConfig("general.working_map");
-
-            this.mapChangeListener = (map -> mapChanged = (map != traveler.target));
-            this.mapChangeSetting.addListener(mapChangeListener);
+        if (config != null) {
+            this.mapChangeSetting = config;
+            this.mapChangeListener = mapId -> targetChanged = (mapId != traveler.target.getId());
         }
     }
 
@@ -46,6 +48,13 @@ public class MapModule extends TemporalModule {
     }
 
     @Override
+    public void install(PluginAPI api) {
+        super.install(api);
+        if (mapChangeSetting != null && mapChangeListener != null)
+            mapChangeSetting.addListener(mapChangeListener);
+    }
+
+    @Override
     public void goBack() {
         super.goBack();
         if (mapChangeSetting != null && mapChangeListener != null)
@@ -54,15 +63,15 @@ public class MapModule extends TemporalModule {
 
     @Override
     public String getStatus() {
-        return traveler.current != null ?
+        return traveler.current == null ?
+                i18n.get("module.map_travel.status.no_next", traveler.target.getName()) :
                 i18n.get("module.map_travel.status.has_next", traveler.target.getName(),
-                        traveler.current.getTargetMap().map(GameMap::getName).orElse("unknown?")) :
-                i18n.get("module.map_travel.status.no_next", traveler.target.getName());
+                        traveler.current.getTargetMap().map(GameMap::getName).orElse("unknown?"));
     }
 
     @Override
     public void onTickModule() {
         if (!traveler.isDone()) traveler.tick();
-        if (mapChanged || traveler.isDone()) goBack();
+        if (targetChanged || traveler.isDone()) goBack();
     }
 }

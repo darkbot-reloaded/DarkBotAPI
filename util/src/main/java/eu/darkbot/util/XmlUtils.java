@@ -1,11 +1,13 @@
 package eu.darkbot.util;
 
+import lombok.experimental.UtilityClass;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+@UtilityClass
 public class XmlUtils {
 
     public static boolean hasChildElements(Element parent, String name) {

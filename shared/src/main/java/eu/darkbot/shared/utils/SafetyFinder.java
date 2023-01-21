@@ -29,9 +29,20 @@ import eu.darkbot.util.Timer;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
+// TODO: This class is terribly complex. Should be split into utils.
+@SuppressWarnings({"PMD.TooManyMethods", "PMD.TooManyFields", "PMD.ExcessiveImports", "PMD.CyclomaticComplexity"})
 public class SafetyFinder implements Listener {
+
+    // After 2 minutes, time-out safety and try to tick normal module a bit
+    protected static final long ESCAPE_TIMEOUT = 120 * TimeUtils.SECOND;
+    // Then reset and keep trying
+    protected static final long ESCAPE_TIMEOUT_RESET = 125 * TimeUtils.SECOND;
+    // If time between ticks is over this, consider there's been a jump in time
+    protected static final int TICK_SKIP_THRESHOLD = 2500;
 
     protected final HeroAPI hero;
     protected final AttackAPI attacker;
@@ -74,7 +85,7 @@ public class SafetyFinder implements Listener {
         ENEMY, SIGHT, REPAIR, REFRESH, WAITING, NONE;
         boolean canUse(SafetyInfo safety) {
             if (safety.getType() == SafetyInfo.Type.CBS) {
-                BattleStation cbs = ((BattleStation) safety.getEntity().orElse(null));
+                BattleStation.Hull cbs = ((BattleStation.Hull) safety.getEntity().orElse(null));
                 if (cbs == null) return false;
                 // Ignore enemy CBS, and if set to ALLY only, ignore empty meteorites (hull = 0)
                 if (cbs.getEntityInfo().isEnemy() || (cbs.getHullId() == 0 && safety.getCbsMode() == SafetyInfo.CbsMode.ALLY)) return false;
@@ -89,7 +100,9 @@ public class SafetyFinder implements Listener {
     }
 
     protected JumpState jumpState = JumpState.CURRENT_MAP;
-    protected enum JumpState {CURRENT_MAP, JUMPING, JUMPED, RETURNING, RETURNED}
+    protected enum JumpState {
+        CURRENT_MAP, JUMPING, JUMPED, RETURNING, RETURNED
+    }
     protected GameMap prevMap;
 
     public SafetyFinder(HeroAPI hero,
@@ -134,8 +147,11 @@ public class SafetyFinder implements Listener {
     @EventHandler
     public void onMapChange(StarSystemAPI.MapChangeEvent event) {
         if (safety != null && safety.getType() == SafetyInfo.Type.PORTAL) {
-            if (event.getNext() == prevMap) jumpState = JumpState.RETURNED;
-            else if (jumpState == JumpState.JUMPING) jumpState = JumpState.JUMPED;
+            if (Objects.equals(event.getNext(), prevMap)) {
+                jumpState = JumpState.RETURNED;
+            } else if (jumpState == JumpState.JUMPING) {
+                jumpState = JumpState.JUMPED;
+            }
         }
     }
 
@@ -154,26 +170,16 @@ public class SafetyFinder implements Listener {
     }
 
     private String simplify(Object obj) {
-        return obj.toString().toLowerCase().replace("_", " ");
+        return obj.toString().toLowerCase(Locale.ROOT).replace("_", " ");
     }
 
     /**
      * @return True if it's safe to keep working, false if the safety is working.
      */
     public boolean tick() {
-        if (escape == Escaping.WAITING) {
-            if (escapingSince == -1) escapingSince = System.currentTimeMillis();
-
-            long escapeTime = System.currentTimeMillis() - escapingSince;
-            if (escapeTime > 121_000) escapingSince = -1;
-            if (escapeTime > 120_000) return false; // Over 2 min waiting? Try ticking module a bit to move.
+        if (shouldTimeout()) {
+            return false;
         }
-        // If no tick occurred for a while, means safety finder should have reset (Probably died)
-        if (System.currentTimeMillis() - lastTick > 2500) {
-            escape = Escaping.NONE;
-            jumpState = JumpState.CURRENT_MAP;
-        }
-        lastTick = System.currentTimeMillis();
 
         if (jumpState == JumpState.CURRENT_MAP || jumpState == JumpState.JUMPING) {
             activeTick();
@@ -186,36 +192,7 @@ public class SafetyFinder implements Listener {
             }
         }
 
-        switch (jumpState) {
-            case CURRENT_MAP:
-                if (escape.shouldJump(safety)
-                        // Also jump if taking damage & you would jump away from enemy.
-                        || (hero.getHealth().hpDecreasedIn(200) && Escaping.ENEMY.shouldJump(safety))) {
-                    jumpState = JumpState.JUMPING;
-                    movement.stop(false);
-                }
-                break;
-            case JUMPING:
-                prevMap = starSystem.getCurrentMap();
-                safety.getEntity()
-                        .ifPresent(e -> jumper.travelAndJump((Portal) e));
-                return false;
-            case JUMPED:
-                moveToSafety(getSafety());
-                if (hero.getHealth().hpDecreasedIn(100) || safety.getJumpMode() != SafetyInfo.JumpMode.ALWAYS_OTHER_SIDE
-                        || (!refreshing && doneRepairing())) {
-                    jumpState = JumpState.RETURNING;
-                    mapTraveler.setTarget(prevMap);
-                }
-                break;
-            case RETURNING:
-                if (mapTraveler.isDone()) mapTraveler.setTarget(prevMap);
-                mapTraveler.tick();
-                return false;
-
-            case RETURNED:
-                moveToSafety(safety);
-        }
+        if (checkJumpingState()) return false;
 
         if (jumpState == JumpState.CURRENT_MAP || jumpState == JumpState.RETURNED) {
             escape = Escaping.WAITING;
@@ -229,13 +206,35 @@ public class SafetyFinder implements Listener {
         return false;
     }
 
+    // True if a time-out occurred and should return, false otherwise
+    protected boolean shouldTimeout() {
+        if (escape == Escaping.WAITING) {
+            if (escapingSince == -1) escapingSince = System.currentTimeMillis();
+
+            // Over 2 min waiting? Try ticking module a bit to move.
+            long escapeTime = System.currentTimeMillis() - escapingSince;
+            if (escapeTime > ESCAPE_TIMEOUT) {
+                if (escapeTime > ESCAPE_TIMEOUT_RESET) escapingSince = -1;
+                return true;
+            }
+        }
+
+        // If no tick occurred for a while, means safety finder should have reset (Probably died)
+        if (System.currentTimeMillis() - lastTick > TICK_SKIP_THRESHOLD) {
+            escape = Escaping.NONE;
+            jumpState = JumpState.CURRENT_MAP;
+        }
+        lastTick = System.currentTimeMillis();
+        return false;
+    }
+
     protected void activeTick() {
+        @SuppressWarnings("PMD.PrematureDeclaration") // False-positive
         Escaping oldEscape = escape;
         escape = getEscape();
         if (escape == Escaping.NONE || escape == Escaping.WAITING) return;
 
-        if (jumpState == JumpState.CURRENT_MAP &&
-                (escape != oldEscape || safety == null || safety.getEntity().map(e -> !e.isValid()).orElse(true))) {
+        if (jumpState == JumpState.CURRENT_MAP && (escape != oldEscape || isEntityInvalid())) {
             safety = getSafety();
         }
         if (safety == null) {
@@ -246,15 +245,66 @@ public class SafetyFinder implements Listener {
         if (oldEscape != escape && escape == Escaping.ENEMY) castDefensiveAbility();
     }
 
+    private boolean checkJumpingState() {
+        switch (jumpState) {
+            case CURRENT_MAP:
+                if (escape.shouldJump(safety)
+                        // Also jump if taking damage & you would jump away from enemy.
+                        || (hero.getHealth().hpDecreasedIn(200) && Escaping.ENEMY.shouldJump(safety))) {
+                    jumpState = JumpState.JUMPING;
+                    movement.stop(false);
+                }
+                break;
+            case JUMPING:
+                prevMap = starSystem.getCurrentMap();
+                safety.getEntity()
+                        .ifPresent(e -> jumper.travelAndJump((Portal) e));
+                return true;
+            case JUMPED:
+                moveToSafety(getSafety());
+                if (hero.getHealth().hpDecreasedIn(100) || safety.getJumpMode() != SafetyInfo.JumpMode.ALWAYS_OTHER_SIDE
+                        || (!refreshing && doneRepairing())) {
+                    jumpState = JumpState.RETURNING;
+                    mapTraveler.setTarget(prevMap);
+                }
+                break;
+            case RETURNING:
+                if (mapTraveler.isDone()) mapTraveler.setTarget(prevMap);
+                mapTraveler.tick();
+                return true;
+
+            case RETURNED:
+                moveToSafety(safety);
+                break;
+        }
+        return false;
+    }
+
+    protected boolean isEntityInvalid() {
+        return safety != null && safety.getEntity().map(e -> !e.isValid()).orElse(true);
+    }
+
     protected Escaping getEscape() {
-        if (escape == Escaping.ENEMY || isUnderAttack()) return Escaping.ENEMY;
-        if (escape == Escaping.WAITING) return Escaping.WAITING;
-        if ((escape == Escaping.SIGHT && !stopRunningNoSight.getValue()) || hasEnemy()) return Escaping.SIGHT;
-        if (escape == Escaping.REPAIR || hero.getHealth().hpPercent() < repairHpRange.getValue().getMin() ||
-                (hero.getHealth().hpPercent() < repairRoamingHp.getValue() &&
-                        (!attacker.hasTarget() || attacker.getTarget().getHealth().hpPercent() > 0.9)))
+        if (escape == Escaping.ENEMY || isUnderAttack()) {
+            return Escaping.ENEMY;
+        } else if (escape == Escaping.WAITING) {
+            return Escaping.WAITING;
+        } else if (enemyInSight()) {
+            return Escaping.SIGHT;
+        } else if (needsRepairing()) {
             return Escaping.REPAIR;
+        }
         return refreshing ? Escaping.REFRESH : Escaping.NONE;
+    }
+
+    private boolean enemyInSight() {
+        return (escape == Escaping.SIGHT && !stopRunningNoSight.getValue()) || hasEnemy();
+    }
+
+    private boolean needsRepairing() {
+        return escape == Escaping.REPAIR || hero.getHealth().hpPercent() < repairHpRange.getValue().getMin() ||
+                (hero.getHealth().hpPercent() < repairRoamingHp.getValue()
+                        && (!attacker.hasTarget() || attacker.getTarget().getHealth().hpPercent() > 0.9));
     }
 
     protected SafetyInfo getSafety() {
@@ -323,9 +373,7 @@ public class SafetyFinder implements Listener {
     protected boolean runFrom(Ship ship) {
         if (enemiesTag.getValue() != null) {
             PlayerInfo playerInfo = legacyConfig.getPlayerInfos().get(ship.getId());
-            if (playerInfo != null) {
-                if (enemiesTag.getValue().hasTag(playerInfo)) return true;
-            }
+            if (playerInfo != null && enemiesTag.getValue().hasTag(playerInfo)) return true;
         }
 
         return ship.getEntityInfo().isEnemy() && (isAttackingOrBlacklisted(ship) ||
