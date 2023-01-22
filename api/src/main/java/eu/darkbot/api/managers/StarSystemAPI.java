@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Provides access to game maps, map sizes, and pathfinding between them.
@@ -40,12 +41,45 @@ public interface StarSystemAPI extends API.Singleton {
     Collection<? extends GameMap> getMaps();
 
     /**
+     * Find {@link GameMap} by given {@code mapId} otherwise will create a new one with given mapId.
+     *
+     * @param mapId id to find
+     * @return {@link GameMap} with given {@code mapId}
+     */
+    GameMap getOrCreateMap(int mapId);
+
+    /**
+     * Find {@link GameMap} by given {@code mapName} otherwise will create a new one with given mapName.
+     *
+     * @param mapName name to find
+     * @return {@link GameMap} with given {@code mapId}
+     */
+    GameMap getOrCreateMap(String mapName);
+
+    /**
+     * Find optional {@link GameMap} by given {@code mapId}.
+     *
+     * @param mapId id to find
+     * @return Optional {@link GameMap} with given {@code mapId}, {@link Optional#empty()} otherwise
+     */
+    Optional<GameMap> findMap(int mapId);
+
+    /**
+     * Find optional {@link GameMap} by given {@code mapName}.
+     *
+     * @param mapName name to find
+     * @return Optional {@link GameMap} with given {@code mapName}, {@link Optional#empty()} otherwise
+     */
+    Optional<GameMap> findMap(String mapName);
+
+    /**
      * Find {@link GameMap} by given {@code mapId}.
      *
      * @param mapId to find
      * @return {@link GameMap} with given {@code mapId}
      * @throws MapNotFoundException if map was not found
      */
+    @Deprecated
     GameMap getById(int mapId) throws MapNotFoundException;
 
     /**
@@ -54,6 +88,7 @@ public interface StarSystemAPI extends API.Singleton {
      * @param mapId to find
      * @return {@link GameMap} with given {@code mapId}
      */
+    @Deprecated
     GameMap getOrCreateMapById(int mapId);
 
     /**
@@ -64,6 +99,7 @@ public interface StarSystemAPI extends API.Singleton {
      * @return {@link GameMap} with given {@code mapName}
      * @throws MapNotFoundException if map was not found
      */
+    @Deprecated
     GameMap getByName(@NotNull String mapName) throws MapNotFoundException;
 
     /**
@@ -77,6 +113,7 @@ public interface StarSystemAPI extends API.Singleton {
      */
     Portal findNext(@NotNull GameMap targetMap);
 
+    @Deprecated
     class MapNotFoundException extends Exception {
         public static final long serialVersionUID = 1L;
 

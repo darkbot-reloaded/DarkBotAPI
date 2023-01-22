@@ -31,22 +31,15 @@ public class Http {
 
     @Getter @Setter
     private static String defaultUserAgent = "BigpointClient/1.6.7";
-    private static String gson;
-
-    public static void setGson(Gson gson) {
-        if (Http.gson != null)
-            throw new IllegalStateException("GSON already assigned!");
-        Http.gson = gson;
-    }
+    private static Gson gson;
 
     protected final String baseUrl;
     protected final Method method;
     protected final boolean followRedirects;
+    protected final BodyHolder bodyHolder = new BodyHolder();
 
     //Discord doesn't handle java's user agent...
     protected String userAgent = defaultUserAgent;
-    protected ParamBuilder params;
-    protected byte[] body;
     protected List<Runnable> suppliers;
     protected Map<String, String> headers = new LinkedHashMap<>();
 
@@ -54,6 +47,12 @@ public class Http {
         this.baseUrl = baseUrl;
         this.method = method;
         this.followRedirects = followRedirects;
+    }
+
+    public static void setGson(Gson gson) {
+        if (Http.gson != null)
+            throw new IllegalStateException("gson already assigned!");
+        Http.gson = gson;
     }
 
     /**
@@ -69,7 +68,7 @@ public class Http {
 
     /**
      * Creates new instance of Http with provided url and request method.
-     * Follows redirects by default.
+     * Follow redirects by default.
      *
      * @param url    to connect
      * @param method of request
@@ -154,13 +153,7 @@ public class Http {
      * @return current instance of Http
      */
     public Http setParam(Object key, Object value) {
-        if (this.body != null)
-            throw new UnsupportedOperationException("Cannot mix body & params");
-        if (this.params == null) {
-            this.params = ParamBuilder.create(ParamBuilder.encode(key), ParamBuilder.encode(value));
-        } else {
-            this.params.set(key, value);
-        }
+        this.bodyHolder.setParam(key, value);
         return this;
     }
 
@@ -174,13 +167,7 @@ public class Http {
      * @return current instance of Http
      */
     public Http setRawParam(Object key, Object value) {
-        if (this.body != null)
-            throw new UnsupportedOperationException("Cannot mix body & params");
-        if (this.params == null) {
-            this.params = ParamBuilder.create(key, value);
-        } else {
-            this.params.setRaw(key, value);
-        }
+        this.bodyHolder.setRawParam(key, value);
         return this;
     }
 
@@ -192,9 +179,7 @@ public class Http {
      */
     @SuppressWarnings("PMD.ArrayIsStoredDirectly")
     public Http setBody(byte[] body) {
-        if (this.params != null)
-            throw new UnsupportedOperationException("Cannot mix body & params");
-        this.body = body;
+        this.bodyHolder.setBody(body);
         return this;
     }
 
@@ -211,7 +196,7 @@ public class Http {
     /**
      * Serializes the object into JSON and set it as POST body
      *
-     * @param json object to be serialized into JSON
+     * @param json         object to be serialized into JSON
      * @param encodeBase64 should JSON be encoded in Base64
      * @return current instance of http
      */
@@ -239,8 +224,8 @@ public class Http {
 
     public URL getUrl() throws IOException {
         String url = baseUrl;
-        if (method == Method.GET && params != null)
-            url += (url.contains("?") ? "" : "?") + params;
+        if (method == Method.GET && bodyHolder.hasParams())
+            url += (url.contains("?") ? "" : "?") + bodyHolder;
 
         return new URL(url);
     }
@@ -269,7 +254,7 @@ public class Http {
     /**
      * Deserializes the JSON response from the input stream into an object of the specified type
      *
-     * @param type class type to be deserialized to
+     * @param type     class type to be deserialized to
      * @param isBase64 is JSON response base64 encoded
      * @return deserialized JSON response
      */
@@ -280,7 +265,7 @@ public class Http {
     /**
      * Deserializes the JSON response from the input stream into an object of the specified type
      *
-     * @param type type to be deserialized to
+     * @param type     type to be deserialized to
      * @param isBase64 is JSON response base64 encoded
      * @return deserialized JSON response
      */
@@ -374,9 +359,9 @@ public class Http {
         conn.setRequestProperty("User-Agent", userAgent);
         if (!headers.isEmpty()) headers.forEach(conn::setRequestProperty);
 
-        if (method == Method.POST && (body != null || params != null)) {
+        if (method == Method.POST && bodyHolder.isValid()) {
             conn.setDoOutput(true);
-            byte[] data = body == null ? params.getBytes() : body;
+            byte[] data = bodyHolder.getBytes();
             conn.setRequestProperty("Content-Length", String.valueOf(data.length));
             try (OutputStream os = conn.getOutputStream()) {
                 os.write(data);

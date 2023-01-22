@@ -47,6 +47,10 @@ public interface Version extends Comparable<Version> {
         return compareTo(other) > 0;
     }
 
+    default boolean isOlderThan(Version other) {
+        return compareTo(other) < 0;
+    }
+
     @Override
     default int compareTo(Version o) {
         if (getMajor() != o.getMajor()) return Integer.compare(getMajor(), o.getMajor());

@@ -4,7 +4,6 @@ plugins {
     id("io.freefair.lombok") version "6.6.1"
     id("com.diffplug.spotless") version "6.12.1"
     id("pmd")
-    id("io.freefair.lombok") version "6.6.1"
 }
 
 description = "darkbot-common"

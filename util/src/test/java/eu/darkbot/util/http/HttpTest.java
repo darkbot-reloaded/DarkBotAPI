@@ -1,18 +1,18 @@
 package eu.darkbot.util.http;
 
 import com.google.gson.Gson;
+import lombok.EqualsAndHashCode;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
-public class HttpTest {
+class HttpTest {
 
     @Test
-    public void testJson() throws IOException {
+    void testJson() throws IOException {
         Http.setGson(new Gson());
         TestPojo pojo = new TestPojo(UUID.randomUUID().toString(), Math.random(), new Random().nextInt());
 
@@ -30,27 +30,16 @@ public class HttpTest {
         Assertions.assertEquals(pojo, encoded);
     }
 
-    public static class TestPojo {
+    @EqualsAndHashCode
+    static class TestPojo {
         private final String a;
         private final double b;
         private final int c;
 
-        public TestPojo(String a, double b, int c) {
+        TestPojo(String a, double b, int c) {
             this.a = a;
             this.b = b;
             this.c = c;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            TestPojo pojo = (TestPojo) o;
-
-            if (Double.compare(pojo.b, b) != 0) return false;
-            if (c != pojo.c) return false;
-            return Objects.equals(a, pojo.a);
         }
     }
 }

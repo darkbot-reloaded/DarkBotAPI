@@ -117,6 +117,7 @@ public class GalaxySpinner implements GalaxySpinnerAPI {
         }
     }
 
+    @SuppressWarnings({"PMD.AvoidThrowingNewInstanceOfSameException", "PMD.ExceptionAsFlowControl"})
     private Document getDocument(Http http) throws IOException {
         return http.consumeInputStream(is -> {
             try (BufferedInputStream bis = new BufferedInputStream(is)) {
@@ -127,7 +128,11 @@ public class GalaxySpinner implements GalaxySpinnerAPI {
 
                 bis.reset();
 
-                return XmlUtils.parse(bis);
+                try {
+                    return XmlUtils.parse(bis);
+                } catch (IOException | SAXException e) {
+                    throw new IOException(e);
+                }
             }
         });
     }

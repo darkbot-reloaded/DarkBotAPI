@@ -30,10 +30,10 @@ public class GalaxyInfoImpl implements eu.darkbot.api.game.galaxy.GalaxyInfo {
         this.money = getOrDefault(rootElement, "money", money);
         this.samples = getOrDefault(rootElement, "samples", samples);
         this.energyCost = getOrDefault(rootElement, "energy_cost", energyCost);
-        this.spinSalePercentage = getOrDefault(rootElement, "spinSalePercentage", spinSalePercentage);
         this.spinOnSale = getOrDefault(rootElement, "spinOnSale", spinOnSale);
         this.galaxyGateDay = getOrDefault(rootElement, "galaxyGateDay", galaxyGateDay);
         this.bonusRewardsDay = getOrDefault(rootElement, "bonusRewardsDay", bonusRewardsDay);
+        this.spinSalePercent = getOrDefault(rootElement, "spinSalePercentage", spinSalePercent);
 
         if (XmlUtils.hasChildElements(rootElement, "items"))
             updateItems(rootElement);

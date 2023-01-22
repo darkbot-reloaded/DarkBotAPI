@@ -156,7 +156,7 @@ public class LootModule implements Module {
     protected boolean checkMap() {
         if (!workingMap.getValue().equals(starSystem.getCurrentMap().getId()) && !portals.isEmpty()) {
             this.bot.setModule(new MapModule(api, true))
-                    .setTarget(starSystem.getOrCreateMapById(workingMap.getValue()));
+                    .setTarget(starSystem.getOrCreateMap(workingMap.getValue()));
             return false;
         }
         return true;

@@ -15,16 +15,22 @@ import java.util.regex.Pattern;
 @EqualsAndHashCode
 @JsonAdapter(VersionImpl.Adapter.class)
 public class VersionImpl implements Version {
-    protected static final Pattern VERSION = Pattern.compile("" +
+    protected static final Pattern VERSION = Pattern.compile(
             "(?<major>[^0-9]*[0-9]+)" +
             "(\\.(?<minor>[0-9]+))?" +
             "(\\.(?<patch>[0-9]+))?" +
             "(\\.(?<revision>[0-9]+))?" +
             "(?<beta> ?b(eta)? ?(?<betanum>[0-9]+)?)?" +
-            "(?<alpha> ?a(lpha) ?(?<alphanum>[0-9]+)?)?");
+            "(?<alpha> ?a(lpha)? ?(?<alphanum>[0-9]+)?)?");
 
     protected final String version;
-    protected final int major, minor, patch, revision, beta, alpha;
+
+    protected final int major;
+    protected final int minor;
+    protected final int patch;
+    protected final int revision;
+    protected final int beta;
+    protected final int alpha;
 
     protected VersionImpl(String version) {
         Matcher matcher = VERSION.matcher(version);
@@ -55,37 +61,39 @@ public class VersionImpl implements Version {
         this.version = getVersionString();
     }
 
-    protected static int getInt(Matcher m, String groupName) {
+    private static int getInt(Matcher m, String groupName) {
         String result = m.group(groupName);
         return result == null ? -1 : Integer.parseInt(result);
     }
 
-    protected static int getOptionalInt(Matcher m, String groupName) {
+    private static int getOptionalInt(Matcher m, String groupName) {
         String result = m.group(groupName);
         if (result == null) return -1;
         String num = m.group(groupName + "num");
         return num == null ? 0 : Integer.parseInt(num);
     }
 
+    @Override
     public boolean isBeta() {
         return beta != Integer.MAX_VALUE;
     }
 
+    @Override
     public boolean isAlpha() {
         return alpha != Integer.MAX_VALUE;
     }
 
-    protected String getVersionString() {
-        String version = String.valueOf(major);
+    private String getVersionString() {
+        StringBuilder versionBuilder = new StringBuilder(String.valueOf(major));
 
-        if (minor != -1) version += "." + minor;
-        if (patch != -1) version += "." + patch;
-        if (revision != -1) version += "." + revision;
+        if (minor != -1) versionBuilder.append('.').append(minor);
+        if (patch != -1) versionBuilder.append('.').append(patch);
+        if (revision != -1) versionBuilder.append('.').append(revision);
 
-        if (isBeta()) version += " b" + beta;
-        if (isAlpha()) version += " a" + alpha;
+        if (beta != Integer.MAX_VALUE) versionBuilder.append(" b").append(beta);
+        if (alpha != Integer.MAX_VALUE) versionBuilder.append(" a").append(alpha);
 
-        return version;
+        return versionBuilder.toString();
     }
 
     @Override
