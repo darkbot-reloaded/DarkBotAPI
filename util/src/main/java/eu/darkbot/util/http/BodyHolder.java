@@ -2,7 +2,6 @@ package eu.darkbot.util.http;
 
 import java.util.Arrays;
 
-@SuppressWarnings({"PMD.MethodReturnsInternalArray", "PMD.ArrayIsStoredDirectly"})
 class BodyHolder {
     private byte[] body;
     private ParamBuilder paramBuilder;
@@ -24,6 +23,7 @@ class BodyHolder {
         return paramBuilder != null;
     }
 
+    @SuppressWarnings("PMD.MethodReturnsInternalArray")
     byte[] getBytes() {
         if (body != null) return body;
         if (paramBuilder != null) return paramBuilder.getBytes();
@@ -39,6 +39,7 @@ class BodyHolder {
         getParams().setRaw(key, value);
     }
 
+    @SuppressWarnings("PMD.ArrayIsStoredDirectly")
     void setBody(byte[] body) {
         if (paramBuilder != null)
             throw new UnsupportedOperationException("Cannot mix body & params");
