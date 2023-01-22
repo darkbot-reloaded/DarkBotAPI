@@ -45,22 +45,16 @@ public interface StarSystemAPI extends API.Singleton {
      *
      * @param mapId id to find
      * @return {@link GameMap} with given {@code mapId}
+     * @since 0.7.1
      */
     GameMap getOrCreateMap(int mapId);
-
-    /**
-     * Find {@link GameMap} by given {@code mapName} otherwise will create a new one with given mapName.
-     *
-     * @param mapName name to find
-     * @return {@link GameMap} with given {@code mapId}
-     */
-    GameMap getOrCreateMap(String mapName);
 
     /**
      * Find optional {@link GameMap} by given {@code mapId}.
      *
      * @param mapId id to find
      * @return Optional {@link GameMap} with given {@code mapId}, {@link Optional#empty()} otherwise
+     * @since 0.7.1
      */
     Optional<GameMap> findMap(int mapId);
 
@@ -69,6 +63,7 @@ public interface StarSystemAPI extends API.Singleton {
      *
      * @param mapName name to find
      * @return Optional {@link GameMap} with given {@code mapName}, {@link Optional#empty()} otherwise
+     * @since 0.7.1
      */
     Optional<GameMap> findMap(String mapName);
 
@@ -79,7 +74,7 @@ public interface StarSystemAPI extends API.Singleton {
      * @return {@link GameMap} with given {@code mapId}
      * @throws MapNotFoundException if map was not found
      */
-    @Deprecated
+    @Deprecated(since = "0.7.1")
     GameMap getById(int mapId) throws MapNotFoundException;
 
     /**
@@ -88,7 +83,7 @@ public interface StarSystemAPI extends API.Singleton {
      * @param mapId to find
      * @return {@link GameMap} with given {@code mapId}
      */
-    @Deprecated
+    @Deprecated(since = "0.7.1")
     GameMap getOrCreateMapById(int mapId);
 
     /**
@@ -99,7 +94,7 @@ public interface StarSystemAPI extends API.Singleton {
      * @return {@link GameMap} with given {@code mapName}
      * @throws MapNotFoundException if map was not found
      */
-    @Deprecated
+    @Deprecated(since = "0.7.1")
     GameMap getByName(@NotNull String mapName) throws MapNotFoundException;
 
     /**
@@ -113,7 +108,7 @@ public interface StarSystemAPI extends API.Singleton {
      */
     Portal findNext(@NotNull GameMap targetMap);
 
-    @Deprecated
+    @Deprecated(since = "0.7.1")
     class MapNotFoundException extends Exception {
         public static final long serialVersionUID = 1L;
 
