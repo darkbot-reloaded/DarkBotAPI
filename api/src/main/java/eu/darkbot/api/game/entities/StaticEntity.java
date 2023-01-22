@@ -1,5 +1,7 @@
 package eu.darkbot.api.game.entities;
 
+import eu.darkbot.api.game.enums.PetGear;
+import lombok.Getter;
 import org.jetbrains.annotations.ApiStatus;
 
 /**
@@ -32,7 +34,7 @@ public interface StaticEntity extends Entity {
     }
 
     /**
-     * Part of the plutus experiments event. When shot down, spawns a boss npc.
+     * Part of the plutus experiments event.
      */
     interface PlutusGenerator extends StaticEntity {
 
@@ -41,5 +43,27 @@ public interface StaticEntity extends Entity {
          * @since 0.7.1
          */
         boolean isHealType();
+    }
+
+    /**
+     * Pet beacon entity, dropped by {@link Pet}
+     *
+     * @since 0.7.1
+     */
+    interface PetBeacon extends StaticEntity {
+
+        Type getType();
+
+        @Getter
+        enum Type {
+            HP(PetGear.BEACON_HP),
+            COMBAT(PetGear.BEACON_COMBAT);
+
+            private final PetGear petGear;
+
+            Type(PetGear petGear) {
+                this.petGear = petGear;
+            }
+        }
     }
 }
