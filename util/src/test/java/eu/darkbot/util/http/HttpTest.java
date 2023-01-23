@@ -3,6 +3,7 @@ package eu.darkbot.util.http;
 import com.google.gson.Gson;
 import lombok.EqualsAndHashCode;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -12,6 +13,7 @@ import java.util.UUID;
 class HttpTest {
 
     @Test
+    @Disabled("Avoid calls on every build")
     void testJson() throws IOException {
         Http.setGson(new Gson());
         TestPojo pojo = new TestPojo(UUID.randomUUID().toString(), Math.random(), new Random().nextInt());

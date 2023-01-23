@@ -152,15 +152,20 @@ public class PluginApiImpl implements PluginAPI {
     /*
      * Small helper method to get the best constructor for a class
      */
-    @SuppressWarnings("PMD.CyclomaticComplexity") // This method doesn't look that complicated...
     private static Constructor<?> getBestConstructor(Class<?> clazz) {
         Constructor<?>[] constructors = clazz.getConstructors();
-        if (constructors.length == 0)
-            throw new UnsupportedOperationException("No public constructor exists for " + clazz.getName());
-        // Ideal case, just one constructor to call
-        if (constructors.length == 1) return constructors[0];
+        switch (constructors.length) {
+            case 0:
+                throw new UnsupportedOperationException("No public constructor exists for " + clazz.getName());
+            case 1:
+                return constructors[0];
+            default:
+                // For multiple constructors, search for the @Inject annotation
+                return findInjectable(clazz, constructors);
+        }
+    }
 
-        // For multiple constructors, search for the @Inject annotation
+    private static Constructor<?> findInjectable(Class<?> clazz, Constructor<?>... constructors) {
         Constructor<?> result = null;
         for (Constructor<?> c : constructors) {
             if (c.getAnnotation(Inject.class) == null) continue;
