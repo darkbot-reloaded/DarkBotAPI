@@ -24,7 +24,7 @@ public interface PluginAPI extends API.Singleton {
      * @return an instance of the implementation for the given {@link API}
      * @throws UnsupportedOperationException if given api isn't supported
      */
-    @NotNull <T extends API> T requireAPI(@NotNull Class<T> api) throws UnsupportedOperationException;
+    @NotNull <T extends API> T requireAPI(@NotNull Class<T> api);
 
     /**
      * Creates an instance of the asked class, by calling the constructor filling-in APIs.
@@ -35,7 +35,9 @@ public interface PluginAPI extends API.Singleton {
      * @param clazz The class to create an instance of
      * @param <T>   type of instance to create
      * @return instance of given type, if a suitable constructor was found
-     * @throws UnsupportedOperationException if given api isn't supported
+     * @throws UnsupportedOperationException if given type is an interface
+     * @apiNote if type implements {@link API.Singleton} then only one instance
+     * of the type will exist in PluginAPI context as {@link java.lang.ref.WeakReference}
      */
-    @NotNull <T> T requireInstance(@NotNull Class<T> clazz) throws UnsupportedOperationException;
+    @NotNull <T> T requireInstance(@NotNull Class<T> clazz);
 }

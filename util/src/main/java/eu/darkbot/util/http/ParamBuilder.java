@@ -1,6 +1,5 @@
 package eu.darkbot.util.http;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
@@ -118,6 +117,7 @@ public class ParamBuilder {
      *
      * @return String of current parameters
      */
+    @Override
     public String toString() {
         return this.params.entrySet().stream()
                 .map(Object::toString)
@@ -153,11 +153,6 @@ public class ParamBuilder {
      * @return encoded String or raw value on exception
      */
     public static String encode(String value) {
-        try {
-            return URLEncoder.encode(value, StandardCharsets.UTF_8.name());
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return value;
-        }
+        return URLEncoder.encode(value, StandardCharsets.UTF_8);
     }
 }

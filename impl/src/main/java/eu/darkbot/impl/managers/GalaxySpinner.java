@@ -7,18 +7,25 @@ import eu.darkbot.api.managers.BackpageAPI;
 import eu.darkbot.api.managers.EventBrokerAPI;
 import eu.darkbot.api.managers.GalaxySpinnerAPI;
 import eu.darkbot.impl.galaxy.GalaxyInfoImpl;
+import eu.darkbot.util.XmlUtils;
 import eu.darkbot.util.http.Http;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.util.Optional;
 
 public class GalaxySpinner implements GalaxySpinnerAPI {
-    private static final long EXPIRY_TIME = 1000L;
-    private final byte[] BUFFER = new byte[1024];
+    public static final String API_ENDPOINT = "flashinput/galaxyGates.php";
+    public static final String PARAM_USER_ID = "userID";
+    public static final String PARAM_ACTION = "action";
+    public static final String PARAM_SID = "sid";
+    public static final String PARAM_GATE_ID = "gateID";
+
+    private final byte[] buffer = new byte[1024];
 
     private final BackpageAPI backpage;
     private final GalaxyInfoImpl galaxyInfo;
@@ -41,26 +48,26 @@ public class GalaxySpinner implements GalaxySpinnerAPI {
     public @Nullable Boolean updateGalaxyInfos(int expiryTime) {
         if (!backpage.isInstanceValid() || System.currentTimeMillis() <= lastUpdate + expiryTime) return null;
 
-        Http http = backpage.getHttp("flashinput/galaxyGates.php", 1000)
-                .setParam("userID", backpage.getUserId())
-                .setParam("action", "init")
-                .setParam("sid", backpage.getSid());
+        Http http = backpage.getHttp(API_ENDPOINT, 1000)
+                .setParam(PARAM_USER_ID, backpage.getUserId())
+                .setParam(PARAM_ACTION, "init")
+                .setParam(PARAM_SID, backpage.getSid());
 
         return handleRequest(http);
     }
 
     @Override
     public Optional<SpinResult> spinGate(@NotNull GalaxyGate gate, boolean multiplier, int spinAmount, int minWait) {
-        Http http = backpage.getHttp("flashinput/galaxyGates.php", minWait)
-                .setParam("userID", backpage.getUserId())
-                .setParam("action", "multiEnergy")
-                .setParam("sid", backpage.getSid())
-                .setParam("gateID", gate.getId())
+        Http http = backpage.getHttp(API_ENDPOINT, minWait)
+                .setParam(PARAM_USER_ID, backpage.getUserId())
+                .setParam(PARAM_ACTION, "multiEnergy")
+                .setParam(PARAM_SID, backpage.getSid())
+                .setParam(PARAM_GATE_ID, gate.getId())
                 .setParam(gate.getName(), "1");
 
         if (getGalaxyInfo().getFreeEnergy() > 0) http.setParam("sample", 1);
         if (multiplier) http.setParam("multiplier", 1);
-        if (spinAmount > 4) http.setParam("spinamount", spinAmount);
+        if (spinAmount > 1) http.setParam("spinamount", spinAmount);
 
         boolean success = Boolean.TRUE.equals(handleRequest(http));
 
@@ -72,11 +79,11 @@ public class GalaxySpinner implements GalaxySpinnerAPI {
 
     @Override
     public boolean placeGate(@NotNull GalaxyGate gate, int minWait) {
-        Http http = backpage.getHttp("flashinput/galaxyGates.php", minWait)
-                .setParam("userID", backpage.getUserId())
-                .setParam("sid", backpage.getSid())
-                .setParam("action", "setupGate")
-                .setParam("gateID", gate.getId());
+        Http http = backpage.getHttp(API_ENDPOINT, minWait)
+                .setParam(PARAM_USER_ID, backpage.getUserId())
+                .setParam(PARAM_SID, backpage.getSid())
+                .setParam(PARAM_ACTION, "setupGate")
+                .setParam(PARAM_GATE_ID, gate.getId());
 
         boolean success = Boolean.TRUE.equals(handleRequest(http));
         if (success)
@@ -87,11 +94,11 @@ public class GalaxySpinner implements GalaxySpinnerAPI {
 
     @Override
     public boolean buyLife(@NotNull GalaxyGate gate, int minWait) {
-        Http http = backpage.getHttp("flashinput/galaxyGates.php", minWait)
-                .setParam("userID", backpage.getUserId())
-                .setParam("sid", backpage.getSid())
-                .setParam("gateID", gate.getId())
-                .setParam("action", "buyLife");
+        Http http = backpage.getHttp(API_ENDPOINT, minWait)
+                .setParam(PARAM_USER_ID, backpage.getUserId())
+                .setParam(PARAM_SID, backpage.getSid())
+                .setParam(PARAM_GATE_ID, gate.getId())
+                .setParam(PARAM_ACTION, "buyLife");
 
         return Boolean.TRUE.equals(handleRequest(http));
     }
@@ -104,26 +111,27 @@ public class GalaxySpinner implements GalaxySpinnerAPI {
             galaxyInfo.update(document);
             lastUpdate = System.currentTimeMillis();
             return true;
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
     }
 
-    private Document getDocument(Http http) throws Exception {
+    private Document getDocument(Http http) throws IOException {
         return http.consumeInputStream(is -> {
             try (BufferedInputStream bis = new BufferedInputStream(is)) {
                 bis.mark(1024);
 
-                String start = new String(BUFFER, 0, bis.read(BUFFER));
-                if (start.equals("materializer locked")) return null;
+                String start = new String(buffer, 0, bis.read(buffer));
+                if ("materializer locked".equals(start)) return null;
 
                 bis.reset();
 
-                return DocumentBuilderFactory
-                        .newInstance()
-                        .newDocumentBuilder()
-                        .parse(bis);
+                try {
+                    return XmlUtils.parse(bis);
+                } catch (SAXException e) {
+                    throw new IOException(e);
+                }
             }
         });
     }

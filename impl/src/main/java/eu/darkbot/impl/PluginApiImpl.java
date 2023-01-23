@@ -2,6 +2,7 @@ package eu.darkbot.impl;
 
 import eu.darkbot.api.API;
 import eu.darkbot.api.PluginAPI;
+import eu.darkbot.api.exceptions.FailedCreationException;
 import eu.darkbot.api.utils.Inject;
 import eu.darkbot.impl.decorators.ClassDecorator;
 import eu.darkbot.impl.decorators.PostInitializationDecorator;
@@ -13,6 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Objects;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.stream.Collectors;
@@ -63,7 +65,7 @@ public class PluginApiImpl implements PluginAPI {
     private synchronized <T> T getOrCreate(Class<T> clazz) {
         Set<Singleton> workingSet = null;
         if (Singleton.class.isAssignableFrom(clazz)) {
-            workingSet = clazz.getClassLoader() == getClass().getClassLoader() ? singletons : weakSingletons;
+            workingSet = Objects.equals(clazz.getClassLoader(), getClass().getClassLoader()) ? singletons : weakSingletons;
             for (Singleton implementation : workingSet) {
                 if (clazz.isInstance(implementation))
                     return clazz.cast(implementation);
@@ -75,8 +77,7 @@ public class PluginApiImpl implements PluginAPI {
     /*
      * Impl note: should always use getOrCreate() instead, since it's synchronized
      */
-    private <T> T createNewInstance(Class<T> clazz, @Nullable Set<Singleton> workingSet)
-            throws UnsupportedOperationException {
+    private <T> T createNewInstance(Class<T> clazz, @Nullable Set<Singleton> workingSet) {
         if (creationStack.get().contains(clazz)) {
             throw new UnsupportedOperationException("Circular dependency detected: " +
                     Stream.concat(creationStack.get().stream(), Stream.of(clazz))
@@ -85,35 +86,36 @@ public class PluginApiImpl implements PluginAPI {
         }
 
         creationStack.get().addLast(clazz);
-        if (clazz.isInterface()) {
-            try {
-                return (T) createNewInstance(getImplementationClass(clazz), workingSet);
-            } finally {
-                creationStack.get().removeLast();
-            }
-        }
-
-        Constructor<?> constructor = getBestConstructor(clazz);
-
-        T value;
         try {
-            // Not doing this in a stream in an attempt to keep stack traces as clear as possible
-            Object[] params = new Object[constructor.getParameterCount()];
-            Class<?>[] types = constructor.getParameterTypes();
-            for (int i = 0; i < params.length; i++) {
-                params[i] = getOrCreate(types[i]);
+            if (clazz.isInterface()) {
+                return createNewInstance(getImplementationClass(clazz), workingSet);
+            } else {
+                return buildClass(clazz, workingSet);
             }
-
-            value = (T) constructor.newInstance(params);
-            if (workingSet != null && value instanceof Singleton)
-                workingSet.add((Singleton) value);
-
-            for (ClassDecorator<?> d : decorators)
-                d.tryLoad(value);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException("Exception calling constructor for API: " + clazz.getName(), e);
+            throw new FailedCreationException("Exception calling constructor for API: " + clazz.getName(), e);
         } finally {
             creationStack.get().removeLast();
+        }
+    }
+
+    @NotNull private <T> T buildClass(Class<T> clazz, @Nullable Set<Singleton> workingSet)
+            throws InstantiationException, IllegalAccessException, InvocationTargetException {
+        Constructor<?> constructor = getBestConstructor(clazz);
+
+        // Not doing this in a stream in an attempt to keep stack traces as clear as possible
+        Object[] params = new Object[constructor.getParameterCount()];
+        Class<?>[] types = constructor.getParameterTypes();
+        for (int i = 0; i < params.length; i++) {
+            params[i] = getOrCreate(types[i]);
+        }
+
+        T value = (T) constructor.newInstance(params);
+        if (workingSet != null && value instanceof Singleton)
+            workingSet.add((Singleton) value);
+
+        for (ClassDecorator<?> d : decorators) {
+            d.tryLoad(value);
         }
 
         return value;
@@ -130,7 +132,7 @@ public class PluginApiImpl implements PluginAPI {
     }
 
     @Override
-    public @NotNull <T extends API> T requireAPI(@NotNull Class<T> api) throws UnsupportedOperationException {
+    public @NotNull <T extends API> T requireAPI(@NotNull Class<T> api) {
         if (!api.isInterface())
             throw new UnsupportedOperationException("Can't get API from implementation " +
                     api.getName() + ", use the API interface");
@@ -139,7 +141,7 @@ public class PluginApiImpl implements PluginAPI {
     }
 
     @Override
-    public @NotNull <T> T requireInstance(@NotNull Class<T> clazz) throws UnsupportedOperationException {
+    public @NotNull <T> T requireInstance(@NotNull Class<T> clazz) {
         if (clazz.isInterface())
             throw new UnsupportedOperationException("Can't create instance from interface " +
                     clazz.getName() + ", use requireAPI instead");
@@ -150,6 +152,7 @@ public class PluginApiImpl implements PluginAPI {
     /*
      * Small helper method to get the best constructor for a class
      */
+    @SuppressWarnings("PMD.CyclomaticComplexity") // This method doesn't look that complicated...
     private static Constructor<?> getBestConstructor(Class<?> clazz) {
         Constructor<?>[] constructors = clazz.getConstructors();
         if (constructors.length == 0)
@@ -175,9 +178,10 @@ public class PluginApiImpl implements PluginAPI {
     /*
      * Small helper method to get the implementation class for an interface
      */
-    private Class<?> getImplementationClass(Class<?> itf) {
+    private <T> Class<? extends T> getImplementationClass(Class<T> itf) {
         return implClasses.stream()
                 .filter(itf::isAssignableFrom)
+                .map(c -> (Class<? extends T>) c)
                 .findFirst()
                 .orElseThrow(() ->
                         new UnsupportedOperationException("No implementation found for " + itf.getName()));

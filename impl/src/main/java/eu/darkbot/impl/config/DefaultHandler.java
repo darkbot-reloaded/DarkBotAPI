@@ -53,7 +53,7 @@ public class DefaultHandler<T> implements ValueHandler<T> {
 
         if (setting instanceof ConfigSettingImpl.Parent) {
             ConfigSettingImpl.Parent<T> current = (ConfigSettingImpl.Parent<T>) setting;
-            current.getChildren().forEach(this::updateChild);
+            current.getChildren().values().forEach(this::updateChild);
         }
     }
 
@@ -70,7 +70,7 @@ public class DefaultHandler<T> implements ValueHandler<T> {
                 ReflectionUtils.get(field, parentObj, setting.getType()));
     }
 
-    private <C> void updateChild(String key, ConfigSetting<C> child) {
+    private <C> void updateChild(ConfigSetting<C> child) {
         child.getHandler().updateChildren(child);
     }
 

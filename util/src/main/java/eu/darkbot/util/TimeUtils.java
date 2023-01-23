@@ -1,5 +1,8 @@
 package eu.darkbot.util;
 
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
 public class TimeUtils {
     public static final long
             SECOND = 1000,

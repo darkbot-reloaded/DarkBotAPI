@@ -42,8 +42,10 @@ public interface Point {
             this.y = y;
         }
 
+        @Override
         public double getX() { return x; }
 
+        @Override
         public double getY() { return y; }
     }
 }

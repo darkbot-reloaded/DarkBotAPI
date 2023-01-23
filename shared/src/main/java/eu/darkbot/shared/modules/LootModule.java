@@ -9,6 +9,7 @@ import eu.darkbot.api.game.entities.Npc;
 import eu.darkbot.api.game.entities.Portal;
 import eu.darkbot.api.game.entities.Ship;
 import eu.darkbot.api.game.enums.EntityEffect;
+import eu.darkbot.api.game.other.Health;
 import eu.darkbot.api.game.other.Locatable;
 import eu.darkbot.api.game.other.Location;
 import eu.darkbot.api.game.other.Lockable;
@@ -23,12 +24,30 @@ import eu.darkbot.api.managers.PetAPI;
 import eu.darkbot.api.managers.StarSystemAPI;
 import eu.darkbot.api.utils.Inject;
 import eu.darkbot.shared.utils.SafetyFinder;
+import eu.darkbot.util.TimeUtils;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Objects;
 
 @Feature(name = "Npc Killer", description = "Npc-only module. Will never pick up resources.")
+@SuppressWarnings({"PMD.TooManyMethods", "PMD.TooManyFields", "PMD.ExcessiveParameterList"})
 public class LootModule implements Module {
+
+    // NPC completely unreachable if this far away
+    private static final int HARD_REACH_LIMIT = 650;
+    // The limit on how far in it can be for it to be reachable
+    private static final int REACH_LIMIT = 600;
+    // If this npc is somewhat hard to reach
+    private static final int LENIENT_REACH_LIMIT = 500;
+
+    private static final double ALMOST_FULL_HP = 0.9;
+    private static final double FULL_SHIELD = 0.99;
+
+    // If the radius for circling is this or higher, ignore no-circle flag
+    private static final int ALWAYS_CIRCLE_RADIUS = 750;
+
+    private static final int MAX_LOCATION_SEARCH = 10_000;
 
     protected final PluginAPI api;
     protected final BotAPI bot;
@@ -49,7 +68,7 @@ public class LootModule implements Module {
     protected final ConfigSetting<Boolean> runConfigInCircle;
     protected final ConfigSetting<Boolean> onlyKillPreferred;
 
-    protected boolean backwards = false;
+    protected boolean backwards;
     protected long refreshing;
 
     public LootModule(PluginAPI api) {
@@ -113,14 +132,16 @@ public class LootModule implements Module {
 
     @Override
     public boolean canRefresh() {
-        if (!attack.hasTarget()) refreshing = System.currentTimeMillis() + 10000;
-        return !attack.hasTarget() && safety.state() == SafetyFinder.Escaping.WAITING;
+        if (attack.hasTarget()) return false;
+        refreshing = System.currentTimeMillis() + 10_000;
+        return safety.state() == SafetyFinder.Escaping.WAITING;
     }
 
     @Override
     public String getStatus() {
-        return safety.state() != SafetyFinder.Escaping.NONE ? safety.status()
-                : (attack.hasTarget() ? attack.getStatus() : "Roaming");
+        return safety.state() == SafetyFinder.Escaping.NONE
+                ? attack.hasTarget() ? attack.getStatus() : "Roaming"
+                : safety.status();
     }
 
     public AttackAPI getAttacker() {
@@ -135,7 +156,7 @@ public class LootModule implements Module {
     protected boolean checkMap() {
         if (!workingMap.getValue().equals(starSystem.getCurrentMap().getId()) && !portals.isEmpty()) {
             this.bot.setModule(new MapModule(api, true))
-                    .setTarget(starSystem.getOrCreateMapById(workingMap.getValue()));
+                    .setTarget(starSystem.getOrCreateMap(workingMap.getValue()));
             return false;
         }
         return true;
@@ -150,30 +171,51 @@ public class LootModule implements Module {
         Lockable target = attack.getTarget();
 
         double closestDist = movement.getClosestDistance(attack.getTarget());
-        if (hero.getTarget() != attack.getTarget()) {
-            if (closestDist > 600) {
+        if (!Objects.equals(hero.getTarget(), attack.getTarget())) {
+            // We didn't lock the entity yet, and it got too far inside obstacle
+            if (closestDist > REACH_LIMIT) {
                 attack.setBlacklisted(1000);
                 hero.setLocalTarget(null);
             }
-        } else if (!(attack.hasExtraFlag(NpcFlag.IGNORE_OWNERSHIP) || target.isOwned())
-                || attack.isBugged()
-                || (hero.distanceTo(target) > npcDistanceIgnore.getValue()) // Too far away from ship
-                || (closestDist > 650 && target.getHealth().hpPercent() > 0.90)   // Too far into obstacle and full hp
-                || (closestDist > 500 && !target.isMoving() // Inside obstacle, waiting & and regen shields
-                && (target.getHealth().shieldIncreasedIn(1000) || target.getHealth().shieldPercent() > 0.99))) {
+        } else if (shouldIgnore(closestDist, target)) {
             attack.setBlacklisted(5000);
             hero.setLocalTarget(null);
-        } else if (target.getEntityInfo().getUsername().contains("Invoke") && attack.hasExtraFlag(NpcFlag.PASSIVE)
-                && target == hero.getLocalTarget() && !attack.isCastingAbility()) {
+        } else if (target.getEntityInfo().getUsername().contains("Invoke")
+                && attack.hasExtraFlag(NpcFlag.PASSIVE)
+                && Objects.equals(target, hero.getLocalTarget())
+                && !attack.isCastingAbility()) {
             attack.setBlacklisted(600_000);
             hero.setLocalTarget(null);
         }
+    }
+
+    protected boolean shouldIgnore(double closestDist, Lockable target) {
+        // Not owned, bugged, or too far away
+        if (attack.isBugged()
+                || !(attack.hasExtraFlag(NpcFlag.IGNORE_OWNERSHIP) || target.isOwned())
+                || hero.distanceTo(target) > npcDistanceIgnore.getValue())
+            return true;
+
+        Health health = target.getHealth();
+
+        // Too far into obstacle and full hp
+        if (closestDist > HARD_REACH_LIMIT && health.hpPercent() > ALMOST_FULL_HP)
+            return true;
+
+        // Inside obstacle, waiting & and regenerating shields
+        return closestDist > LENIENT_REACH_LIMIT && !target.isMoving() &&
+                (target.getHealth().shieldIncreasedIn((int) TimeUtils.SECOND)
+                        || target.getHealth().shieldPercent() > FULL_SHIELD);
     }
 
     protected double getRadius(Lockable target) {
         if (!(target instanceof Npc)) throw new UnsupportedOperationException(
                 "LootModule doesn't support non-npc radius. Extend it and implement your own.");
         return attack.modifyRadius(((Npc) target).getInfo().getRadius());
+    }
+
+    protected int getSpeed(Lockable target) {
+        return target instanceof Movable ? ((Movable) target).getSpeed() : 0;
     }
 
     protected void moveToAnSafePosition() {
@@ -186,10 +228,10 @@ public class LootModule implements Module {
         double distance = hero.distanceTo(attack.getTarget());
         double angle = targetLoc.angleTo(hero);
         double radius = getRadius(target);
-        double speed = target instanceof Movable ? ((Movable) target).getSpeed() : 0;
+        double speed = getSpeed(target);
         boolean noCircle = attack.hasExtraFlag(NpcFlag.NO_CIRCLE);
 
-        if (radius > 750) noCircle = false;
+        if (radius > ALWAYS_CIRCLE_RADIUS) noCircle = false;
 
         double angleDiff;
         if (noCircle) {
@@ -210,10 +252,7 @@ public class LootModule implements Module {
                     - hero.distanceTo(Location.of(targetLoc, angle, radius)), 0) / radius;
         }
         direction = getBestDir(targetLoc, angle, angleDiff, distance);
-
-        while (!movement.canMove(direction) && distance < 10000)
-            direction.toAngle(targetLoc, angle += backwards ? -0.3 : 0.3, distance += 2);
-        if (distance >= 10000) direction.toAngle(targetLoc, angle, 500);
+        searchValidLocation(direction, targetLoc, angle, distance);
 
         setConfig(direction);
 
@@ -221,8 +260,10 @@ public class LootModule implements Module {
     }
 
     protected Location getBestDir(Locatable targetLoc, double angle, double angleDiff, double distance) {
-        int maxCircleIterations = this.maxCircleIterations.getValue(), iteration = 1;
-        double forwardScore = 0, backScore = 0;
+        int maxCircleIterations = this.maxCircleIterations.getValue();
+        int iteration = 1;
+        double forwardScore = 0;
+        double backScore = 0;
         do {
             forwardScore += score(Locatable.of(targetLoc, angle + (angleDiff * iteration), distance));
             backScore += score(Locatable.of(targetLoc, angle - (angleDiff * iteration), distance));
@@ -234,6 +275,17 @@ public class LootModule implements Module {
         return Location.of(targetLoc, angle + angleDiff * (backwards ? -1 : 1), distance);
     }
 
+    protected void searchValidLocation(Location direction, Location targetLoc, double angle, double distance) {
+        // Search in a spiral around the wanted position
+        while (!movement.canMove(direction) && distance < MAX_LOCATION_SEARCH) {
+            direction.toAngle(targetLoc, angle += backwards ? -0.3 : 0.3, distance += 2);
+        }
+
+        // Found no valid location within in a spiral, settle for whatever
+        if (distance >= MAX_LOCATION_SEARCH)
+            direction.toAngle(targetLoc, angle, 500);
+    }
+
     protected double score(Locatable loc) {
         return (movement.canMove(loc) ? 0 : -1000) - npcs.stream() // Consider barrier as bad as 1000 radius units.
                 .filter(n -> attack.getTarget() != n)
@@ -243,20 +295,25 @@ public class LootModule implements Module {
 
     protected void setConfig(Locatable direction) {
         Npc target = attack.getTargetAs(Npc.class);
-        if (target == null || !target.isValid()) hero.setRoamMode();
-        else if (runConfigInCircle.getValue()
+        if (target == null || !target.isValid()) {
+            hero.setRoamMode();
+        } else if (runConfigInCircle.getValue()
                 && target.getHealth().hpPercent() < 0.25
-                && hero.distanceTo(direction) > target.getInfo().getRadius() * 2) hero.setRunMode();
-        else if (hero.distanceTo(direction) > target.getInfo().getRadius() * 3) hero.setRoamMode();
-        else hero.setAttackMode(target);
+                && hero.distanceTo(direction) > target.getInfo().getRadius() * 2) {
+            hero.setRunMode();
+        } else if (hero.distanceTo(direction) > target.getInfo().getRadius() * 3) {
+            hero.setRoamMode();
+        } else {
+            hero.setAttackMode(target);
+        }
     }
 
     protected boolean isAttackedByOthers(Npc npc) {
         for (Ship ship : this.ships) {
-            if (!ship.isAttacking(npc)) continue;
-
-            if (!npc.getInfo().hasExtraFlag(NpcFlag.IGNORE_ATTACKED)) npc.setBlacklisted(20_000);
-            return true;
+            if (ship.isAttacking(npc)) {
+                if (!npc.getInfo().hasExtraFlag(NpcFlag.IGNORE_ATTACKED)) npc.setBlacklisted(20_000);
+                return true;
+            }
         }
         return false;
     }
@@ -265,7 +322,7 @@ public class LootModule implements Module {
         Lockable target = attack.getTarget();
 
         int extraPriority = attack.hasTarget() &&
-                (hero.getLocalTarget() == target || hero.distanceTo(target) < 600)
+                (Objects.equals(hero.getLocalTarget(), target) || hero.distanceTo(target) < 600)
                 ? 20 - (int) (target.getHealth().hpPercent() * 10) : 0;
 
         return this.npcs.stream()

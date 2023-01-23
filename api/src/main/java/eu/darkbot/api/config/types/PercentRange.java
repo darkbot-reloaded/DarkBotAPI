@@ -27,7 +27,8 @@ public interface PercentRange {
     }
 
     class PercentRangeImpl implements PercentRange {
-        final double min, max;
+        private final double min;
+        private final double max;
 
         public PercentRangeImpl(double min, double max) {
             this.min = min;

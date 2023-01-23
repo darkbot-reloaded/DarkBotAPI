@@ -11,7 +11,6 @@ import eu.darkbot.api.game.other.Lockable;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
-import java.util.Optional;
 
 /**
  * Provides a way to lock &amp; attack other entities.

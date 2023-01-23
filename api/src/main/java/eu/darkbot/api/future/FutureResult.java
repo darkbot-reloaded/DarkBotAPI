@@ -18,7 +18,7 @@ public interface FutureResult<R> {
     /**
      * Will try to cancel this {@link FutureResult}
      * If this method returns true that means execution of this Future is canceled/interrupted
-     *
+     * <br>
      * May return false if current status is already {@link Status#COMMITTED}
      * and mayInterrupt parameter is set to false.
      *

@@ -7,42 +7,33 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 public class GalaxyInfoImpl implements eu.darkbot.api.game.galaxy.GalaxyInfo {
     private final SpinResultImpl spinResult = new SpinResultImpl(this);
-    private final Map<GalaxyGate, GateInfoImpl> gates = new HashMap<>();
+    private final Map<GalaxyGate, GateInfoImpl> gates = new EnumMap<>(GalaxyGate.class);
 
-    private int money, samples, energyCost, spinSalePercentage;
-    private boolean spinOnSale, galaxyGateDay, bonusRewardsDay;
+    private int money;
+    private int samples;
+    private int energyCost;
+    private int spinSalePercent;
+    private boolean spinOnSale;
+    private boolean galaxyGateDay;
+    private boolean bonusRewardsDay;
 
     public void update(Document document) {
         Element rootElement = document.getDocumentElement();
 
-        Integer tempValue;
-        if ((tempValue = XmlUtils.childValueToInt(rootElement, "money")) != null)
-            this.money = tempValue;
-
-        if ((tempValue = XmlUtils.childValueToInt(rootElement, "samples")) != null)
-            this.samples = tempValue;
-
-        if ((tempValue = XmlUtils.childValueToInt(rootElement, "spinSalePercentage")) != null)
-            this.spinSalePercentage = tempValue;
-
-        if ((tempValue = XmlUtils.childValueToInt(rootElement, "spinOnSale")) != null)
-            this.spinOnSale = tempValue == 1;
-
-        if ((tempValue = XmlUtils.childValueToInt(rootElement, "galaxyGateDay")) != null)
-            this.galaxyGateDay = tempValue == 1;
-
-        if ((tempValue = XmlUtils.childValueToInt(rootElement, "bonusRewardsDay")) != null)
-            this.bonusRewardsDay = tempValue == 1;
-
-        if ((tempValue = XmlUtils.valueToInt(XmlUtils.getChildElement(rootElement, "energy_cost"))) != null)
-            this.energyCost = tempValue;
+        this.money = getOrDefault(rootElement, "money", money);
+        this.samples = getOrDefault(rootElement, "samples", samples);
+        this.energyCost = getOrDefault(rootElement, "energy_cost", energyCost);
+        this.spinOnSale = getOrDefault(rootElement, "spinOnSale", spinOnSale);
+        this.galaxyGateDay = getOrDefault(rootElement, "galaxyGateDay", galaxyGateDay);
+        this.bonusRewardsDay = getOrDefault(rootElement, "bonusRewardsDay", bonusRewardsDay);
+        this.spinSalePercent = getOrDefault(rootElement, "spinSalePercentage", spinSalePercent);
 
         if (XmlUtils.hasChildElements(rootElement, "items"))
             updateItems(rootElement);
@@ -62,6 +53,16 @@ public class GalaxyInfoImpl implements eu.darkbot.api.game.galaxy.GalaxyInfo {
 
     public SpinResultImpl getSpinResult() {
         return spinResult;
+    }
+
+    private int getOrDefault(Element rootElement, String name, int defaultValue) {
+        Integer value = XmlUtils.childValueToInt(rootElement, name);
+        return value == null ? defaultValue : value;
+    }
+
+    private boolean getOrDefault(Element rootElement, String name, boolean defaultValue) {
+        Integer value = XmlUtils.childValueToInt(rootElement, name);
+        return value == null ? defaultValue : value == 1;
     }
 
     private void updateItems(Element rootElement) {
@@ -103,7 +104,7 @@ public class GalaxyInfoImpl implements eu.darkbot.api.game.galaxy.GalaxyInfo {
 
     @Override
     public int getSpinSalePercentage() {
-        return spinSalePercentage;
+        return spinSalePercent;
     }
 
     @Override

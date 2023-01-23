@@ -9,6 +9,5 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface ShipModeSelector {
 
-    @NotNull
-    PrioritizedSupplier<ShipMode> getShipModeSupplier();
+    @NotNull PrioritizedSupplier<ShipMode> getShipModeSupplier();
 }

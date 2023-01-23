@@ -30,7 +30,7 @@ public interface BackpageAPI extends API.Singleton {
     boolean isInstanceValid();
 
     /**
-     * Returns the value returned by the SID status request. 
+     * Returns the value returned by the SID status request.
      * 200 = SID is working correctly
      */
     String getSidStatus();
@@ -69,6 +69,7 @@ public interface BackpageAPI extends API.Singleton {
      * @deprecated Use {@link #getHttp(String)} instead
      */
     @Deprecated
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     HttpURLConnection getConnection(@NotNull String path) throws Exception;
 
     /**
@@ -83,6 +84,7 @@ public interface BackpageAPI extends API.Singleton {
      * @deprecated Use {@link #getHttp(String, int)} instead
      */
     @Deprecated
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     default HttpURLConnection getConnection(@NotNull String path, int minWait) throws Exception {
         TimeUtils.sleepThread(getLastRequestTime().toEpochMilli() + minWait - System.currentTimeMillis());
 
@@ -107,7 +109,7 @@ public interface BackpageAPI extends API.Singleton {
 
     /**
      * Creates an HTTP client that connects to {@link #getInstanceURI()} &amp; path, with the sessionID cookie set.
-     * Will ensure at least {@param minWait} ms have elapsed since last request.
+     * Will ensure at least {@code minWait} ms have elapsed since last request.
      *
      * @param path The path to append at the end of the URI
      * @param method HTTP method to call with

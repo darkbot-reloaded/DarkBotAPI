@@ -77,10 +77,12 @@ public interface Locatable {
             this.y = y;
         }
 
+        @Override
         public double getX() {
             return x;
         }
 
+        @Override
         public double getY() {
             return y;
         }

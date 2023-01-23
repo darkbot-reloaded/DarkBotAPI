@@ -3,13 +3,14 @@ package eu.darkbot.util;
 
 /**
  * Util to make timing easier.
- *
+ * <br>
  * The naming is modeled after the idea of a bomb timer. You can prime (activate) it with
  * a certain fuse, and it defuses after that time.
  */
-public class Timer {
-    private long time = 0;
-    private final long defaultFuse, randomRange;
+public final class Timer {
+    private long time;
+    private final long defaultFuse;
+    private final long randomRange;
 
     /**
      * Get a default instance of timer, with no default fuse

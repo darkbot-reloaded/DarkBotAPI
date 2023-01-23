@@ -8,17 +8,20 @@ import eu.darkbot.api.managers.HeroItemsAPI;
 import eu.darkbot.util.Timer;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+
 public abstract class AbstractAttackImpl implements AttackAPI {
 
-    protected static int DELAY_BETWEEN_ATTACK_ATTEMPTS = 500;
+    /** Minimum delay between attack attempts in milliseconds */
+    protected static final int ATTACK_DELAY = 500;
 
     protected final HeroItemsAPI heroItems;
     protected final HeroAPI hero;
 
     protected Lockable target;
 
-    protected Timer lockTry = Timer.get(500),
-            attackTry = Timer.get(DELAY_BETWEEN_ATTACK_ATTEMPTS);
+    protected Timer lockTry = Timer.get(500);
+    protected Timer attackTry = Timer.get(ATTACK_DELAY);
 
     protected boolean attacked;
 
@@ -34,7 +37,7 @@ public abstract class AbstractAttackImpl implements AttackAPI {
 
     @Override
     public void setTarget(@Nullable Lockable target) {
-        if (this.target == target) return;
+        if (Objects.equals(this.target, target)) return;
         this.target = target;
         lockTry.disarm();
         attackTry.disarm();
@@ -42,18 +45,16 @@ public abstract class AbstractAttackImpl implements AttackAPI {
 
     @Override
     public boolean isLocked() {
-        return hasTarget() && hero.getTarget() == target;
+        return hasTarget() && Objects.equals(hero.getTarget(), target);
     }
 
     @Override
     public void tryLockTarget() {
         if (!hasTarget() || isLocked()) return;
 
-        if (lockTry.tryActivate()) {
-            if (target.trySelect(false)) {
-                hero.setLocalTarget(target);
-                attacked = false;
-            }
+        if (lockTry.tryActivate() && target.trySelect(false)) {
+            hero.setLocalTarget(target);
+            attacked = false;
         }
     }
 
@@ -67,21 +68,24 @@ public abstract class AbstractAttackImpl implements AttackAPI {
         if (isLocked()) {
             SelectableItem.Laser laser = getBestLaserAmmo();
 
-            if (laser != null && hero.getLaser() != laser && heroItems.useItem(laser, 500).isSuccessful()) {
-                if (isAttackViaSlotBarEnabled()) {
-                    attackTry.activate();
-                    attacked = true;
-                    return;
-                }
+            if (laser != null
+                    && hero.getLaser() != laser
+                    && heroItems.useItem(laser, 500).isSuccessful()
+                    && isAttackViaSlotBarEnabled()) {
+                attackTry.activate();
+                attacked = true;
+                return;
             }
 
             // Always try to attack valid target, even with unknown ammo
             attack();
-        } else tryLockTarget();
+        } else {
+            tryLockTarget();
+        }
     }
 
     protected void attack() {
-        if (isAttacking() || (attacked && attackTry.isActive())) return;
+        if (isAttacking() || attacked && attackTry.isActive()) return;
         if (hero.triggerLaserAttack()) {
             attackTry.activate();
             attacked = true;

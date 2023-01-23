@@ -6,11 +6,9 @@ import eu.darkbot.api.extensions.PluginInfo;
 import eu.darkbot.util.ReflectionUtils;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.function.Consumer;
@@ -19,6 +17,7 @@ import java.util.function.Function;
 /**
  * Represents a setting that can be configured by the user
  */
+@SuppressWarnings("PMD.DataClass")
 public class ConfigSettingImpl<T> implements ConfigSetting<T> {
 
     private final @Nullable ConfigSetting.Parent<?> parent;
@@ -44,47 +43,57 @@ public class ConfigSettingImpl<T> implements ConfigSetting<T> {
         this.handler = handler;
     }
 
+    @Override
     public @Nullable ConfigSetting.Parent<?> getParent() {
         return parent;
     }
 
+    @Override
     public String getKey() {
         return key;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public String getDescription() {
         return description;
     }
 
+    @Override
     public Class<T> getType() {
         return type;
     }
 
+    @Override
     public T getValue() {
         return value;
     }
 
+    @Override
     public void setValue(T value) {
         value = handler.validate(value);
-        if (this.value != value) {
+        if (!Objects.equals(this.value, value)) {
             this.value = value;
             handler.updateParent(this);
         }
         listeners.forEach(l -> l.accept(this.value));
     }
 
+    @Override
     public void addListener(Consumer<T> listener) {
         this.listeners.add(listener);
     }
 
+    @Override
     public void removeListener(Consumer<T> listener) {
         this.listeners.remove(listener);
     }
 
+    @Override
     public ValueHandler<T> getHandler() {
         return handler;
     }
@@ -106,6 +115,7 @@ public class ConfigSettingImpl<T> implements ConfigSetting<T> {
             this.children = children.apply(this);
         }
 
+        @Override
         public Map<String, ConfigSetting<?>> getChildren() {
             return children;
         }
@@ -149,4 +159,3 @@ public class ConfigSettingImpl<T> implements ConfigSetting<T> {
     }
 
 }
-

@@ -1,14 +1,23 @@
 package eu.darkbot.util.http;
 
+import com.google.gson.Gson;
 import eu.darkbot.util.IOUtils;
 import eu.darkbot.util.function.ThrowingFunction;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,24 +28,18 @@ import java.util.function.Consumer;
  * Use it like builder, just one time for instance
  */
 public class Http {
-    private static String DEFAULT_USER_AGENT = "BigpointClient/1.6.3";
 
-    public static String getDefaultUserAgent() {
-        return DEFAULT_USER_AGENT;
-    }
-
-    public static void setDefaultUserAgent(String defaultUserAgent) {
-        DEFAULT_USER_AGENT = defaultUserAgent;
-    }
+    @Getter @Setter
+    private static String defaultUserAgent = "BigpointClient/1.6.7";
+    private static Gson gson;
 
     protected final String baseUrl;
     protected final Method method;
     protected final boolean followRedirects;
+    protected final BodyHolder bodyHolder = new BodyHolder();
 
     //Discord doesn't handle java's user agent...
-    protected String userAgent = DEFAULT_USER_AGENT;
-    protected ParamBuilder params;
-    protected byte[] body;
+    protected String userAgent = defaultUserAgent;
     protected List<Runnable> suppliers;
     protected Map<String, String> headers = new LinkedHashMap<>();
 
@@ -44,6 +47,12 @@ public class Http {
         this.baseUrl = baseUrl;
         this.method = method;
         this.followRedirects = followRedirects;
+    }
+
+    public static void setGson(Gson gson) {
+        if (Http.gson != null)
+            throw new IllegalStateException("gson already assigned!");
+        Http.gson = gson;
     }
 
     /**
@@ -59,7 +68,7 @@ public class Http {
 
     /**
      * Creates new instance of Http with provided url and request method.
-     * Follows redirects by default.
+     * Follow redirects by default.
      *
      * @param url    to connect
      * @param method of request
@@ -144,11 +153,7 @@ public class Http {
      * @return current instance of Http
      */
     public Http setParam(Object key, Object value) {
-        if (this.body != null)
-            throw new UnsupportedOperationException("Cannot mix body & params");
-        if (this.params == null)
-            this.params = ParamBuilder.create(ParamBuilder.encode(key), ParamBuilder.encode(value));
-        else this.params.set(key, value);
+        this.bodyHolder.setParam(key, value);
         return this;
     }
 
@@ -162,25 +167,47 @@ public class Http {
      * @return current instance of Http
      */
     public Http setRawParam(Object key, Object value) {
-        if (this.body != null)
-            throw new UnsupportedOperationException("Cannot mix body & params");
-        if (this.params == null)
-            this.params = ParamBuilder.create(key, value);
-        else this.params.setRaw(key, value);
+        this.bodyHolder.setRawParam(key, value);
         return this;
     }
 
     /**
      * Set the body for POST requests
-     * 
+     *
      * @param body bytes to send as body
      * @return current instance of http
      */
     public Http setBody(byte[] body) {
-        if (this.params != null)
-            throw new UnsupportedOperationException("Cannot mix body & params");
-        this.body = body;
+        this.bodyHolder.setBody(body);
         return this;
+    }
+
+    /**
+     * Serializes the object into JSON and set it as POST body
+     *
+     * @param json object to be serialized into JSON
+     * @return current instance of http
+     */
+    public Http setJsonBody(Object json) throws IOException {
+        return setJsonBody(json, false);
+    }
+
+    /**
+     * Serializes the object into JSON and set it as POST body
+     *
+     * @param json         object to be serialized into JSON
+     * @param encodeBase64 should JSON be encoded in Base64
+     * @return current instance of http
+     */
+    public Http setJsonBody(Object json, boolean encodeBase64) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        try (OutputStream out = encodeBase64 ? Base64.getEncoder().wrap(baos) : baos;
+             OutputStreamWriter osw = new OutputStreamWriter(out, StandardCharsets.UTF_8)) {
+            gson.toJson(json, osw);
+        }
+
+        return setBody(baos.toByteArray());
     }
 
     /**
@@ -196,8 +223,8 @@ public class Http {
 
     public URL getUrl() throws IOException {
         String url = baseUrl;
-        if (method == Method.GET && params != null)
-            url += (!url.contains("?") ? "?" : "") + params;
+        if (method == Method.GET && bodyHolder.hasParams())
+            url += (url.contains("?") ? "" : "?") + bodyHolder;
 
         return new URL(url);
     }
@@ -211,6 +238,41 @@ public class Http {
      */
     public String getContent() throws IOException {
         return IOUtils.read(getInputStream(), true);
+    }
+
+    /**
+     * Deserializes the JSON response from the input stream into an object of the specified type
+     *
+     * @param type class type to be deserialized to
+     * @return deserialized JSON response
+     */
+    public <T> T fromJson(Class<T> type) throws IOException {
+        return fromJson(type, false);
+    }
+
+    /**
+     * Deserializes the JSON response from the input stream into an object of the specified type
+     *
+     * @param type     class type to be deserialized to
+     * @param isBase64 is JSON response base64 encoded
+     * @return deserialized JSON response
+     */
+    public <T> T fromJson(Class<T> type, boolean isBase64) throws IOException {
+        return fromJson((Type) type, isBase64);
+    }
+
+    /**
+     * Deserializes the JSON response from the input stream into an object of the specified type
+     *
+     * @param type     type to be deserialized to
+     * @param isBase64 is JSON response base64 encoded
+     * @return deserialized JSON response
+     */
+    public <T> T fromJson(Type type, boolean isBase64) throws IOException {
+        try (InputStream in = isBase64 ? Base64.getDecoder().wrap(getInputStream()) : getInputStream();
+             InputStreamReader reader = new InputStreamReader(in, StandardCharsets.UTF_8)) {
+            return gson.fromJson(reader, type);
+        }
     }
 
     /**
@@ -253,12 +315,14 @@ public class Http {
      * @return the result of calling function with the input stream
      * @throws X if your function throws an exception
      */
-    @SuppressWarnings("unchecked")
-    public <R, X extends Throwable> R consumeInputStream(ThrowingFunction<InputStream, R, X> function) throws X {
+    @SuppressWarnings({"unchecked", "PMD.AvoidCatchingThrowable"})
+    public <R, X extends Throwable> R consumeInputStream(ThrowingFunction<InputStream, R, X> function) throws X, IOException {
         try (InputStream is = getInputStream()) {
-            return function.apply(is);
-        } catch (Throwable t) {
-            throw (X) t;
+            try {
+                return function.apply(is);
+            } catch (Throwable t) {
+                throw (X) t;
+            }
         }
     }
 
@@ -294,9 +358,9 @@ public class Http {
         conn.setRequestProperty("User-Agent", userAgent);
         if (!headers.isEmpty()) headers.forEach(conn::setRequestProperty);
 
-        if (method == Method.POST && (body != null || params != null)) {
+        if (method == Method.POST && bodyHolder.isValid()) {
             conn.setDoOutput(true);
-            byte[] data = body != null ? body : params.getBytes();
+            byte[] data = bodyHolder.getBytes();
             conn.setRequestProperty("Content-Length", String.valueOf(data.length));
             try (OutputStream os = conn.getOutputStream()) {
                 os.write(data);

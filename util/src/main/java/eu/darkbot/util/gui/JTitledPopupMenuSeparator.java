@@ -6,12 +6,14 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
 public class JTitledPopupMenuSeparator extends JPopupMenu.Separator {
+    private static final long serialVersionUID = 1L;
 
-    private static final JPopupMenu menu = new JPopupMenu();
+    // Used exclusively for constant font data
+    private static final JComponent MENU = new JPopupMenu();
 
     public JTitledPopupMenuSeparator(String title) {
         setBorder(new TitledBorder(title));
-        setPreferredSize(new Dimension(0, menu.getFontMetrics(menu.getFont()).getHeight()));
+        setPreferredSize(new Dimension(0, MENU.getFontMetrics(MENU.getFont()).getHeight()));
     }
 
     private static class TitledBorder implements Border {
@@ -24,7 +26,7 @@ public class JTitledPopupMenuSeparator extends JPopupMenu.Separator {
 
         @Override
         public Insets getBorderInsets(Component c) {
-            int height = c.getFontMetrics(menu.getFont()).getHeight();
+            int height = c.getFontMetrics(MENU.getFont()).getHeight();
             return new Insets(height, 0, 0, 0);
         }
 
@@ -35,12 +37,12 @@ public class JTitledPopupMenuSeparator extends JPopupMenu.Separator {
 
         @Override
         public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-            FontMetrics fm = c.getFontMetrics(menu.getFont());
+            FontMetrics fm = c.getFontMetrics(MENU.getFont());
             int titleWidth = fm.stringWidth(title);
             int titleHeight = fm.getHeight();
 
             // fill background
-            g.setColor(menu.getBackground());
+            g.setColor(MENU.getBackground());
             g.fillRect(x, y, width, titleHeight);
 
             int gap = 4;
