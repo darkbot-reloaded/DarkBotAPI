@@ -7,15 +7,13 @@ import eu.darkbot.api.managers.BackpageAPI;
 import eu.darkbot.api.managers.EventBrokerAPI;
 import eu.darkbot.api.managers.GalaxySpinnerAPI;
 import eu.darkbot.impl.galaxy.GalaxyInfoImpl;
+import eu.darkbot.util.XmlUtils;
 import eu.darkbot.util.http.Http;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.util.Optional;
@@ -26,17 +24,6 @@ public class GalaxySpinner implements GalaxySpinnerAPI {
     public static final String PARAM_ACTION = "action";
     public static final String PARAM_SID = "sid";
     public static final String PARAM_GATE_ID = "gateID";
-
-    private static final DocumentBuilder DOCUMENT_PARSER;
-    static {
-        DocumentBuilder docBuilder = null;
-        try {
-            docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        }
-        DOCUMENT_PARSER = docBuilder;
-    }
 
     private final byte[] buffer = new byte[1024];
 
@@ -139,8 +126,9 @@ public class GalaxySpinner implements GalaxySpinnerAPI {
                 if ("materializer locked".equals(start)) return null;
 
                 bis.reset();
+
                 try {
-                    return DOCUMENT_PARSER.parse(bis);
+                    return XmlUtils.parse(bis);
                 } catch (SAXException e) {
                     throw new IOException(e);
                 }

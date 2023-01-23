@@ -6,6 +6,21 @@ plugins {
     id("io.freefair.lombok") version "6.6.1"
 }
 
+description = "darkbot-common"
+
+tasks.wrapper {
+    gradleVersion = "7.5.1"
+
+    // without gradle javadocs and sources
+    distributionType = Wrapper.DistributionType.BIN
+}
+
+dependencies {
+    api(project(":darkbot-util"))
+    api(project(":darkbot-api"))
+    api(project(":darkbot-shared"))
+}
+
 val apiVersion = "0.7.0"
 
 allprojects {
@@ -80,6 +95,16 @@ allprojects {
     dependencies {
         compileOnly("org.jetbrains:annotations:23.1.0")
         testCompileOnly("org.jetbrains:annotations:23.1.0")
+
+        compileOnly("com.google.code.gson:gson:2.10.1")
+
+        testImplementation("com.google.code.gson:gson:2.10.1")
+        testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
+        testImplementation("org.mockito:mockito-core:4.11.0")
+    }
+
+    tasks.test {
+        useJUnitPlatform()
     }
 
     val javadocOpts = tasks.javadoc.get().options as StandardJavadocDocletOptions
@@ -92,19 +117,4 @@ allprojects {
     tasks.withType(PublishToMavenLocal::class) {
         dependsOn("check")
     }
-}
-
-description = "darkbot-common"
-
-dependencies {
-    api(project(":darkbot-util"))
-    api(project(":darkbot-api"))
-    api(project(":darkbot-shared"))
-}
-
-tasks.wrapper {
-    gradleVersion = "7.5.1"
-
-    // without gradle javadocs and sources
-    distributionType = Wrapper.DistributionType.BIN
 }

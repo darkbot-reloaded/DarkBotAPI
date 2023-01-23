@@ -160,7 +160,7 @@ public class CollectorModule implements Module {
     }
 
     protected GameMap getWorkingMap() {
-        return starSystem.getOrCreateMapById(workingMap.getValue());
+        return starSystem.getOrCreateMap(workingMap.getValue());
     }
 
     protected boolean checkMap() {

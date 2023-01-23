@@ -2,7 +2,6 @@ package eu.darkbot.util;
 
 import lombok.experimental.UtilityClass;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -23,16 +22,12 @@ public class IOUtils {
         return new String(readByteArray(input, closeStream), StandardCharsets.UTF_8);
     }
 
-    @SuppressWarnings("PMD.AssignmentInOperand")
     public static byte[] readByteArray(InputStream input, boolean closeStream) throws IOException {
-        ByteArrayOutputStream result = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
-        int length;
-        while ((length = input.read(buffer)) != -1) {
-            result.write(buffer, 0, length);
+        if (closeStream) {
+            try (input) {
+                return input.readAllBytes();
+            }
         }
-        if (closeStream) input.close();
-
-        return result.toByteArray();
+        return input.readAllBytes();
     }
 }
