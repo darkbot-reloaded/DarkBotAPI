@@ -1,9 +1,9 @@
 plugins {
     id("java-library")
     id("maven-publish")
-    id("io.freefair.lombok") version "6.6.1"
     id("com.diffplug.spotless") version "6.12.1"
     id("pmd")
+    id("io.freefair.lombok") version "6.6.1"
 }
 
 description = "darkbot-common"
@@ -21,7 +21,7 @@ dependencies {
     api(project(":darkbot-shared"))
 }
 
-val apiVersion = "0.7.0"
+val apiVersion = "0.7.1"
 
 allprojects {
     group = "eu.darkbot"
