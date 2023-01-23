@@ -27,7 +27,7 @@ public interface StaticEntity extends Entity {
     interface BurningTrail extends StaticEntity {
         /**
          * @return true if that trail was dropped by {@link eu.darkbot.api.managers.HeroAPI}
-         * @since 0.7.1
+         * @since 0.7.0
          */
         @ApiStatus.Experimental
         boolean isOwn();
@@ -40,7 +40,7 @@ public interface StaticEntity extends Entity {
 
         /**
          * @return true if type of generator is Heal(green)
-         * @since 0.7.1
+         * @since 0.7.0
          */
         boolean isHealType();
     }
@@ -48,7 +48,7 @@ public interface StaticEntity extends Entity {
     /**
      * Pet beacon entity, dropped by {@link Pet}
      *
-     * @since 0.7.1
+     * @since 0.7.0
      */
     interface PetBeacon extends StaticEntity {
 

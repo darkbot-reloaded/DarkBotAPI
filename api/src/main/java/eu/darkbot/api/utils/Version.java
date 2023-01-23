@@ -12,7 +12,7 @@ public interface Version extends Comparable<Version> {
      * @param version string to be parsed
      * @return {@code Version} representation of the given string
      * @throws IllegalArgumentException if {@code version} doesn't match Version pattern
-     * @since 0.7.1
+     * @since 0.7.0
      */
     static Version of(String version) {
         return new VersionImpl(version);
