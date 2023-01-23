@@ -142,7 +142,7 @@ public class CollectorModule implements Module {
         }
     }
 
-    protected boolean isWaiting() {
+    public boolean isWaiting() {
         if (currentBox == null || !currentBox.isValid()) {
             waitingUntil = 0;
             return false;
@@ -150,7 +150,7 @@ public class CollectorModule implements Module {
         return System.currentTimeMillis() <= waitingUntil;
     }
 
-    protected boolean isNotWaiting() {
+    public boolean isNotWaiting() {
         return !isWaiting();
     }
 
