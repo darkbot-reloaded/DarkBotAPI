@@ -27,7 +27,6 @@ allprojects {
     group = "eu.darkbot"
     version = apiVersion
 
-    apply(plugin = "io.freefair.lombok")
     apply(plugin = "java-library")
     java {
         sourceCompatibility = JavaVersion.VERSION_11
