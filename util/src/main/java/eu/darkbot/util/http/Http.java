@@ -177,7 +177,6 @@ public class Http {
      * @param body bytes to send as body
      * @return current instance of http
      */
-    @SuppressWarnings("PMD.ArrayIsStoredDirectly")
     public Http setBody(byte[] body) {
         this.bodyHolder.setBody(body);
         return this;
