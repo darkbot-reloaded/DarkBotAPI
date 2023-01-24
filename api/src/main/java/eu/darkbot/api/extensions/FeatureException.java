@@ -2,7 +2,7 @@ package eu.darkbot.api.extensions;
 
 /**
  * Throwing this exception in a constructor of Type annotated with {@link Feature}
- * will prevent feature from further loading & will show an issue next to feature in plugins tab
+ * will prevent feature from further loading &amp; will show an issue next to feature in plugins tab
  * <p>
  * Also, you can throw this exception in [Module, Behavior, Task] ...tick() methods to achieve similar gaol
  */
