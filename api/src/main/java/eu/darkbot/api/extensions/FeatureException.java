@@ -16,8 +16,8 @@ public class FeatureException extends RuntimeException {
      * @param cause   cause of the exception, will be shown as description of the issue
      */
     public FeatureException(String message, Throwable cause) {
-        this(message, (String) null);
-        initCause(cause);
+        super(message, cause);
+        this.description = null;
     }
 
     /**
