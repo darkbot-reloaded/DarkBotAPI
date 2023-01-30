@@ -49,6 +49,10 @@ public class Http {
         this.followRedirects = followRedirects;
     }
 
+    public static Gson getGson() {
+        return GSON;
+    }
+
     /**
      * Creates new instance of Http with provided url.
      * Request method is {@link Method#GET} and follows redirects by default.
