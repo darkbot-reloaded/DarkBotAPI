@@ -13,6 +13,10 @@ public interface ZoneInfo {
     void remove(int x, int y);
 
     void toggle(int x, int y);
+    
+    List<Zone> getZones();
+    
+    List<Zone> getSortedZones();
 
     default void set(int x, int y, int x2, int y2) {
         for (; x < x2; x++) {
