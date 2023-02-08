@@ -86,4 +86,8 @@ public class FeatureException extends RuntimeException {
         this.level = level;
         this.description = null;
     }
+
+    public boolean isCritical() {
+        return level == IssueHandler.Level.ERROR;
+    }
 }
