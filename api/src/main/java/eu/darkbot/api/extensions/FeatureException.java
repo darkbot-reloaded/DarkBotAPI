@@ -3,7 +3,7 @@ package eu.darkbot.api.extensions;
 import lombok.Getter;
 
 @Getter
-public class FeatureException extends RuntimeException {
+public final class FeatureException extends RuntimeException {
     private static final long serialVersionUID = -4649810460744079421L;
 
     private final String description;
