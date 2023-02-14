@@ -35,7 +35,7 @@ public interface HangarAPI extends API.Singleton {
     /**
      * Request hangar list to be updated within a certain timeframe.
      * This method should be repeatedly called to request updates
-     * 
+     *
      * @param millis The maximum time to wait
      */
     void requestUpdateCurrentHangar(@NotNull long millis);
@@ -43,7 +43,7 @@ public interface HangarAPI extends API.Singleton {
     /**
      * Request current hangar to be updated within a certain timeframe.
      * This method should be repeatedly called to request updates
-     * 
+     *
      * @param millis The maximum time to wait
      */
     void requestUpdateHangarList(@NotNull long millis);
@@ -51,7 +51,7 @@ public interface HangarAPI extends API.Singleton {
     /**
      * Request to change the current hangar.
      * The ship must be in a base or disconnected.
-     * 
+     *
      * @param hangarId Id of the hangar to which the change is to be made
      * @return true if the request was successful
      */
