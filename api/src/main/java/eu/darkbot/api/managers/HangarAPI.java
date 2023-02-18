@@ -2,7 +2,6 @@ package eu.darkbot.api.managers;
 
 import eu.darkbot.api.API;
 import eu.darkbot.api.extensions.Task;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Allows different hangar-related actions to be performed.
@@ -38,7 +37,7 @@ public interface HangarAPI extends API.Singleton {
      *
      * @param millis The maximum time to wait
      */
-    void requestUpdateCurrentHangar(@NotNull long millis);
+    void requestUpdateCurrentHangar(long millis);
 
     /**
      * Request current hangar to be updated within a certain timeframe.
@@ -46,7 +45,7 @@ public interface HangarAPI extends API.Singleton {
      *
      * @param millis The maximum time to wait
      */
-    void requestUpdateHangarList(@NotNull long millis);
+    void requestUpdateHangarList(long millis);
 
     /**
      * Request to change the current hangar.
@@ -55,5 +54,5 @@ public interface HangarAPI extends API.Singleton {
      * @param hangarId Id of the hangar to which the change is to be made
      * @return true if the request was successful
      */
-    boolean changeHangar(@NotNull String hangarId);
+    boolean changeHangar(int hangarId);
 }
