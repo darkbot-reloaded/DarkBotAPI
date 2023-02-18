@@ -28,10 +28,10 @@ import java.util.function.Consumer;
  * Use it like builder, just one time for instance
  */
 public class Http {
+    private static final Gson GSON = new Gson();
 
     @Getter @Setter
     private static String defaultUserAgent = "BigpointClient/1.6.7";
-    private static Gson gson;
 
     protected final String baseUrl;
     protected final Method method;
@@ -49,10 +49,8 @@ public class Http {
         this.followRedirects = followRedirects;
     }
 
-    public static void setGson(Gson gson) {
-        if (Http.gson != null)
-            throw new IllegalStateException("gson already assigned!");
-        Http.gson = gson;
+    public static Gson getGson() {
+        return GSON;
     }
 
     /**
@@ -204,7 +202,7 @@ public class Http {
 
         try (OutputStream out = encodeBase64 ? Base64.getEncoder().wrap(baos) : baos;
              OutputStreamWriter osw = new OutputStreamWriter(out, StandardCharsets.UTF_8)) {
-            gson.toJson(json, osw);
+            GSON.toJson(json, osw);
         }
 
         return setBody(baos.toByteArray());
@@ -271,7 +269,7 @@ public class Http {
     public <T> T fromJson(Type type, boolean isBase64) throws IOException {
         try (InputStream in = isBase64 ? Base64.getDecoder().wrap(getInputStream()) : getInputStream();
              InputStreamReader reader = new InputStreamReader(in, StandardCharsets.UTF_8)) {
-            return gson.fromJson(reader, type);
+            return GSON.fromJson(reader, type);
         }
     }
 
