@@ -81,7 +81,7 @@ public final class FeatureException extends RuntimeException {
         this.description = description;
     }
 
-    private FeatureException(String message, IssueHandler.Level level, Throwable cause) {
+    private FeatureException(String message, Throwable cause, IssueHandler.Level level) {
         super(message, cause);
         this.level = level;
         this.description = null;
