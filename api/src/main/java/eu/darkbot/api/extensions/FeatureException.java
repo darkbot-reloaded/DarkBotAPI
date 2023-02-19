@@ -34,7 +34,7 @@ public final class FeatureException extends RuntimeException {
      * @see IssueHandler
      */
     public static FeatureException critical(String message, Throwable cause) {
-        return new FeatureException(message, IssueHandler.Level.ERROR, cause);
+        return new FeatureException(message, cause, IssueHandler.Level.ERROR);
     }
 
     /**
@@ -62,7 +62,7 @@ public final class FeatureException extends RuntimeException {
      * @see IssueHandler
      */
     public static FeatureException warning(String message, Throwable cause) {
-        return new FeatureException(message, IssueHandler.Level.WARNING, cause);
+        return new FeatureException(message, cause, IssueHandler.Level.WARNING);
     }
 
     /**
