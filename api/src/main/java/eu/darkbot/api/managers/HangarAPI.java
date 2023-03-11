@@ -8,6 +8,7 @@ import eu.darkbot.api.extensions.Task;
  * Should only be called from background thread, used in {@link Task}s.
  *
  * @see Task
+ * @since 0.7.1
  */
 public interface HangarAPI extends API.Singleton {
 
