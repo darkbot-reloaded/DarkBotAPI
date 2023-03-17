@@ -54,6 +54,12 @@ public interface GalaxySpinnerAPI extends API.Singleton {
     Optional<SpinResult> spinGate(@NotNull GalaxyGate gate, boolean multiplier, int spinAmount, int minWait);
 
     /**
+     * @return overall amount of possible successful in-game spins - value may not be reliable
+     * @see #spinGate - spinAmount parameter
+     */
+    int getSpinsUsed();
+
+    /**
      * Place the gate on your x-1 map
      *
      * @param gate    The gate to place

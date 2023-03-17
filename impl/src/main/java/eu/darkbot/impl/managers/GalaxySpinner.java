@@ -7,6 +7,8 @@ import eu.darkbot.api.managers.BackpageAPI;
 import eu.darkbot.api.managers.EventBrokerAPI;
 import eu.darkbot.api.managers.GalaxySpinnerAPI;
 import eu.darkbot.impl.galaxy.GalaxyInfoImpl;
+import eu.darkbot.util.TimeUtils;
+import eu.darkbot.util.Timer;
 import eu.darkbot.util.XmlUtils;
 import eu.darkbot.util.http.Http;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +32,9 @@ public class GalaxySpinner implements GalaxySpinnerAPI {
     private final BackpageAPI backpage;
     private final GalaxyInfoImpl galaxyInfo;
     private final EventBrokerAPI eventBroker;
+    private final Timer infosUpdateTimer = Timer.get(TimeUtils.MINUTE * 3);
 
+    private int spins;
     private long lastUpdate;
 
     public GalaxySpinner(BackpageAPI backpage, EventBrokerAPI eventBroker) {
@@ -53,7 +57,11 @@ public class GalaxySpinner implements GalaxySpinnerAPI {
                 .setParam(PARAM_ACTION, "init")
                 .setParam(PARAM_SID, backpage.getSid());
 
-        return handleRequest(http);
+        Boolean result = handleRequest(http);
+        if (Boolean.TRUE.equals(result))
+            infosUpdateTimer.activate();
+
+        return result;
     }
 
     @Override
@@ -71,10 +79,24 @@ public class GalaxySpinner implements GalaxySpinnerAPI {
 
         boolean success = Boolean.TRUE.equals(handleRequest(http));
 
-        if (success)
+        if (success) {
+            spins += spinAmount;
             eventBroker.sendEvent(new SpinGateEvent(galaxyInfo.getSpinResult(), spinAmount));
 
+            if (infosUpdateTimer.isInactive()) {
+                // try to update infos every 3min on successful spin
+                // to prevent spinning infinitely when client-side only last parts are missing,
+                // where server-side gate is completed
+                updateGalaxyInfos(-1);
+            }
+        }
+
         return success ? Optional.of(galaxyInfo.getSpinResult()) : Optional.empty();
+    }
+
+    @Override
+    public int getSpinsUsed() {
+        return spins;
     }
 
     @Override
