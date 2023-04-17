@@ -634,7 +634,9 @@ public interface SelectableItem {
         HECATE_PLUS_STOCKPILE("ability_hecate-plus_stockpile"),
         HAMMERCLAW_PLUS_REALLOCATE("ability_hammerclaw-plus_reallocate"),
         SPEARHEAD_PLUS_JAMX_CREED("ability_spearhead-plus_jamx-creed"),
-        SPEARHEAD_PLUS_NEUTRALIZING_MARKER("ability_spearhead-plus_neutralizing-marker");
+        SPEARHEAD_PLUS_NEUTRALIZING_MARKER("ability_spearhead-plus_neutralizing-marker"),
+        TARTARUS_PLUS_SPEED_BOOST("ability_tartarus-plus_speed-boost-plus"),
+        TARTARUS_PLUS_RAPID_FIRE("ability_tartarus-plus_rapid-fire-plus");
 
         private static final String PREFIX = "ability_";
         private final String id;
