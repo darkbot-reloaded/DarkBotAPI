@@ -9,6 +9,7 @@ public interface NpcEventAPI extends API.Singleton {
 
     /**
      * Get how long until the current {@link #getStatus()} changes.
+     *
      * @return how long until the npc is active/inactive, in seconds
      */
     double getRemainingTime();
