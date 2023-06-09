@@ -39,15 +39,15 @@ public interface DispatchRetrieverAPI extends API.Singleton {
      */
     interface Retriever {
         /**
-         * @return short game name
-         */
-        String getName();
-
-        /**
          * @return in game variable name
          */
 
-        String getInGameName();
+        String getId();
+
+        /**
+         * @return short game name
+         */
+        String getName();
 
         /**
          * @return retriever type
