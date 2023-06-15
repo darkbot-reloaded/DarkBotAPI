@@ -52,7 +52,7 @@ public interface DispatchRetrieverAPI extends API.Singleton {
         /**
          * @return retriever type
          */
-        String getType();
+        String getDescription();
 
         /**
          * @return the time to build or complete retriever
