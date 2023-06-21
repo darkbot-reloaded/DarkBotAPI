@@ -82,6 +82,11 @@ public interface StatsAPI extends API.Singleton {
      */
     double getEarnedHonor();
 
+    /**
+     * @return total amount of nova energy which hero currently have
+     */
+    int getNovaEnergy();
+
     class StatsResetEvent implements Event {
         public StatsResetEvent() {
         }
