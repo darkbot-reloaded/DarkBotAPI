@@ -21,7 +21,7 @@ dependencies {
     api(project(":darkbot-shared"))
 }
 
-val apiVersion = "0.7.1"
+val apiVersion = "0.7.3"
 
 allprojects {
     group = "eu.darkbot"
