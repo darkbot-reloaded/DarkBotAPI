@@ -12,7 +12,7 @@ public interface AssemblyAPI extends API.Singleton {
 
     Recipe getSelectedRecipe();
 
-    CheckBox getFilterDropdown();
+    boolean isFilterDropDownOpen();
 
     List<? extends Recipe> getRecipes();
 
@@ -40,10 +40,6 @@ public interface AssemblyAPI extends API.Singleton {
         double getAmountRequiredBackup();
     }
 
-    interface CheckBox {
-        boolean getIsChecked();
-    }
-
     interface RowSetting {
         RowEntryVO getFirst();
 
@@ -53,7 +49,7 @@ public interface AssemblyAPI extends API.Singleton {
     interface RowEntryVO {
         String getFilter();
 
-        CheckBox getCheckBox();
+        boolean isChecked();
 
     }
 }
