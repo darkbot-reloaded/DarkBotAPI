@@ -29,7 +29,7 @@ public interface AssemblyAPI extends API.Singleton {
     List<? extends Recipe> getRecipes();
 
     /**
-     * @return {@code List} of all category of filters represented in Darkorbit
+     * @return {@code List} of all category of filters represented ingame
      */
     List<? extends RowFilter> getRowFilters();
 
