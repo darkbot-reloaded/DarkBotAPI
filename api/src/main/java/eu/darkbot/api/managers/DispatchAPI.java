@@ -15,7 +15,7 @@ public interface DispatchAPI extends API.Singleton {
     List<? extends RewardLoot> getRewardLoot();
 
     /**
-     * @return avaialbe dispatch slots  to be used
+     * @return available dispatch slots that can be used
      */
     int getAvailableSlots();
 
@@ -25,17 +25,17 @@ public interface DispatchAPI extends API.Singleton {
     int getTotalSlots();
 
     /**
-     * @return The {@code List} of all available retrivers
+     * @return The {@code List} of all available retrievers
      */
     List<? extends Retriever> getAvailableRetrievers();
 
     /**
-     * @return The {@code List} of all in progress retrivers
+     * @return The {@code List} of all in progress retrievers
      */
     List<? extends Retriever> getInProgressRetrievers();
 
     /**
-     * @return The {@code DispatchRetrieverVO} of the selected retriever
+     * @return The {@code Retriever} of the selected retriever
      */
     Retriever getSelectedRetriever();
 
@@ -55,7 +55,7 @@ public interface DispatchAPI extends API.Singleton {
         String getName();
 
         /**
-         * @return retriever type
+         * @return retriever description
          */
         String getDescription();
 
@@ -66,7 +66,8 @@ public interface DispatchAPI extends API.Singleton {
         double getDuration();
 
         /**
-         * @return slot position of the retriever
+         * @return InProgress retrievers: slot position of the retriever
+         * Available retrievers: slot id of retriever per category
          */
         int getSlotId();
     }
