@@ -55,9 +55,9 @@ public interface DispatchAPI extends API.Singleton {
         String getName();
 
         /**
-         * @return retriever description
+         * @return retriever description id
          */
-        String getDescription();
+        String getDescriptionId();
 
         /**
          * @return the time to build or complete retriever
@@ -66,8 +66,7 @@ public interface DispatchAPI extends API.Singleton {
         double getDuration();
 
         /**
-         * @return InProgress retrievers: slot position of the retriever
-         * Available retrievers: slot id of retriever per category
+         * @return slot position of the retriever that are in progress
          */
         int getSlotId();
     }
