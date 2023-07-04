@@ -84,6 +84,9 @@ public interface AssemblyAPI extends API.Singleton {
         double getAmountRequiredBackup();
     }
 
+    /**
+     * Contains ItemFilter that contain 2 filters per row
+     */
     interface RowFilter {
         /**
          * @return first column of {@code ItemFilter}
@@ -96,6 +99,9 @@ public interface AssemblyAPI extends API.Singleton {
         ItemFilter getSecond();
     }
 
+    /**
+     * Item Filter data for Filters in Assembly
+     */
     interface ItemFilter {
         /**
          * @return name of item filter in assembly window
@@ -109,6 +115,9 @@ public interface AssemblyAPI extends API.Singleton {
 
     }
 
+    /**
+     * Mapping of {@code ItemFilter} into row, col indexed
+     */
     interface Filter {
         /**
          * @return name of item filter in assembly window
