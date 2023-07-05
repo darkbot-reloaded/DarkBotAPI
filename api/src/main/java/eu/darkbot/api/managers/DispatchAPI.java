@@ -43,10 +43,10 @@ public interface DispatchAPI extends API.Singleton {
      * In game retriever representation, includes name, in game name, type, duration &amp; slot id
      */
     interface Retriever {
+
         /**
          * @return in game variable name
          */
-
         String getId();
 
         /**
@@ -75,11 +75,12 @@ public interface DispatchAPI extends API.Singleton {
      * In game rewards loot representation, includes loot id, &amp; amount
      */
     interface RewardLoot {
+
         /**
          * @return in game variable name of reward
          */
-
         String getLootId();
+
         /**
          * @return amount of reward
          */

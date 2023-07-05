@@ -9,7 +9,7 @@ import java.util.List;
  */
 public interface AssemblyAPI extends API.Singleton {
     /**
-     * @return index id of currently selected recipe in assembly window
+     * @return index of currently selected recipe in assembly window
      */
     int getSelectedRecipeIndex();
 
@@ -29,12 +29,7 @@ public interface AssemblyAPI extends API.Singleton {
     List<? extends Recipe> getRecipes();
 
     /**
-     * @return {@code List} of all category of filters represented ingame
-     */
-    List<? extends RowFilter> getRowFilters();
-
-    /**
-     * @return {@code List} of all category of filters with row and col data
+     * @return {@code List} of all category of filters
      */
     List<? extends Filter> getFilters();
 
@@ -75,44 +70,7 @@ public interface AssemblyAPI extends API.Singleton {
         /**
          * @return amount of resource required for recipe
          */
-
         double getAmountRequired();
-
-        /**
-         * @return amount of resource required for recipe - this is a backup incase first one is 0
-         */
-        double getAmountRequiredBackup();
-    }
-
-    /**
-     * Contains ItemFilter that contain 2 filters per row
-     */
-    interface RowFilter {
-        /**
-         * @return first column of {@code ItemFilter}
-         */
-        ItemFilter getFirst();
-
-        /**
-         * @return second column of {@code ItemFilter}, null if there is no second column
-         */
-        ItemFilter getSecond();
-    }
-
-    /**
-     * Item Filter data for Filters in Assembly
-     */
-    interface ItemFilter {
-        /**
-         * @return name of item filter in assembly window
-         */
-        String getFilterName();
-
-        /**
-         * @return if the filter is applied
-         */
-        boolean isChecked();
-
     }
 
     /**
@@ -138,6 +96,6 @@ public interface AssemblyAPI extends API.Singleton {
          * @return if the filter is applied
          */
         boolean isChecked();
-
     }
+
 }
