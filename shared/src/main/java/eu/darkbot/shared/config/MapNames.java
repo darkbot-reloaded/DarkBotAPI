@@ -7,6 +7,7 @@ import eu.darkbot.api.utils.Inject;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,6 +21,7 @@ public class MapNames implements Dropdown.Options<Integer> {
     @Inject
     public MapNames(StarSystemAPI starSystemAPI) {
         this(starSystemAPI, starSystemAPI.getMaps().stream()
+                .sorted(Comparator.comparing(GameMap::getName))
                 .map(GameMap::getId)
                 .filter(id -> id > 0) // Filter out fake maps
                 .collect(Collectors.toList()));
@@ -43,6 +45,20 @@ public class MapNames implements Dropdown.Options<Integer> {
     @Override
     public @NotNull String getText(Integer option) {
         return option == null ? "null" : starSystemAPI.getOrCreateMap(option).getName();
+    }
+
+    /**
+     * Alternative which will only include accessible, non galaxy gate, maps.
+     */
+    public static class Accessible extends MapNames {
+
+        public Accessible(StarSystemAPI starSystemAPI) {
+            super(starSystemAPI, starSystemAPI.getMaps().stream()
+                    .filter(gm -> !gm.isGG() && gm.getId() > 0 && starSystemAPI.isAccessible(gm))
+                    .sorted(Comparator.comparing(GameMap::getName))
+                    .map(GameMap::getId)
+                    .collect(Collectors.toList()));
+        }
     }
 
 }
