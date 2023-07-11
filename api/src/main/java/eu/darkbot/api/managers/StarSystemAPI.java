@@ -41,6 +41,11 @@ public interface StarSystemAPI extends API.Singleton {
     Collection<? extends GameMap> getMaps();
 
     /**
+     * @return if the map can be jumped to from any other map.
+     */
+    boolean isAccessible(GameMap map);
+
+    /**
      * Find {@link GameMap} by given {@code mapId} otherwise will create a new one with given mapId.
      *
      * @param mapId id to find
