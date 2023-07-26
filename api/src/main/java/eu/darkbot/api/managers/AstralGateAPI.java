@@ -6,11 +6,11 @@ import java.util.List;
 
 /**
  * Provides access to data for the Astral galaxy gate in-game.
- *
  */
 public interface AstralGateAPI extends API.Singleton {
     /**
-     * Making the gate appear on the map requires the use of one CPU (acts as a key).
+     * Making the gate appear on the map requires the use of one CPU (acts as a
+     * key).
      *
      * @return Amount of CPUs available.
      */
@@ -86,7 +86,6 @@ public interface AstralGateAPI extends API.Singleton {
          * @return The stat attribute name
          */
         String getAttribute();
-
 
         /**
          * @return The stat attribute value
