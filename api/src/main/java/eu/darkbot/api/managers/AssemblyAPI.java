@@ -106,6 +106,16 @@ public interface AssemblyAPI extends API.Singleton {
          * @return if the filter is applied
          */
         boolean isChecked();
+
+        /**
+         * @return x-axis offset if filter window
+         */
+        double getX();
+
+        /**
+         * @return y-axis offset if filter window
+         */
+        double getY();
     }
 
 }
