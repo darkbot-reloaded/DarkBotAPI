@@ -90,6 +90,6 @@ public interface AstralGateAPI extends API.Singleton {
         /**
          * @return The stat attribute value
          */
-        Double getValue();
+        double getValue();
     }
 }
