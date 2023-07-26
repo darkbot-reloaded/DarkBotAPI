@@ -72,6 +72,22 @@ public interface DispatchAPI extends API.Singleton {
     }
 
     /**
+     * In game representation of cost of retriever
+     */
+    interface Cost{
+        /**
+         * @return in game loot name
+         */
+        String getLootId();
+
+        /**
+         * @return amount of required resource for retriever
+         */
+        int getAmount();
+
+    }
+
+    /**
      * In game rewards loot representation, includes loot id, &amp; amount
      */
     interface RewardLoot {

@@ -56,6 +56,16 @@ public interface AssemblyAPI extends API.Singleton {
          * @return if the recipe is craftable, false if recipe is ready to be collected
          */
         boolean isCraftable();
+
+        /**
+         * @return if the recipe is building in progress
+         */
+        boolean isInProgress();
+
+        /**
+         * @return if the recipe is collectable
+         */
+        boolean isCollectable();
     }
 
     /**
