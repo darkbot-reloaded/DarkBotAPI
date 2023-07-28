@@ -74,7 +74,7 @@ public interface DispatchAPI extends API.Singleton {
     /**
      * In game representation of cost of retriever
      */
-    interface Cost{
+    interface Cost {
         /**
          * @return in game loot name
          */
