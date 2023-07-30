@@ -1,8 +1,7 @@
 package eu.darkbot.api.managers;
 
-import org.jetbrains.annotations.Nullable;
-
 import eu.darkbot.api.API;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Provides access to data for the Quests in-game.
@@ -14,7 +13,8 @@ public interface QuestAPI extends API.Singleton {
      *         Even if there are several accepted quests, only the selected one is
      *         returned.
      */
-    @Nullable Quest getCurrenQuest();
+    @Nullable
+    Quest getCurrenQuest();
 
     /**
      * Quest Object
