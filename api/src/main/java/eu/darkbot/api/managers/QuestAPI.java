@@ -13,8 +13,7 @@ public interface QuestAPI extends API.Singleton {
      *         Even if there are several accepted quests, only the selected one is
      *         returned.
      */
-    @Nullable
-    Quest getCurrentQuest();
+    @Nullable Quest getCurrentQuest();
 
     /**
      * Quest Object
