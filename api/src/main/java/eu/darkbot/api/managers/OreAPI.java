@@ -2,6 +2,8 @@ package eu.darkbot.api.managers;
 
 import eu.darkbot.api.API;
 import eu.darkbot.api.game.entities.Station;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,41 +51,32 @@ public interface OreAPI extends API.Singleton {
     /**
      * Types of Ores visible in refinery window
      */
+    @Getter
+    @AllArgsConstructor
     enum Ore {
-        PROMETIUM(0),
-        ENDURIUM(1),
-        TERBIUM(2),
-        PROMETID(4),
-        DURANIUM(5),
-        PROMERIUM(6),
-        SEPROM(7),
-        PALLADIUM(8),
-        OSMIUM(28),
+        PROMETIUM(0, false),
+        ENDURIUM(1, false),
+        TERBIUM(2, false),
+        PROMETID(4, true),
+        DURANIUM(5, true),
+        PROMERIUM(6, true),
+        SEPROM(7, true),
+        PALLADIUM(8, false),
+        OSMIUM(28, true),
         // Must keep at the end, otherwise selling code leaves a gap for it.
-        XENOMIT(3, false);
+        XENOMIT(3, false, false);
 
         private final int id;
+        private final boolean upgradable;
         private final boolean sellable;
 
-        Ore(int id) {
-            this(id, true);
-        }
-
-        Ore(int id, boolean sellable) {
-            this.id = id;
-            this.sellable = sellable;
-        }
-
-        public int getId() {
-            return id;
+        Ore(int id, boolean upgradable) {
+            this(id, upgradable, true);
         }
 
         public String getName() {
             return name().toLowerCase(Locale.ROOT);
         }
 
-        public boolean isSellable() {
-            return sellable;
-        }
     }
 }

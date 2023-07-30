@@ -75,7 +75,7 @@ public interface AstralGateAPI extends API.Singleton {
         /**
          * @return List of the item's stats, if available.
          */
-        List<? extends ItemStat> getTheStatsList();
+        List<? extends ItemStat> getStats();
     }
 
     /**
