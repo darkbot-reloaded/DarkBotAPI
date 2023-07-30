@@ -14,7 +14,7 @@ public interface QuestAPI extends API.Singleton {
      *         returned.
      */
     @Nullable
-    Quest getCurrenQuest();
+    Quest getCurrentQuest();
 
     /**
      * Quest Object
@@ -24,7 +24,7 @@ public interface QuestAPI extends API.Singleton {
         /**
          * @return The Quest ID
          */
-        int getCurrentQuestId();
+        int getId();
 
         /**
          * @return If the quest is Active
