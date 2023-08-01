@@ -113,4 +113,9 @@ public interface DispatchAPI extends API.Singleton {
 
     }
 
+    /**
+     * @param retriever to override selected address to
+     */
+    void overrideSelectedRetriever(Retriever retriever);
+
 }
