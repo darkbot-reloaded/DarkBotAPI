@@ -77,7 +77,7 @@ public interface DispatchAPI extends API.Singleton {
         /**
          * @return cost list for the retriever
          */
-        List<Cost> getCostList();
+        List<? extends Cost> getCostList();
     }
 
     /**
