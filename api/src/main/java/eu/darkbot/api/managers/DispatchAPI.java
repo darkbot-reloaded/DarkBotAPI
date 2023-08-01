@@ -43,6 +43,10 @@ public interface DispatchAPI extends API.Singleton {
      * In game retriever representation, includes name, in game name, type, duration &amp; slot id
      */
     interface Retriever {
+        /**
+         * @return if retriever is available
+         */
+        boolean isAvailable();
 
         /**
          * @return in game variable name
