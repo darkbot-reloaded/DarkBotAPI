@@ -73,6 +73,11 @@ public interface DispatchAPI extends API.Singleton {
          * @return slot position of the retriever that are in progress
          */
         int getSlotId();
+
+        /**
+         * @return cost list for the retriever
+         */
+        List<Cost> getCostList();
     }
 
     /**
