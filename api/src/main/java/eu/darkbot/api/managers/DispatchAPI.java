@@ -44,9 +44,9 @@ public interface DispatchAPI extends API.Singleton {
      */
     interface Retriever {
         /**
-         * @return if retriever is available
+         * @return retriever Id
          */
-        boolean isAvailable();
+        int getId();
 
         /**
          * @return in game variable name
@@ -70,17 +70,6 @@ public interface DispatchAPI extends API.Singleton {
         double getDuration();
 
         /**
-         * @return the time to complete retriever
-         */
-
-        double getDurationLeft();
-
-        /**
-         * @return retriever Id
-         */
-        int getId();
-
-        /**
          * @return slot position of the retriever that are in progress
          */
         int getSlotId();
@@ -89,6 +78,11 @@ public interface DispatchAPI extends API.Singleton {
          * @return tier of retriever
          */
         int getTier();
+
+        /**
+         * @return if retriever is available
+         */
+        boolean isAvailable();
 
         /**
          * @return cost list for the retriever
