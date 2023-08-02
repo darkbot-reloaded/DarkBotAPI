@@ -44,14 +44,14 @@ public interface DispatchAPI extends API.Singleton {
      */
     interface Retriever {
         /**
-         * @return if retriever is available
+         * @return retriever Id
          */
-        boolean isAvailable();
+        int getId();
 
         /**
          * @return in game variable name
          */
-        String getId();
+        String getIconId();
 
         /**
          * @return short game name
@@ -64,7 +64,7 @@ public interface DispatchAPI extends API.Singleton {
         String getDescriptionId();
 
         /**
-         * @return the time to build or complete retriever
+         * @return the time to build
          */
 
         double getDuration();
@@ -73,6 +73,26 @@ public interface DispatchAPI extends API.Singleton {
          * @return slot position of the retriever that are in progress
          */
         int getSlotId();
+
+        /**
+         * @return tier of retriever
+         */
+        int getTier();
+
+        /**
+         * @return if retriever is available
+         */
+        boolean isAvailable();
+
+        /**
+         * @return cost list for the retriever
+         */
+        List<? extends Cost> getCostList();
+
+        /**
+         * @return instant cost for the retriever
+         */
+        Cost getInstantCost();
     }
 
     /**
@@ -107,5 +127,10 @@ public interface DispatchAPI extends API.Singleton {
         int getAmount();
 
     }
+
+    /**
+     * @param retriever to override selected address to
+     */
+    void overrideSelectedRetriever(Retriever retriever);
 
 }
