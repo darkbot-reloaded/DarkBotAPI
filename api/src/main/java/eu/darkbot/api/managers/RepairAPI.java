@@ -23,6 +23,11 @@ public interface RepairAPI extends API.Singleton {
     int getDeathAmount();
 
     /**
+     * Sets the deaths amount to a specific number
+     */
+    int setDeathsAmount(int newDeathsAmount);
+
+    /**
      * @return if the hero is currently destroyed
      */
     boolean isDestroyed();

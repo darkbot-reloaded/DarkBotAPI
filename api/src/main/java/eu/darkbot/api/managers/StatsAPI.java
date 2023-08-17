@@ -38,9 +38,25 @@ public interface StatsAPI extends API.Singleton {
     void resetStats();
 
     /**
+     * Helpful if we want to overwrite the current bot stats.
+     * For example: saving stats between sessions.
+     * Note: starting time and running time are in milliseconds.
+     */
+    void overwriteStatsValues(long startingTime, long runningTime,
+                              double credits, double earnedCredits,
+                              double uridium, double earnedUridium,
+                              double experience, double earnedExperience,
+                              double honor, double earnedHonor);
+
+    /**
      * @return running time in milliseconds.
      */
     Duration getRunningTime();
+
+    /**
+     * @return starting time in milliseconds.
+     */
+    long getStartingTime();
 
     /**
      * @return total amount of credits which hero currently have
