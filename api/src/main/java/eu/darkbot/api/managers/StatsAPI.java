@@ -127,7 +127,7 @@ public interface StatsAPI extends API.Singleton {
      * @return earned amount of experience while bot was working
      */
     default double getEarnedExperience() {
-        return getStat(Stats.General.URIDIUM).getEarned();
+        return getStat(Stats.General.EXPERIENCE).getEarned();
     }
 
     /**
