@@ -13,7 +13,8 @@ public final class Stats {
         HONOR,
         CARGO,
         MAX_CARGO,
-        NOVA_ENERGY
+        NOVA_ENERGY,
+        TELEPORT_BONUS_AMOUNT
     }
 
     public enum Bot implements BotKey {
@@ -22,6 +23,24 @@ public final class Stats {
         MEMORY,
         CPU,
         RUNTIME
+    }
+
+    public enum BootyKey implements BotKey {
+        GREEN,
+        BLUE,
+        RED,
+        SILVER,
+        APOCALYPSE,
+        PROMETHEUS,
+        OBSIDIAN_MICROCHIP,
+        BLACK_LIGHT_CODE,
+        BLACK_LIGHT_DECODER,
+        PROSPEROUS_FRAGMENT,
+        ASTRAL,
+        ASTRAL_SUPREME,
+        EMPYRIAN,
+        LUCENT,
+        PERSEUS
     }
 
     private interface BotKey extends StatsAPI.Key {
