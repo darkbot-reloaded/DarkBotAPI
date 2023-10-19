@@ -15,9 +15,9 @@ public interface NpcEventAPI extends API.Singleton {
     double getRemainingTime();
 
     /**
-     * @return the current event name
+     * @return the current npc name
      */
-    String getEventName();
+    String getNpcName();
 
     /**
      * @return the current event id
