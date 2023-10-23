@@ -1,10 +1,9 @@
 package eu.darkbot.api.managers;
 
 import eu.darkbot.api.API;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Provides access to data for the Quests in-game.
@@ -16,21 +15,18 @@ public interface QuestAPI extends API.Singleton {
      *         Even if there are several accepted quests, only the selected one is
      *         returned.
      */
-    @Nullable
-    Quest getCurrentQuestDisplayed();
+    @Nullable Quest getCurrentQuestDisplayed();
 
     /**
      * @return The quest that is currently selected in the QuestGiver
      */
-    @Nullable
-    Quest getCurrentQuestSeleted();
+    @Nullable Quest getCurrentQuestSeleted();
 
     /**
      * @return Returns a list of current quests, only has data when QuestGiver is
      *         opened
      */
-    @Nullable
-    List<QuestListItem> getCurrestQuests();
+    @Nullable List<QuestListItem> getCurrestQuests();
 
     /**
      * Quest Object
