@@ -71,7 +71,7 @@ public interface QuestAPI extends API.Singleton {
         /**
          * @return List of conditions for completion
          */
-        List<Contition> getConditions();
+        List<Condition> getConditions();
 
         /**
          * @return List of rewards to be obtained by completing the quest
@@ -121,9 +121,9 @@ public interface QuestAPI extends API.Singleton {
     }
 
     /**
-     * Contition Object
+     * Condition Object
      */
-    interface Contition {
+    interface Condition {
 
         /**
          * @return Description of the condition
@@ -153,7 +153,7 @@ public interface QuestAPI extends API.Singleton {
         /**
          * @return Returns the list of conditions that the condition itself may have
          */
-        List<Contition> getConditions();
+        List<Condition> getConditions();
     }
 
     /**
