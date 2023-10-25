@@ -29,6 +29,11 @@ public interface QuestAPI extends API.Singleton {
     @Nullable List<QuestListItem> getCurrestQuests();
 
     /**
+     * @return Returns true if the quest giver is open
+     */
+    boolean isVisibleQuestGiver();
+
+    /**
      * Quest Object
      */
     interface Quest {
