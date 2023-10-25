@@ -23,6 +23,11 @@ public interface QuestAPI extends API.Singleton {
     @Nullable Quest getCurrentQuestSeleted();
 
     /**
+     * @return Returns additional information on the selected quest
+     */
+    @Nullable QuestListItem getCurrentQuestInfoSeleted();
+
+    /**
      * @return Returns a list of current quests, only has data when QuestGiver is
      *         opened
      */
@@ -32,6 +37,11 @@ public interface QuestAPI extends API.Singleton {
      * @return Returns true if the quest giver is open
      */
     boolean isVisibleQuestGiver();
+
+    /**
+     * @return Returns the tab position that is being displayed in the QuestGiver
+     */
+    int getTabSelected();
 
     /**
      * Quest Object
