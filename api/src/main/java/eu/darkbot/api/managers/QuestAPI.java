@@ -59,9 +59,9 @@ public interface QuestAPI extends API.Singleton {
         String getDescription();
 
         /**
-         * @return The number of conditions the quest has to be completed.
+         * @return The number of requirements the quest has to be completed.
          */
-        int getConditionsCount();
+        int getRequirementsCount();
 
         /**
          * @return True if completed
@@ -69,9 +69,9 @@ public interface QuestAPI extends API.Singleton {
         boolean isCompleted();
 
         /**
-         * @return List of conditions for completion
+         * @return List of requirements for completion
          */
-        List<Condition> getConditions();
+        List<Requirement> getRequirements();
 
         /**
          * @return List of rewards to be obtained by completing the quest
@@ -121,39 +121,39 @@ public interface QuestAPI extends API.Singleton {
     }
 
     /**
-     * Condition Object
+     * Requirement Object
      */
-    interface Condition {
+    interface Requirement {
 
         /**
-         * @return Description of the condition
+         * @return Description of the requirement
          */
         String getDescription();
 
         /**
-         * @return Completed amount of the condition
+         * @return Completed amount of the requirement
          */
         double getGoalReached();
 
         /**
-         * @return Amount needed to complete the condition
+         * @return Amount needed to complete the requirement
          */
         double getGoal();
 
         /**
-         * @return True if the condition has been completed
+         * @return True if the requirement has been completed
          */
         boolean isCompleted();
 
         /**
-         * @return Type of condition
+         * @return Type of requirement
          */
-        String getConditionType();
+        String getRequirementType();
 
         /**
-         * @return Returns the list of conditions that the condition itself may have
+         * @return Returns the list of requirements that the requirement itself may have
          */
-        List<Condition> getConditions();
+        List<Requirement> getRequirements();
     }
 
     /**
