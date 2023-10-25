@@ -169,6 +169,11 @@ public interface QuestAPI extends API.Singleton {
          * @return Returns the list of requirements that the requirement itself may have
          */
         List<Requirement> getRequirements();
+
+        /**
+         * @return Returns whether the requirements can be realised or not.
+         */
+        boolean isEnabled();
     }
 
     /**
