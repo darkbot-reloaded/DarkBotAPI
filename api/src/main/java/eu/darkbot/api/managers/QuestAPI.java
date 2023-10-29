@@ -20,7 +20,7 @@ public interface QuestAPI extends API.Singleton {
     /**
      * @return The quest that is currently selected in the QuestGiver
      */
-    @Nullable Quest getCurrentQuestSeleted();
+    @Nullable Quest getSelectedQuest();
 
     /**
      * @return Returns additional information on the selected quest
