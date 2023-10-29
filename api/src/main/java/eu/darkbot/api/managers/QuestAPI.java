@@ -3,9 +3,7 @@ package eu.darkbot.api.managers;
 import eu.darkbot.api.API;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Provides access to data for the Quests in-game.
@@ -179,7 +177,7 @@ public interface QuestAPI extends API.Singleton {
         /**
          * The string version of requeriment type, prefer using
          * {@link #getRequirementType()} instead
-         * 
+         *
          * @return Type of requirement
          * @see #getRequirementType()
          */
