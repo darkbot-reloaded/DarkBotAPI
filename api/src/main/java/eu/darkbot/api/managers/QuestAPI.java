@@ -3,7 +3,9 @@ package eu.darkbot.api.managers;
 import eu.darkbot.api.API;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Provides access to data for the Quests in-game.
@@ -170,7 +172,18 @@ public interface QuestAPI extends API.Singleton {
         /**
          * @return Type of requirement
          */
-        String getRequirementType();
+        default RequirementType getRequirementType() {
+            return RequirementType.of(getType());
+        }
+
+        /**
+         * The string version of requeriment type, prefer using
+         * {@link #getRequirementType()} instead
+         * 
+         * @return Type of requirement
+         * @see #getRequirementType()
+         */
+        String getType();
 
         /**
          * @return Returns the list of requirements that the requirement itself may have
@@ -181,6 +194,104 @@ public interface QuestAPI extends API.Singleton {
          * @return Returns whether the requirements can be realised or not.
          */
         boolean isEnabled();
+
+        enum RequirementType {
+            UNKNOWN,
+            TIMER,
+            HASTE,
+            ENDURANCE,
+            COUNTDOWN,
+            COLLECT,
+            KILL_NPC,
+            DAMAGE,
+            AVOID_DAMAGE,
+            TAKE_DAMAGE,
+            AVOID_DEATH,
+            COORDINATES,
+            DISTANCE,
+            TRAVEL,
+            FUEL_SHORTAGE,
+            PROXIMITY,
+            MAP,
+            MAP_DIVERSE,
+            EMPTY,
+            MISCELLANEOUS,
+            AMMUNITION,
+            SAVE_AMMUNITION,
+            SPEND_AMMUNITION,
+            SALVAGE,
+            STEAL,
+            KILL_NPCS,
+            KILL_PLAYERS,
+            DAMAGE_NPCS,
+            DAMAGE_PLAYERS,
+            DAMAGE_ENEMY_PLAYERS,
+            VISIT_MAP,
+            DIE,
+            AVOID_KILL_NPC,
+            AVOID_KILL_NPCS,
+            AVOID_KILL_PLAYERS,
+            AVOID_DAMAGE_NPCS,
+            AVOID_DAMAGE_PLAYERS,
+            PREVENT,
+            JUMP,
+            AVOID_JUMP,
+            STEADINESS,
+            MULTIPLIER,
+            STAY_AWAY,
+            IN_GROUP,
+            KILL_ANY,
+            WEB,
+            CLIENT,
+            CARGO,
+            SELL_ORE,
+            LEVEL,
+            GAIN_INFLUENCE,
+            RESTRICT_AMMUNITION_KILL_NPC,
+            RESTRICT_AMMUNITION_KILL_PLAYER,
+            HONOR_NEGATIVE,
+            VISIT_QUEST_GIVER,
+            COLLECT_BONUS_BOX,
+            QUICK_BUY,
+            ENTER_GROUP,
+            REAL_TIME_HASTE,
+            ACTIVATE_MAP_ASSET_TYPE,
+            VISIT_JUMP_GATE_TO_MAP_TYPE,
+            VISIT_MULTIPLE_MAPS,
+            COLLECT_LOOT,
+            FINISH_STARTER_GATE,
+            FINISH_GALAXY_GATE,
+            FINISH_GALAXY_GATES,
+            IN_CLAN,
+            REFINE_ORE,
+            PUT_ITEM_IN_SLOT_BAR,
+            USE_ORE_UPDATE,
+            VISIT_MAP_ASSET,
+            UPDATE_SKYLAB_TO_LEVEL,
+            BEACON_TAKEOVER,
+            COLLECT_BUILT_RECIPE,
+            VISIT_DISRUPTION_ZONE,
+            REAL_TIME_DATE_HASTE,
+            COLLECT_BONUS_BOX_TYPE,
+            DAMAGE_MAPASSETS,
+            COMPLETED_OBJECTIVES,
+            ACTIVATE_CPU,
+            SPEND_ITEM,
+            CLEAR_GALAXY_GATE_WAVE,
+            SCORE_ASTRAL_ASCENSION,
+            SPEND_RECIPE_INGREDIENTS,
+            COMPLETE_SEASON_PASS_QUESTS,
+            LOGIN_CONDITION,
+            DURING_EVENT;
+
+            private static RequirementType of(String name) {
+                for (RequirementType type : RequirementType.values()) {
+                    if (type.name().equalsIgnoreCase(name))
+                        return type;
+                }
+                return UNKNOWN;
+            }
+        }
     }
 
     /**
