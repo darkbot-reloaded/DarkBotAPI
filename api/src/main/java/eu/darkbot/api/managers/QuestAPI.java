@@ -41,7 +41,7 @@ public interface QuestAPI extends API.Singleton {
     /**
      * @return Returns the tab position that is being displayed in the QuestGiver
      */
-    int getTabSelected();
+    int getSelectedTab();
 
     /**
      * Quest Object
