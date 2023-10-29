@@ -148,7 +148,7 @@ public interface QuestAPI extends API.Singleton {
         /**
          * @return Completed amount of the requirement
          */
-        double getGoalReached();
+        double getProgress();
 
         /**
          * @return Amount needed to complete the requirement
