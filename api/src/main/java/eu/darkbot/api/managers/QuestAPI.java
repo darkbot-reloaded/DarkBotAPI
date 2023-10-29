@@ -25,7 +25,7 @@ public interface QuestAPI extends API.Singleton {
     /**
      * @return Returns additional information on the selected quest
      */
-    @Nullable QuestListItem getCurrentQuestInfoSeleted();
+    @Nullable QuestListItem getSelectedQuestInfo();
 
     /**
      * @return Returns a list of current quests, only has data when QuestGiver is
