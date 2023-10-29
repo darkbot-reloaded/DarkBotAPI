@@ -15,7 +15,7 @@ public interface QuestAPI extends API.Singleton {
      *         Even if there are several accepted quests, only the selected one is
      *         returned.
      */
-    @Nullable Quest getCurrentQuestDisplayed();
+    @Nullable Quest getDisplayedQuest();
 
     /**
      * @return The quest that is currently selected in the QuestGiver
