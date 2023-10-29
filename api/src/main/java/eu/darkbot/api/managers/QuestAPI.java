@@ -36,7 +36,7 @@ public interface QuestAPI extends API.Singleton {
     /**
      * @return Returns true if the quest giver is open
      */
-    boolean isVisibleQuestGiver();
+    boolean isQuestGiverOpen();
 
     /**
      * @return Returns the tab position that is being displayed in the QuestGiver
@@ -154,6 +154,13 @@ public interface QuestAPI extends API.Singleton {
          * @return Amount needed to complete the requirement
          */
         double getGoal();
+
+        /**
+         * @return Returns the realised percentage of the requirement
+         */
+        default double getProgressPercentage() {
+            return getProgress() / getGoal();
+        }
 
         /**
          * @return True if the requirement has been completed
