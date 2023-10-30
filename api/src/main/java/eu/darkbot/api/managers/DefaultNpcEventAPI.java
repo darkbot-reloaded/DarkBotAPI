@@ -42,7 +42,7 @@ public interface DefaultNpcEventAPI extends API.Singleton {
     /**
      * @return the number of boss npc left on the map
      */
-    int bossNpcLeft();
+    int getBossCount();
 
     /**
      * @return the current status of the Npc event
