@@ -22,7 +22,7 @@ public interface DefaultNpcEventAPI extends API.Singleton {
     /**
      * @return the current event id
      */
-    String getEventID();
+    String getEventId();
 
     /**
      * @return the message description during the event
