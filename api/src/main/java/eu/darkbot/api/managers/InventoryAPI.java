@@ -10,7 +10,7 @@ public interface InventoryAPI {
     /**
      * @return list of items in inventory
      */
-    List<? extends Item> getItems();
+    List<? extends Item> getItems(int minWaitMs);
 
 
     interface Item {
