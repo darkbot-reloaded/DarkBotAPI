@@ -32,7 +32,7 @@ public interface DefaultNpcEventAPI extends API.Singleton {
     /**
      * @return the message for npc's to kill
      */
-    String getNpcLeftDescription();
+    String getRemainingNpcsDescription();
 
     /**
      * @return the number of npc left on the map
