@@ -74,6 +74,7 @@ public interface QuestAPI extends API.Singleton {
         default int getRequirementsCount() {
             return getRequirements().size();
         }
+
         /**
          * @return True if completed
          */
