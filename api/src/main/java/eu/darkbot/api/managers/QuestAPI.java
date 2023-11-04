@@ -59,11 +59,6 @@ public interface QuestAPI extends API.Singleton {
         boolean isActive();
 
         /**
-         * @return The quest category
-         */
-        String getCategory();
-
-        /**
          * @return The title of the quest in the client's language
          */
         String getTitle();
@@ -76,8 +71,9 @@ public interface QuestAPI extends API.Singleton {
         /**
          * @return The number of requirements the quest has to be completed.
          */
-        int getRequirementsCount();
-
+        default int getRequirementsCount() {
+            return getRequirements().size();
+        }
         /**
          * @return True if completed
          */
