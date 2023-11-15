@@ -20,20 +20,17 @@ public interface NativeBrowserAPI extends API.Singleton {
      * @param link link to open
      * @return process of the browser if was open successfully, null otherwise
      */
-    @Nullable
-    Process openLink(String link);
+    @Nullable Process openLink(String link);
 
-    @Nullable
-    default Process openLink(URI uri) {
+    @Nullable default Process openLink(URI uri) {
         return openLink(uri.toString());
     }
 
     /**
-     * Opens game link with host & set dosid cookie
+     * Opens game link with host and set dosid cookie
      *
      * @param path path of the url to open
      * @return process of the browser if was open successfully, null otherwise
      */
-    @Nullable
-    Process openGameLink(String path);
+    @Nullable Process openGameLink(String path);
 }
