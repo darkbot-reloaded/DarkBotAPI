@@ -6,6 +6,7 @@ import eu.darkbot.api.game.entities.Portal;
 import eu.darkbot.api.game.other.Area;
 import eu.darkbot.api.game.other.GameMap;
 import eu.darkbot.util.ArrayUtils;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -55,6 +56,15 @@ public interface StarSystemAPI extends API.Singleton {
     GameMap getOrCreateMap(int mapId);
 
     /**
+     * Find {@link GameMap} by given {@code mapName} otherwise will create a new one with given mapName.
+     *
+     * @param mapName map name to find
+     * @return {@link GameMap} with given {@code mapId}
+     * @since 0.8.3
+     */
+    GameMap getOrCreateMap(String mapName);
+
+    /**
      * Find optional {@link GameMap} by given {@code mapId}.
      *
      * @param mapId id to find
@@ -79,8 +89,10 @@ public interface StarSystemAPI extends API.Singleton {
      * @return {@link GameMap} with given {@code mapId}
      * @throws MapNotFoundException if map was not found
      */
-    @Deprecated(since = "0.7.0")
-    GameMap getById(int mapId) throws MapNotFoundException;
+    @Deprecated(since = "0.7.0", forRemoval = true)
+    default GameMap getById(int mapId) throws MapNotFoundException {
+        return findMap(mapId).orElseThrow(() -> new StarSystemAPI.MapNotFoundException(mapId));
+    }
 
     /**
      * Find {@link GameMap} by given {@code mapId} otherwise will create a new one with given mapId.
@@ -88,8 +100,10 @@ public interface StarSystemAPI extends API.Singleton {
      * @param mapId to find
      * @return {@link GameMap} with given {@code mapId}
      */
-    @Deprecated(since = "0.7.0")
-    GameMap getOrCreateMapById(int mapId);
+    @Deprecated(since = "0.7.0", forRemoval = true)
+    default GameMap getOrCreateMapById(int mapId) {
+        return getOrCreateMap(mapId);
+    }
 
     /**
      * Find {@link GameMap} by given {@code mapName}.
@@ -99,8 +113,10 @@ public interface StarSystemAPI extends API.Singleton {
      * @return {@link GameMap} with given {@code mapName}
      * @throws MapNotFoundException if map was not found
      */
-    @Deprecated(since = "0.7.0")
-    GameMap getByName(@NotNull String mapName) throws MapNotFoundException;
+    @Deprecated(since = "0.7.0", forRemoval = true)
+    default GameMap getByName(@NotNull String mapName) throws MapNotFoundException {
+        return findMap(mapName).orElseThrow(() -> new StarSystemAPI.MapNotFoundException(mapName));
+    }
 
     /**
      * Pathfinding through maps towards a goal, this returns the portal
@@ -113,9 +129,9 @@ public interface StarSystemAPI extends API.Singleton {
      */
     Portal findNext(@NotNull GameMap targetMap);
 
-    @Deprecated(since = "0.7.0")
+    @Deprecated(since = "0.7.0", forRemoval = true)
     class MapNotFoundException extends Exception {
-        public static final long serialVersionUID = 1L;
+        private static final long serialVersionUID = 1L;
 
         public MapNotFoundException(int mapId) {
             super("Map with id " + mapId + " was not found");
@@ -126,6 +142,7 @@ public interface StarSystemAPI extends API.Singleton {
         }
     }
 
+    @Getter
     class MapChangeEvent implements Event {
         private final GameMap previous;
         private final GameMap next;
@@ -135,12 +152,5 @@ public interface StarSystemAPI extends API.Singleton {
             this.next = next;
         }
 
-        public GameMap getPrevious() {
-            return previous;
-        }
-
-        public GameMap getNext() {
-            return next;
-        }
     }
 }
