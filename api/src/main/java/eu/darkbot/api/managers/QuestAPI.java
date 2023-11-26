@@ -31,7 +31,7 @@ public interface QuestAPI extends API.Singleton {
      * @return Returns a list of current quests, only has data when QuestGiver is
      *         opened
      */
-    @Nullable List<QuestListItem> getCurrestQuests();
+    @Nullable List<? extends QuestListItem> getCurrestQuests();
 
     /**
      * @return Returns true if the quest giver is open
@@ -83,12 +83,12 @@ public interface QuestAPI extends API.Singleton {
         /**
          * @return List of requirements for completion
          */
-        List<Requirement> getRequirements();
+        List<? extends Requirement> getRequirements();
 
         /**
          * @return List of rewards to be obtained by completing the quest
          */
-        List<Reward> getRewards();
+        List<? extends Reward> getRewards();
     }
 
     /**
@@ -183,7 +183,7 @@ public interface QuestAPI extends API.Singleton {
         /**
          * @return Returns the list of requirements that the requirement itself may have
          */
-        List<Requirement> getRequirements();
+        List<? extends Requirement> getRequirements();
 
         /**
          * @return Returns whether the requirements can be realised or not.
