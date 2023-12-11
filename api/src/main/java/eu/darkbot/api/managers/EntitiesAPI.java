@@ -6,6 +6,7 @@ import eu.darkbot.api.game.entities.Barrier;
 import eu.darkbot.api.game.entities.BattleStation;
 import eu.darkbot.api.game.entities.Box;
 import eu.darkbot.api.game.entities.Entity;
+import eu.darkbot.api.game.entities.FakeEntity;
 import eu.darkbot.api.game.entities.Mine;
 import eu.darkbot.api.game.entities.Mist;
 import eu.darkbot.api.game.entities.Npc;
@@ -18,6 +19,7 @@ import eu.darkbot.api.game.entities.Ship;
 import eu.darkbot.api.game.entities.SpaceBall;
 import eu.darkbot.api.game.entities.StaticEntity;
 import eu.darkbot.api.game.entities.Station;
+import eu.darkbot.api.game.other.Location;
 import eu.darkbot.api.game.other.Obstacle;
 import org.jetbrains.annotations.UnmodifiableView;
 
@@ -163,6 +165,16 @@ public interface EntitiesAPI extends API.Singleton {
      */
     @UnmodifiableView
     Collection<? extends Entity> getAll();
+
+    /**
+     * Creating a fake mine on a map that will be counted by pathfinder
+     */
+    FakeEntity.FakeMine createFakeMine(int typeId, Location loc, long removeDistance, long keepAlive);
+
+    /**
+     * Creating a fake box on a map
+     */
+    FakeEntity.FakeBox createFakeBox(String boxName, Location loc, long removeDistance, long keepAlive, boolean removeIfAttemptSelect);
 
     /**
      * Base entity event triggered whenever any entity is added or removed.
