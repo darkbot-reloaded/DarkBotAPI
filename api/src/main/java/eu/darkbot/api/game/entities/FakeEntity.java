@@ -14,7 +14,7 @@ public interface FakeEntity extends Entity {
     }
 
     /**
-     * Set timeout lifetime of a fake object in ms, -1 - disable timer
+     * Set timeout lifetime of a fake object in ms
      */
     void setTimeout(long keepAlive);
 
