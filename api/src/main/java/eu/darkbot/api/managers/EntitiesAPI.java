@@ -177,6 +177,11 @@ public interface EntitiesAPI extends API.Singleton {
     FakeEntity.FakeBox createFakeBox(String boxName, Location loc, long removeDistance, long keepAlive, boolean removeIfAttemptSelect);
 
     /**
+     * Creating a fake NPC on a map
+     */
+    FakeEntity.FakeShip createFakeNpc(String npcName, Location loc, long removeDistance, long keepAlive, boolean removeIfAttemptSelect);
+
+    /**
      * Base entity event triggered whenever any entity is added or removed.
      * To listen only for creation or removal, use the more specific events:
      *
