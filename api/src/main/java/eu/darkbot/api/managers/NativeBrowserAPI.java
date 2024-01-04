@@ -9,7 +9,7 @@ import java.net.URI;
 /**
  * API which let you open links in native browser supported by DarkBot
  */
-@ApiStatus.AvailableSince("0.8.2")
+@ApiStatus.AvailableSince("0.8.4")
 public interface NativeBrowserAPI extends API.Singleton {
 
     boolean isSupported();
