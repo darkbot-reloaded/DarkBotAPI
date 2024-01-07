@@ -23,6 +23,7 @@ public class PortalJumper {
 
     protected Timer nextTravelMove = Timer.get();
     protected Timer tryingToJumpSince = Timer.get(90_000);
+    protected Timer lastJumpAttempt = Timer.get(2_500);
 
     @Inject
     public PortalJumper(BotAPI bot, MovementAPI movement, GroupAPI group) {
@@ -74,6 +75,8 @@ public class PortalJumper {
 
         if (minGroupSize > 0 && (!group.hasGroup() || group.getSize() < minGroupSize))
             return;
+
+        if (lastJumpAttempt.activate()) tryingToJumpSince.activate();
 
         movement.jumpPortal(target);
 
