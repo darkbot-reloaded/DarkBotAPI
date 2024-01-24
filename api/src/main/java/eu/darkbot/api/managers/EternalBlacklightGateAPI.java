@@ -44,7 +44,7 @@ public interface EternalBlacklightGateAPI extends API.Singleton {
 
     /**
      * Selects provided boosters, booster have to be an instance from {@link #getBoosterOptions()}!<br>
-     * Call this method every tick if {@link #getBoosterPoints()} > 0
+     * Call this method every tick, method checks internally {@link #getBoosterPoints()}
      *
      * @param booster the booster to select from {@link #getBoosterOptions()}
      * @return true if is in process of the selection and {@link #getBoosterPoints()} > 0, false otherwise
