@@ -39,7 +39,7 @@ public interface Movable extends Entity {
      * Comparing with {@link Double#MIN_VALUE} means that angle was never updated.
      * <br>Value is in the range of -<i>pi</i> to <i>pi</i>
      *
-     * @return angle based on current position and destination, is rotated by 50% compared to {@link LocationInfo#getAngle()}
+     * @return angle based on current position and destination, is rotated by 180° compared to {@link LocationInfo#getAngle()}
      */
     double getDestinationAngle();
 
