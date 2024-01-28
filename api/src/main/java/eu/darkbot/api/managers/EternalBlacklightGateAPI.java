@@ -7,8 +7,6 @@ import java.util.Locale;
 
 /**
  * Provides access to data for the eternal blacklight galaxy gate in-game.
- *
- * TODO: include methods to accept the boosters
  * TODO: add a generic interface for both eternal gate APIs extended by both
  */
 public interface EternalBlacklightGateAPI extends API.Singleton {
