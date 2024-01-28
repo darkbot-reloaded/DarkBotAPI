@@ -11,8 +11,16 @@ import eu.darkbot.api.API;
  * @deprecated Plugins should not rely on modifying memory to access functions, and should use other APIs instead.
  */
 @Deprecated
-@SuppressWarnings("PMD.TooManyMethods")
+@SuppressWarnings({"PMD.TooManyMethods", "PMD.ExcessivePublicCount"})
 public interface MemoryAPI extends API.Singleton {
+    long NULL = 0;
+    long ATOM_KIND = 0b111L;
+    long ATOM_MASK = ~ATOM_KIND;
+
+    /**
+     * String used as fallback for {@link #readString(long)} when returned value is null.
+     */
+    String FALLBACK_STRING = "ERROR";
 
     /**
      * Reads signed integer value from memory.
@@ -21,6 +29,22 @@ public interface MemoryAPI extends API.Singleton {
      * @return signed integer value
      */
     int readInt(long address);
+
+    default int readInt(long address, int o1) {
+        return readInt(address + o1);
+    }
+
+    default int readInt(long address, int o1, int o2) {
+        return readInt(resolve(address, o1) + o2);
+    }
+
+    default int readInt(long address,  int o1, int o2, int o3) {
+        return readInt(resolve(address, o1, o2) + o3);
+    }
+
+    default int readInt(long address, int o1, int o2, int o3, int o4) {
+        return readInt(resolve(address, o1, o2, o3) + o4);
+    }
 
     default int readInt(long address, int... offsets) {
         int i = 0;
@@ -39,12 +63,48 @@ public interface MemoryAPI extends API.Singleton {
      */
     long readLong(long address);
 
+    default long readLong(long address, int o1) {
+        return readLong(address + o1);
+    }
+
+    default long readLong(long address, int o1, int o2) {
+        return readLong(resolve(address, o1) + o2);
+    }
+
+    default long readLong(long address,  int o1, int o2, int o3) {
+        return readLong(resolve(address, o1, o2) + o3);
+    }
+
+    default long readLong(long address, int o1, int o2, int o3, int o4) {
+        return readLong(resolve(address, o1, o2, o3) + o4);
+    }
+
     default long readLong(long address, int... offsets) {
         for (int offset : offsets) {
             address = readLong(address + offset);
         }
 
         return address;
+    }
+
+    default long readAtom(long address) {
+        return readLong(address) & ATOM_MASK;
+    }
+
+    default long readAtom(long address, int o1) {
+        return readAtom(address + o1);
+    }
+
+    default long readAtom(long address, int o1, int o2) {
+        return readAtom(readAtom(address, o1) + o2) & ATOM_MASK;
+    }
+
+    default long readAtom(long address,  int o1, int o2, int o3) {
+        return readAtom(readAtom(address, o1, o2) + o3) & ATOM_MASK;
+    }
+
+    default long readAtom(long address, int o1, int o2, int o3, int o4) {
+        return readAtom(readAtom(address, o1, o2, o3) + o4) & ATOM_MASK;
     }
 
     /**
@@ -54,6 +114,22 @@ public interface MemoryAPI extends API.Singleton {
      * @return double value
      */
     double readDouble(long address);
+
+    default double readDouble(long address, int o1) {
+        return readDouble(address + o1);
+    }
+
+    default double readDouble(long address, int o1, int o2) {
+        return readDouble(resolve(address, o1) + o2);
+    }
+
+    default double readDouble(long address,  int o1, int o2, int o3) {
+        return readDouble(resolve(address, o1, o2) + o3);
+    }
+
+    default double readDouble(long address, int o1, int o2, int o3, int o4) {
+        return readDouble(resolve(address, o1, o2, o3) + o4);
+    }
 
     default double readDouble(long address, int... offsets) {
         int i = 0;
@@ -72,6 +148,22 @@ public interface MemoryAPI extends API.Singleton {
      */
     boolean readBoolean(long address);
 
+    default boolean readBoolean(long address, int o1) {
+        return readBoolean(address + o1);
+    }
+
+    default boolean readBoolean(long address, int o1, int o2) {
+        return readBoolean(resolve(address, o1) + o2);
+    }
+
+    default boolean readBoolean(long address,  int o1, int o2, int o3) {
+        return readBoolean(resolve(address, o1, o2) + o3);
+    }
+
+    default boolean readBoolean(long address, int o1, int o2, int o3, int o4) {
+        return readBoolean(resolve(address, o1, o2, o3) + o4);
+    }
+
     default boolean readBoolean(long address, int... offsets) {
         int i = 0;
         for (; i < offsets.length - 1; i++) {
@@ -85,9 +177,27 @@ public interface MemoryAPI extends API.Singleton {
      * Reads String from memory.
      *
      * @param address to read
-     * @return the string from memory if present, null otherwise
+     * @return the string from memory if present, {@link #FALLBACK_STRING} otherwise
      */
-    String readString(long address);
+    default String readString(long address) {
+        return readString(address, FALLBACK_STRING);
+    }
+
+    default String readString(long address, int o1) {
+        return readString(resolve(address, o1));
+    }
+
+    default String readString(long address, int o1, int o2) {
+        return readString(resolve(address, o1, o2));
+    }
+
+    default String readString(long address,  int o1, int o2, int o3) {
+        return readString(resolve(address, o1, o2, o3));
+    }
+
+    default String readString(long address, int o1, int o2, int o3, int o4) {
+        return readString(resolve(address, o1, o2, o3, o4));
+    }
 
     default String readString(long address, int... offsets) {
         return readString(readLong(address, offsets));
@@ -95,18 +205,49 @@ public interface MemoryAPI extends API.Singleton {
 
     /**
      * Reads {@link String} from memory.
+     * Retruns fallback if memory read failed, empty string is valid!
      *
      * @param address  to read from
-     * @param fallback to return in case of null/empty result
+     * @param fallback to return in case of invalid memory read
      * @return string from memory if present, fallback otherwise
      */
-    default String readString(long address, String fallback) {
-        String value = readString(address);
-        return value == null || value.isEmpty() ? fallback : value;
+    String readString(long address, String fallback);
+
+    default String readString(long address, String fallback, int o1) {
+        return readString(resolve(address, o1), fallback);
     }
+
+    default String readString(long address, String fallback, int o1, int o2) {
+        return readString(resolve(address, o1, o2), fallback);
+    }
+
+    default String readString(long address, String fallback,  int o1, int o2, int o3) {
+        return readString(resolve(address, o1, o2, o3), fallback);
+    }
+
+    default String readString(long address, String fallback, int o1, int o2, int o3, int o4) {
+        return readString(resolve(address, o1, o2, o3, o4), fallback);
+    }
+
 
     default String readString(long address, String fallback, int... offsets) {
         return readString(readLong(address, offsets), fallback);
+    }
+
+    default long resolve(long address, int o1) {
+        return readLong(address + o1);
+    }
+
+    default long resolve(long address, int o1, int o2) {
+        return readLong(resolve(address, o1) + o2);
+    }
+
+    default long resolve(long address, int o1, int o2, int o3) {
+        return readLong(resolve(address, o1, o2) + o3);
+    }
+
+    default long resolve(long address, int o1, int o2, int o3, int o4) {
+        return readLong(resolve(address, o1, o2, o3) + o4);
     }
 
     /**
