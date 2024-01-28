@@ -29,6 +29,7 @@ public interface Movable extends Entity {
 
     /**
      * Reads in-game angle which is, where entity looks at, not where it flies to.
+     * <br>Value is in the range of <i>pi</i> to <i>2pi</i>
      *
      * @return angle of the {@link Movable} in-game as radians.
      */
@@ -36,8 +37,9 @@ public interface Movable extends Entity {
 
     /**
      * Comparing with {@link Double#MIN_VALUE} means that angle was never updated.
+     * <br>Value is in the range of -<i>pi</i> to <i>pi</i>
      *
-     * @return angle based on current position and destination
+     * @return angle based on current position and destination, is rotated by 180° compared to {@link LocationInfo#getAngle()}
      */
     double getDestinationAngle();
 
