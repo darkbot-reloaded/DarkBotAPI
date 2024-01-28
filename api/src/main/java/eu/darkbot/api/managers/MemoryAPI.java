@@ -35,15 +35,15 @@ public interface MemoryAPI extends API.Singleton {
     }
 
     default int readInt(long address, int o1, int o2) {
-        return readInt(resolve(address, o1) + o2);
+        return readInt(readLong(address, o1) + o2);
     }
 
     default int readInt(long address,  int o1, int o2, int o3) {
-        return readInt(resolve(address, o1, o2) + o3);
+        return readInt(readLong(address, o1, o2) + o3);
     }
 
     default int readInt(long address, int o1, int o2, int o3, int o4) {
-        return readInt(resolve(address, o1, o2, o3) + o4);
+        return readInt(readLong(address, o1, o2, o3) + o4);
     }
 
     default int readInt(long address, int... offsets) {
@@ -68,15 +68,15 @@ public interface MemoryAPI extends API.Singleton {
     }
 
     default long readLong(long address, int o1, int o2) {
-        return readLong(resolve(address, o1) + o2);
+        return readLong(readLong(address, o1) + o2);
     }
 
     default long readLong(long address,  int o1, int o2, int o3) {
-        return readLong(resolve(address, o1, o2) + o3);
+        return readLong(readLong(address, o1, o2) + o3);
     }
 
     default long readLong(long address, int o1, int o2, int o3, int o4) {
-        return readLong(resolve(address, o1, o2, o3) + o4);
+        return readLong(readLong(address, o1, o2, o3) + o4);
     }
 
     default long readLong(long address, int... offsets) {
@@ -120,15 +120,15 @@ public interface MemoryAPI extends API.Singleton {
     }
 
     default double readDouble(long address, int o1, int o2) {
-        return readDouble(resolve(address, o1) + o2);
+        return readDouble(readLong(address, o1) + o2);
     }
 
     default double readDouble(long address,  int o1, int o2, int o3) {
-        return readDouble(resolve(address, o1, o2) + o3);
+        return readDouble(readLong(address, o1, o2) + o3);
     }
 
     default double readDouble(long address, int o1, int o2, int o3, int o4) {
-        return readDouble(resolve(address, o1, o2, o3) + o4);
+        return readDouble(readLong(address, o1, o2, o3) + o4);
     }
 
     default double readDouble(long address, int... offsets) {
@@ -153,15 +153,15 @@ public interface MemoryAPI extends API.Singleton {
     }
 
     default boolean readBoolean(long address, int o1, int o2) {
-        return readBoolean(resolve(address, o1) + o2);
+        return readBoolean(readLong(address, o1) + o2);
     }
 
     default boolean readBoolean(long address,  int o1, int o2, int o3) {
-        return readBoolean(resolve(address, o1, o2) + o3);
+        return readBoolean(readLong(address, o1, o2) + o3);
     }
 
     default boolean readBoolean(long address, int o1, int o2, int o3, int o4) {
-        return readBoolean(resolve(address, o1, o2, o3) + o4);
+        return readBoolean(readLong(address, o1, o2, o3) + o4);
     }
 
     default boolean readBoolean(long address, int... offsets) {
@@ -184,19 +184,19 @@ public interface MemoryAPI extends API.Singleton {
     }
 
     default String readString(long address, int o1) {
-        return readString(resolve(address, o1));
+        return readString(readLong(address, o1));
     }
 
     default String readString(long address, int o1, int o2) {
-        return readString(resolve(address, o1, o2));
+        return readString(readLong(address, o1, o2));
     }
 
     default String readString(long address,  int o1, int o2, int o3) {
-        return readString(resolve(address, o1, o2, o3));
+        return readString(readLong(address, o1, o2, o3));
     }
 
     default String readString(long address, int o1, int o2, int o3, int o4) {
-        return readString(resolve(address, o1, o2, o3, o4));
+        return readString(readLong(address, o1, o2, o3, o4));
     }
 
     default String readString(long address, int... offsets) {
@@ -214,40 +214,23 @@ public interface MemoryAPI extends API.Singleton {
     String readString(long address, String fallback);
 
     default String readString(long address, String fallback, int o1) {
-        return readString(resolve(address, o1), fallback);
+        return readString(readLong(address, o1), fallback);
     }
 
     default String readString(long address, String fallback, int o1, int o2) {
-        return readString(resolve(address, o1, o2), fallback);
+        return readString(readLong(address, o1, o2), fallback);
     }
 
     default String readString(long address, String fallback,  int o1, int o2, int o3) {
-        return readString(resolve(address, o1, o2, o3), fallback);
+        return readString(readLong(address, o1, o2, o3), fallback);
     }
 
     default String readString(long address, String fallback, int o1, int o2, int o3, int o4) {
-        return readString(resolve(address, o1, o2, o3, o4), fallback);
+        return readString(readLong(address, o1, o2, o3, o4), fallback);
     }
-
 
     default String readString(long address, String fallback, int... offsets) {
         return readString(readLong(address, offsets), fallback);
-    }
-
-    default long resolve(long address, int o1) {
-        return readLong(address + o1);
-    }
-
-    default long resolve(long address, int o1, int o2) {
-        return readLong(resolve(address, o1) + o2);
-    }
-
-    default long resolve(long address, int o1, int o2, int o3) {
-        return readLong(resolve(address, o1, o2) + o3);
-    }
-
-    default long resolve(long address, int o1, int o2, int o3, int o4) {
-        return readLong(resolve(address, o1, o2, o3) + o4);
     }
 
     /**
