@@ -3,14 +3,17 @@ package eu.darkbot.api.managers;
 import eu.darkbot.api.API;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Provides access to data for the eternal blacklight galaxy gate in-game.
- *
- * TODO: include methods to accept the boosters
  * TODO: add a generic interface for both eternal gate APIs extended by both
  */
 public interface EternalBlacklightGateAPI extends API.Singleton {
+    /**
+     * @return true if EBG event is enabled, false otherwise
+     */
+    boolean isEventEnabled();
     /**
      * Making the gate appear on the map requires the use of one CPU (acts as a key).
      *
@@ -38,6 +41,15 @@ public interface EternalBlacklightGateAPI extends API.Singleton {
     int getFurthestWave();
 
     /**
+     * Selects provided boosters, booster have to be an instance from {@link #getBoosterOptions()}!<br>
+     * Call this method every tick, method checks internally {@link #getBoosterPoints()}
+     *
+     * @param booster the booster to select from {@link #getBoosterOptions()}
+     * @return true if is in process of the selection and {@link #getBoosterPoints()} > 0, false otherwise
+     */
+    boolean selectBooster(Booster booster);
+
+    /**
      * The list of currently active boosters affecting the
      * ship if inside the eternal blacklight galaxy gate.
      *
@@ -56,6 +68,9 @@ public interface EternalBlacklightGateAPI extends API.Singleton {
      */
     List<? extends Booster> getBoosterOptions();
 
+    UserRank getOwnRank();
+    List<? extends UserRank> getLeaderboard();
+
     /**
      * Booster for eternal black light
      */
@@ -71,5 +86,43 @@ public interface EternalBlacklightGateAPI extends API.Singleton {
          * @return Booster category id
          */
         String getCategory();
+
+        /**
+         * @return {@link Category} of the booster
+         */
+        Category getCategoryType();
+    }
+
+    interface UserRank {
+        int getRank();
+        int getWave();
+
+        String getUsername();
+        String getUpdateTimeText();
+    }
+
+    enum Category {
+        ABILITY_COOLDOWN_TIME,
+        DAMAGE,
+        DAMAGE_LASER,
+        DAMAGE_ROCKETS,
+        HITCHANCE_LASER,
+        HITPOINTS,
+        SHIELD,
+        SPEED;
+
+        private final String categoryName;
+
+        Category() {
+            this.categoryName = name().toLowerCase(Locale.ROOT);
+        }
+
+        public static Category of(String category) {
+            for (Category value : values()) {
+                if (value.categoryName.equals(category))
+                    return value;
+            }
+            return null;
+        }
     }
 }

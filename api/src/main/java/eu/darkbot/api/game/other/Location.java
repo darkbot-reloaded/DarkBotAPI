@@ -2,7 +2,7 @@ package eu.darkbot.api.game.other;
 
 import org.jetbrains.annotations.NotNull;
 
-public interface Location extends Locatable, Point {
+public interface Location extends Locatable {
 
     /**
      * Creates new instance of {@link Location} with given parameters.
@@ -12,6 +12,10 @@ public interface Location extends Locatable, Point {
      */
     static Location of(double x, double y) {
         return new LocationImpl(x, y);
+    }
+
+    static Location of(Locatable locatable) {
+        return of(locatable.getX(), locatable.getY());
     }
 
     /**
@@ -32,7 +36,7 @@ public interface Location extends Locatable, Point {
      * @return a new {@link Location} object with same coordinates as current
      */
     default Location copy() {
-        return Location.of(this.getX(), this.getY());
+        return Location.of(this);
     }
 
     /**
@@ -70,6 +74,10 @@ public interface Location extends Locatable, Point {
     default Location toAngle(@NotNull Locatable center, double angle, double radius) {
         return setTo(center.getX() - Math.cos(angle) * radius,
                 center.getY() - Math.sin(angle) * radius);
+    }
+
+    default Location toAngle(double angle, double radius) {
+        return toAngle(this, angle, radius);
     }
 
     class LocationImpl implements Location {
