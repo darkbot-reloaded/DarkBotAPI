@@ -69,6 +69,7 @@ public interface SelectableItem {
         EMAA_20,
         SBL_100;
 
+        private static final Laser[] VALUES = values();
         private static final String PREFIX = "ammunition_laser_";
         private final String id;
         private final boolean cooldown;
@@ -92,7 +93,7 @@ public interface SelectableItem {
         }
 
         public static Laser of(String laserId) {
-            for (Laser laser : values()) {
+            for (Laser laser : VALUES) {
                 if (laser.getId().equals(laserId))
                     return laser;
             }
@@ -137,6 +138,7 @@ public interface SelectableItem {
         AGT_500,
         RC_100(true);
 
+        private static final Rocket[] VALUES = values();
         private static final String PREFIX = "ammunition_rocket_",
                 PREFIX_SPECIAL = "ammunition_specialammo_";
         private final String id;
@@ -152,7 +154,7 @@ public interface SelectableItem {
         }
 
         public static Rocket of(String rocketId) {
-            for (Rocket rocket : values()) {
+            for (Rocket rocket : VALUES) {
                 if (rocket.getId().equals(rocketId))
                     return rocket;
             }
@@ -706,6 +708,7 @@ public interface SelectableItem {
          */
         X2(null);
 
+        private static final Formation[] VALUES = values();
         private static final int X2_FORMATION_ID = 42;
 
         private static final String PREFIX = "drone_formation_";
@@ -735,12 +738,12 @@ public interface SelectableItem {
 
         public static Formation of(int formationId) {
             if (formationId == X2_FORMATION_ID) return X2;
-            if (formationId < 0 || formationId >= values().length) return STANDARD;
-            return values()[formationId];
+            if (formationId < 0 || formationId >= VALUES.length) return STANDARD;
+            return VALUES[formationId];
         }
 
         public static Formation of(String id) {
-            for (Formation formation : values()) {
+            for (Formation formation : VALUES) {
                 if (formation.getId().equals(id))
                     return formation;
             }

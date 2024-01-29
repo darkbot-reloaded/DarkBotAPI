@@ -20,16 +20,18 @@ public enum ItemCategory {
     DRONE_FORMATIONS,
     PET;
 
-    public String getId() {
-        return name().toLowerCase(Locale.ROOT);
-    }
+    private static final ItemCategory[] VALUES = values();
 
     public static ItemCategory of(String categoryId) {
-        for (ItemCategory itemCategory : values()) {
+        for (ItemCategory itemCategory : VALUES) {
             if (itemCategory.getId().equals(categoryId))
-                    return itemCategory;
+                return itemCategory;
         }
 
         return null;
+    }
+
+    public String getId() {
+        return name().toLowerCase(Locale.ROOT);
     }
 }

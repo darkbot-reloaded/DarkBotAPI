@@ -47,9 +47,11 @@ public interface EntityInfo {
         VRU,
         SATURN;
 
+        private static final Faction[] VALUES = values();
+
         public static Faction of(int factionId) {
-            if (factionId >= values().length || factionId < 0) return NONE;
-            return values()[factionId];
+            if (factionId >= VALUES.length || factionId < 0) return NONE;
+            return VALUES[factionId];
         }
     }
 
@@ -62,9 +64,11 @@ public interface EntityInfo {
         NOT_ATTACK_PACT,
         WAR;
 
+        private static final Diplomacy[] VALUES = values();
+
         public static Diplomacy of(int diplomacyId) {
-            if (diplomacyId >= values().length || diplomacyId < 0) return NONE;
-            return values()[diplomacyId];
+            if (diplomacyId >= VALUES.length || diplomacyId < 0) return NONE;
+            return VALUES[diplomacyId];
         }
     }
 }

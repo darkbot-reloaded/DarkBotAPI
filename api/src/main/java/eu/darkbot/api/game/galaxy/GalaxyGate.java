@@ -2,6 +2,8 @@ package eu.darkbot.api.game.galaxy;
 
 import eu.darkbot.api.game.other.GameMap;
 import eu.darkbot.api.managers.StarSystemAPI;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -9,6 +11,8 @@ import java.util.stream.Collectors;
 /**
  * Every GalaxyGate available in spinner.
  */
+@Getter
+@AllArgsConstructor
 public enum GalaxyGate {
     ALPHA  ("alpha",    1,  "α"),
     BETA   ("beta",     2,  "β"),
@@ -22,18 +26,14 @@ public enum GalaxyGate {
     HADES  ("hades",    13, "Hades"),
     KUIPER ("streuner", 19, "ς");
 
+    private static final GalaxyGate[] VALUES = values();
+
     private final String name;
     private final int id;
     private final String mapSymbol;
 
-    GalaxyGate(String name, int id, String mapSymbol) {
-        this.name = name;
-        this.id = id;
-        this.mapSymbol = mapSymbol;
-    }
-
     public static GalaxyGate of(String gateName) {
-        for (GalaxyGate gate : values()) {
+        for (GalaxyGate gate : VALUES) {
             if (gate.name.equals(gateName))
                 return gate;
         }
@@ -42,24 +42,12 @@ public enum GalaxyGate {
     }
 
     public static GalaxyGate of(int gateId) {
-        for (GalaxyGate gate : values()) {
+        for (GalaxyGate gate : VALUES) {
             if (gate.id == gateId)
                 return gate;
         }
 
         return null;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getMapSymbol() {
-        return mapSymbol;
     }
 
     public boolean isInGate(GameMap map) {

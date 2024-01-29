@@ -1,5 +1,6 @@
 package eu.darkbot.api.game.other;
 
+import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 
 public interface Location extends Locatable {
@@ -80,6 +81,7 @@ public interface Location extends Locatable {
         return toAngle(this, angle, radius);
     }
 
+    @ToString
     class LocationImpl implements Location {
         public double x;
         public double y;
@@ -120,12 +122,9 @@ public interface Location extends Locatable {
 
         @Override
         public int hashCode() {
-            int result;
-            long temp;
-            temp = Double.doubleToLongBits(getX());
-            result = (int) (temp ^ (temp >>> 32));
-            temp = Double.doubleToLongBits(getY());
-            result = 31 * result + (int) (temp ^ (temp >>> 32));
+            int result = super.hashCode();
+            result = 31 * result + Double.hashCode(getX());
+            result = 31 * result + Double.hashCode(getX());
             return result;
         }
     }
