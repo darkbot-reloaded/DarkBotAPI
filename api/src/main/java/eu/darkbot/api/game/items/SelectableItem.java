@@ -483,7 +483,11 @@ public interface SelectableItem {
         /** PVP immunity CPU, pve exclusive */
         PA_X(CpuType.CPU),
         /** Opens the Astral galaxy gate */
-        ASTRAL_CPU(CpuType.PORTAL);
+        ASTRAL_CPU(CpuType.PORTAL),
+        /** Spawns NPC near you*/
+        BOUNTIFUL_ALIEN_CPU_EASY(CpuType.SPECIAL_AMMO),
+        /** Spawns NPC near you*/
+        BOUNTIFUL_ALIEN_CPU_NORMAL(CpuType.SPECIAL_AMMO);
 
         private final String id;
 
@@ -624,6 +628,8 @@ public interface SelectableItem {
         ORCUS_ASSIMILATE,
         HOLO_SELF_REVERSAL,
         HOLO_ENEMY_REVERSAL,
+        BASILISK_NOXIOUS_NEBULA,
+        BASILISK_HEIGHTENED_VALOUR,
         SOLACE_PLUS_NANO_CLUSTER_REPAIRER_PLUS("ability_solace-plus_nano-cluster-repairer-plus"),
         CITADEL_PLUS_PRISMATIC_ENDURANCE("ability_citadel-plus_prismatic-endurance"),
         LIBERATOR_PLUS_SELF_REPAIR("ability_liberator-plus_self-repair"),
@@ -638,7 +644,8 @@ public interface SelectableItem {
         SPEARHEAD_PLUS_JAMX_CREED("ability_spearhead-plus_jamx-creed"),
         SPEARHEAD_PLUS_NEUTRALIZING_MARKER("ability_spearhead-plus_neutralizing-marker"),
         TARTARUS_PLUS_SPEED_BOOST("ability_tartarus-plus_speed-boost-plus"),
-        TARTARUS_PLUS_RAPID_FIRE("ability_tartarus-plus_rapid-fire-plus");
+        TARTARUS_PLUS_RAPID_FIRE("ability_tartarus-plus_rapid-fire-plus"),
+        SPECTRUM_PLUS_PRISMATIC_REFLECTING("ability_spectrum-plus_prismatic-reflecting");
 
         private static final String PREFIX = "ability_";
         private final String id;
