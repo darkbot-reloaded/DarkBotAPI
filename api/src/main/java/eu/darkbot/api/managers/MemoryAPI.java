@@ -11,7 +11,7 @@ import eu.darkbot.api.API;
  * @deprecated Plugins should not rely on modifying memory to access functions, and should use other APIs instead.
  */
 @Deprecated
-@SuppressWarnings("ALL")
+@SuppressWarnings({"PMD.TooManyMethods", "PMD.ExcessivePublicCount", "unused"})
 public interface MemoryAPI extends API.Singleton {
     long NULL = 0;
     long ATOM_KIND = 0b111L;
