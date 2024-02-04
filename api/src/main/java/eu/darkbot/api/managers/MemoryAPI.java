@@ -11,7 +11,7 @@ import eu.darkbot.api.API;
  * @deprecated Plugins should not rely on modifying memory to access functions, and should use other APIs instead.
  */
 @Deprecated
-@SuppressWarnings({"PMD.TooManyMethods", "PMD.ExcessivePublicCount"})
+@SuppressWarnings("ALL")
 public interface MemoryAPI extends API.Singleton {
     long NULL = 0;
     long ATOM_KIND = 0b111L;
@@ -38,7 +38,7 @@ public interface MemoryAPI extends API.Singleton {
         return readInt(readLong(address, o1) + o2);
     }
 
-    default int readInt(long address,  int o1, int o2, int o3) {
+    default int readInt(long address, int o1, int o2, int o3) {
         return readInt(readLong(address, o1, o2) + o3);
     }
 
@@ -71,12 +71,16 @@ public interface MemoryAPI extends API.Singleton {
         return readLong(readLong(address, o1) + o2);
     }
 
-    default long readLong(long address,  int o1, int o2, int o3) {
+    default long readLong(long address, int o1, int o2, int o3) {
         return readLong(readLong(address, o1, o2) + o3);
     }
 
     default long readLong(long address, int o1, int o2, int o3, int o4) {
         return readLong(readLong(address, o1, o2, o3) + o4);
+    }
+
+    default long readLong(long address, int o1, int o2, int o3, int o4, int o5) {
+        return readLong(readLong(address, o1, o2, o3, o4) + o5);
     }
 
     default long readLong(long address, int... offsets) {
@@ -99,7 +103,7 @@ public interface MemoryAPI extends API.Singleton {
         return readAtom(readAtom(address, o1) + o2) & ATOM_MASK;
     }
 
-    default long readAtom(long address,  int o1, int o2, int o3) {
+    default long readAtom(long address, int o1, int o2, int o3) {
         return readAtom(readAtom(address, o1, o2) + o3) & ATOM_MASK;
     }
 
@@ -123,7 +127,7 @@ public interface MemoryAPI extends API.Singleton {
         return readDouble(readLong(address, o1) + o2);
     }
 
-    default double readDouble(long address,  int o1, int o2, int o3) {
+    default double readDouble(long address, int o1, int o2, int o3) {
         return readDouble(readLong(address, o1, o2) + o3);
     }
 
@@ -156,7 +160,7 @@ public interface MemoryAPI extends API.Singleton {
         return readBoolean(readLong(address, o1) + o2);
     }
 
-    default boolean readBoolean(long address,  int o1, int o2, int o3) {
+    default boolean readBoolean(long address, int o1, int o2, int o3) {
         return readBoolean(readLong(address, o1, o2) + o3);
     }
 
@@ -191,7 +195,7 @@ public interface MemoryAPI extends API.Singleton {
         return readString(readLong(address, o1, o2));
     }
 
-    default String readString(long address,  int o1, int o2, int o3) {
+    default String readString(long address, int o1, int o2, int o3) {
         return readString(readLong(address, o1, o2, o3));
     }
 
@@ -199,8 +203,8 @@ public interface MemoryAPI extends API.Singleton {
         return readString(readLong(address, o1, o2, o3, o4));
     }
 
-    default String readString(long address, int... offsets) {
-        return readString(readLong(address, offsets));
+    default String readString(long address, int o1, int o2, int o3, int o4, int o5) {
+        return readString(readLong(address, o1, o2, o3, o4, o5));
     }
 
     /**
@@ -221,7 +225,7 @@ public interface MemoryAPI extends API.Singleton {
         return readString(readLong(address, o1, o2), fallback);
     }
 
-    default String readString(long address, String fallback,  int o1, int o2, int o3) {
+    default String readString(long address, String fallback, int o1, int o2, int o3) {
         return readString(readLong(address, o1, o2, o3), fallback);
     }
 
@@ -229,8 +233,8 @@ public interface MemoryAPI extends API.Singleton {
         return readString(readLong(address, o1, o2, o3, o4), fallback);
     }
 
-    default String readString(long address, String fallback, int... offsets) {
-        return readString(readLong(address, offsets), fallback);
+    default String readString(long address, String fallback, int o1, int o2, int o3, int o4, int o5) {
+        return readString(readLong(address, o1, o2, o3, o4, o5), fallback);
     }
 
     /**
