@@ -50,14 +50,14 @@ public interface OreAPI extends API.Singleton {
     boolean showTrade(boolean show, @Nullable("if show == false") Station.Refinery tradePoint);
 
     /**
-     * Retrieves the upgrade information associated with {@link UpgradePlace}
+     * Retrieves the upgrade information associated with {@link UpgradeSlot}
      * Upgrade amount may be not always up-to-date
      *
-     * @param upgradePlace the place from where should read the amount of upgraded ore
-     * @return pair of {@link Ore} and upgrade amount of {@link UpgradePlace}, or null when found nothing
+     * @param upgradeSlot the place from where should read the amount of upgraded ore
+     * @return pair of {@link Ore} and upgrade amount of {@link UpgradeSlot}, or null when found nothing
      */
-    @ApiStatus.AvailableSince("0.9.1")
-    @Nullable Upgrade getUpgrade(@NotNull UpgradePlace upgradePlace);
+    @ApiStatus.AvailableSince("0.9.2")
+    @Nullable Upgrade getUpgrade(@NotNull OreAPI.UpgradeSlot upgradeSlot);
 
     /**
      * Types of Ores visible in refinery window
@@ -105,15 +105,15 @@ public interface OreAPI extends API.Singleton {
         int getAmount();
     }
 
-    enum UpgradePlace {
+    enum UpgradeSlot {
         LASERS,
         ROCKETS,
         SPEED_GENERATORS,
         SHIELD_GENERATORS;
 
-        private static final UpgradePlace[] VALUES = values();
+        private static final UpgradeSlot[] VALUES = values();
 
-        public static UpgradePlace of(int idx) {
+        public static UpgradeSlot of(int idx) {
             if (idx >= VALUES.length || idx < 0) return null;
             return VALUES[idx];
         }

@@ -122,9 +122,8 @@ public interface Location extends Locatable {
 
         @Override
         public int hashCode() {
-            int result = super.hashCode();
-            result = 31 * result + Double.hashCode(getX());
-            result = 31 * result + Double.hashCode(getX());
+            int result = Double.hashCode(getX());
+            result = 31 * result + Double.hashCode(getY());
             return result;
         }
     }
