@@ -1,6 +1,8 @@
 package eu.darkbot.api.managers;
 
 import eu.darkbot.api.API;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -89,49 +91,48 @@ public interface BoosterAPI extends API.Singleton {
     /**
      * The types of all boosters available
      */
+    @AllArgsConstructor
     enum Type {
-        ABILITY_COOLDOWN_TIME   ("CD"    , new Color(0xFFC000)),
-        DAMAGE                  ("DMG"   , new Color(0xFD0400)),
-        EXPERIENCE_POINTS       ("EXP"   , new Color(0xF77800)),
-        HITPOINTS               ("HP"    , new Color(0x049104)),
-        HONOUR_POINTS           ("HON"   , new Color(0xFF8080)),
-        REPAIR                  ("REP"   , new Color(0xA93DE4)),
-        COLLECT_RESOURCES       ("RES"   , new Color(0xEAD215)),
-        SHIELD                  ("SHD"   , new Color(0x69EBFF)),
-        SHIELD_REGENERATION     ("SHDR"  , new Color(0x3B64BD)),
-        AMOUNT                  ("AMT"   , new Color(0xFFCC00)),
-        COLLECT_RESOURCES_NEWBIE("DBL"   , new Color(0xFFF3CF)),
-        CHANCE                  ("CHN"   , new Color(0xFFD100)),
-        EVENT_AMOUNT            ("EVT AM", new Color(0x05B6E3)),
-        EVENT_CHANCE            ("EVT CH", new Color(0x00C6EE)),
-        SPECIAL_AMOUNT          ("SP AM" , new Color(0xFFFFFF)),
-        UNKNOWN                 ("?"     , new Color(0x808080)) {
+        ABILITY_COOLDOWN_TIME   ("CD"     , new Color(0xFFC000)),
+        DAMAGE                  ("DMG"    , new Color(0xFD0400)),
+        DAMAGE_PVP              ("DMG PVP", new Color(0xBD0805)),
+        DAMAGE_FACTIONS         ("DMG FAC", new Color(0x941311)),
+        DAMAGE_NPC              ("DMG NPC", new Color(0x7E0807)),
+        EXPERIENCE_POINTS       ("EXP"    , new Color(0xF77800)),
+        HITPOINTS               ("HP"     , new Color(0x049104)),
+        HONOUR_POINTS           ("HON"    , new Color(0xFF8080)),
+        REPAIR                  ("REP"    , new Color(0xA93DE4)),
+        COLLECT_RESOURCES       ("RES"    , new Color(0xEAD215)),
+        SHIELD                  ("SHD"    , new Color(0x69EBFF)),
+        SHIELD_REGENERATION     ("SHDR"   , new Color(0x3B64BD)),
+        AMOUNT                  ("AMT"    , new Color(0xFFCC00)),
+        COLLECT_RESOURCES_NEWBIE("DBL"    , new Color(0xFFF3CF)),
+        CHANCE                  ("CHN"    , new Color(0xFFD100)),
+        EVENT_AMOUNT            ("EVT AM" , new Color(0x05B6E3)),
+        EVENT_CHANCE            ("EVT CH" , new Color(0x00C6EE)),
+        SPECIAL_AMOUNT          ("SP AM"  , new Color(0xFFFFFF)),
+        PET_EXP_BOOSTER         ("PET XP" , new Color(0xF77800)),
+        LASER_HIT_CHANCE        ("LAS HC" , new Color(0x0F6164)),
+        ROCKET_HIT_CHANCE       ("ROC HC" , new Color(0x0B7E81)),
+        UNKNOWN                 ("?"      , new Color(0x808080)) {
             @Override
-            String getSmall(String category) {
+            public String getSmall(String category) {
                 return Arrays.stream(category.split("_"))
                         .map(str -> str.length() <= 3 ? str : str.substring(0, 3))
                         .collect(Collectors.joining(" "));
             }
         };
+        private static final Type[] VALUES = values();
 
         private final String small;
-        private final Color color;
+        @Getter private final Color color;
 
-        Type(String small, Color color) {
-            this.small = small;
-            this.color = color;
-        }
-
-        String getSmall(String category) {
+        public String getSmall(String category) {
             return this.small;
         }
 
-        Color getColor() {
-            return this.color;
-        }
-
-        private static Type of(String category) {
-            for (Type cat : Type.values()) {
+        public static Type of(String category) {
+            for (Type cat : VALUES) {
                 if (cat.name().equalsIgnoreCase(category)) return cat;
             }
             return UNKNOWN;

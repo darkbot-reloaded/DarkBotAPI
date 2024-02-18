@@ -279,8 +279,10 @@ public interface QuestAPI extends API.Singleton {
             LOGIN_CONDITION,
             DURING_EVENT;
 
+            private static final RequirementType[] VALUES = values();
+
             private static RequirementType of(String name) {
-                for (RequirementType type : RequirementType.values()) {
+                for (RequirementType type : VALUES) {
                     if (type.name().equalsIgnoreCase(name))
                         return type;
                 }

@@ -1,5 +1,6 @@
 package eu.darkbot.api.game.other;
 
+
 /**
  * Represents in-game {@link eu.darkbot.api.game.entities.Entity}'s location point.
  */
@@ -29,15 +30,15 @@ public interface LocationInfo extends Location {
      * Calculates future destination of entity in time(ms), if entity isn't moving returns copy of location.
      */
     default Location destinationInTime(long time) {
-        Location copy = copy();
-        double speed = getSpeed();
+        Location result = copy();
 
+        double speed = getSpeed();
         if (speed > 0) {
             double move = speed * time;
             double angle = getAngle();
-            copy.plus(Math.cos(angle) * move, Math.sin(angle) * move);
+            result.plus(Math.cos(angle) * move, Math.sin(angle) * move);
         }
-        return copy;
+        return result;
     }
 
     /**

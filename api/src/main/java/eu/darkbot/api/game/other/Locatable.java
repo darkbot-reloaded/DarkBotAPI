@@ -1,5 +1,6 @@
 package eu.darkbot.api.game.other;
 
+import lombok.Value;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -48,6 +49,17 @@ public interface Locatable {
     }
 
     /**
+     * Checks if the x and y coordinates of this {@link Locatable} are the same as another {@link Locatable}.
+     *
+     * @param other the other {@link Locatable} to compare with
+     * @return true if the x and y coordinates are the same, false otherwise
+     */
+    default boolean isSameAs(Locatable other) {
+        return Double.compare(getX(), other.getX()) == 0
+                && Double.compare(getY(), other.getY()) == 0;
+    }
+
+    /**
      * @param ox x coordinate of the other location
      * @param oy y coordinate of the other location
      * @return the distance between current {@link Location} and other.
@@ -76,43 +88,9 @@ public interface Locatable {
     }
 
     //Locatable implementation
+    @Value
     class LocatableImpl implements Locatable {
-        private final double x;
-        private final double y;
-
-        public LocatableImpl(double x, double y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        @Override
-        public double getX() {
-            return x;
-        }
-
-        @Override
-        public double getY() {
-            return y;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof Locatable)) return false;
-
-            Locatable locatable = (Locatable) o;
-            return locatable.getX() == getX() && locatable.getY() == getY();
-        }
-
-        @Override
-        public int hashCode() {
-            int result;
-            long temp;
-            temp = Double.doubleToLongBits(getX());
-            result = (int) (temp ^ (temp >>> 32));
-            temp = Double.doubleToLongBits(getY());
-            result = 31 * result + (int) (temp ^ (temp >>> 32));
-            return result;
-        }
+        double x;
+        double y;
     }
 }

@@ -22,6 +22,7 @@ public interface Mine extends Entity {
      */
     enum Type {
         UNKNOWN,
+        // 18 -> bigger standard mine? with full pilot bio?
         STANDARD(1, 10, 11, 18),
         EMP(2),
         ANTI_SHIELD(3),
@@ -35,6 +36,8 @@ public interface Mine extends Entity {
         ICE(21), // ICE_MINE
         AGATUS_LURE(26);
 
+        private static final Type[] VALUES = values();
+
         private final int[] ids;
 
         Type(int... ids) {
@@ -42,7 +45,7 @@ public interface Mine extends Entity {
         }
 
         private static Type of(int typeId) {
-            for (Type type : values()) {
+            for (Type type : VALUES) {
                 for (int id : type.ids) {
                     if (id == typeId) return type;
                 }

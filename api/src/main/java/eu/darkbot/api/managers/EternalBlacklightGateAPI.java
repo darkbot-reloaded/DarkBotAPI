@@ -111,6 +111,8 @@ public interface EternalBlacklightGateAPI extends API.Singleton {
         SHIELD,
         SPEED;
 
+        private static final Category[] VALUES = values();
+
         private final String categoryName;
 
         Category() {
@@ -118,7 +120,7 @@ public interface EternalBlacklightGateAPI extends API.Singleton {
         }
 
         public static Category of(String category) {
-            for (Category value : values()) {
+            for (Category value : VALUES) {
                 if (value.categoryName.equals(category))
                     return value;
             }
