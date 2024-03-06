@@ -40,6 +40,11 @@ public interface DispatchAPI extends API.Singleton {
     Retriever getSelectedRetriever();
 
     /**
+     * @return The {@code List} of all available gates
+     */
+    List<? extends Gate> getAvailableGates();
+
+    /**
      * In game retriever representation, includes name, in game name, type, duration &amp; slot id
      */
     interface Retriever {
@@ -93,6 +98,51 @@ public interface DispatchAPI extends API.Singleton {
          * @return instant cost for the retriever
          */
         Cost getInstantCost();
+    }
+
+    /**
+     * In game gate representation, includes name, in game name, type, duration &amp; slot id
+     */
+    interface Gate {
+        /**
+         * @return status
+         */
+        int getStatus();
+
+        /**
+         * @return gate Id
+         */
+        int getGateId();
+
+        /**
+         * @return the time to build
+         */
+        int getDuration();
+
+        /**
+         * @return the time left to complete
+         */
+        double getTimeLeft();
+
+        /**
+         * @return gate dispatch id
+         */
+        String getDispatchId();
+
+        /**
+         * @return in game variable name
+         */
+        String getIconId();
+
+        /**
+         * @return game name
+         */
+        String getName();
+
+        /**
+         * @return cost for the gate
+         */
+        Cost getCost();
     }
 
     /**
