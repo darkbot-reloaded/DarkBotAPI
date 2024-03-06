@@ -1,8 +1,13 @@
 package eu.darkbot.api.game.other;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
-public interface Location extends Locatable, Point {
+public interface Location extends Locatable {
 
     /**
      * Creates new instance of {@link Location} with given parameters.
@@ -12,6 +17,10 @@ public interface Location extends Locatable, Point {
      */
     static Location of(double x, double y) {
         return new LocationImpl(x, y);
+    }
+
+    static Location of(Locatable locatable) {
+        return of(locatable.getX(), locatable.getY());
     }
 
     /**
@@ -32,7 +41,7 @@ public interface Location extends Locatable, Point {
      * @return a new {@link Location} object with same coordinates as current
      */
     default Location copy() {
-        return Location.of(this.getX(), this.getY());
+        return Location.of(this);
     }
 
     /**
@@ -72,27 +81,17 @@ public interface Location extends Locatable, Point {
                 center.getY() - Math.sin(angle) * radius);
     }
 
+    default Location toAngle(double angle, double radius) {
+        return toAngle(this, angle, radius);
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Setter(AccessLevel.NONE)
     class LocationImpl implements Location {
         public double x;
         public double y;
-
-        public LocationImpl() {
-        }
-
-        public LocationImpl(double x, double y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        @Override
-        public double getX() {
-            return x;
-        }
-
-        @Override
-        public double getY() {
-            return y;
-        }
 
         @Override
         public Location setTo(double x, double y) {
@@ -100,26 +99,5 @@ public interface Location extends Locatable, Point {
             this.y = y;
             return this;
         }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof Locatable)) return false;
-
-            Locatable locatable = (Locatable) o;
-            return locatable.getX() == getX() && locatable.getY() == getY();
-        }
-
-        @Override
-        public int hashCode() {
-            int result;
-            long temp;
-            temp = Double.doubleToLongBits(getX());
-            result = (int) (temp ^ (temp >>> 32));
-            temp = Double.doubleToLongBits(getY());
-            result = 31 * result + (int) (temp ^ (temp >>> 32));
-            return result;
-        }
     }
-
 }

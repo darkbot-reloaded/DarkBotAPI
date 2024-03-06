@@ -12,7 +12,7 @@ import java.util.Optional;
 
 /**
  * Provides a way to inspect &amp; interact with plugins &amp; features loaded on the bot.
- *
+ * <p>
  * Generally this API shouldn't be of much use except when requiring one
  * feature to have a dependency on another.
  */
@@ -36,6 +36,15 @@ public interface ExtensionsAPI extends API.Singleton {
      * @return {@link FeatureInfo} of given feature.
      */
     @Nullable <T> FeatureInfo<T> getFeatureInfo(@NotNull Class<T> feature);
+
+    /**
+     * If you have the actual class, prefer the above method.
+     * Use this only to reference features that you can't have as a dependency to use the actual class.
+     *
+     * @param featureId canonical name of the class for the feature
+     * @return {@link FeatureInfo} of given feature.
+     */
+    @Nullable FeatureInfo<?> getFeatureInfo(@NotNull String featureId);
 
     /**
      * Get what class loader has been used to load the plugin

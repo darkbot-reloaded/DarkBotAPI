@@ -1,6 +1,8 @@
 package eu.darkbot.api.managers;
 
 import eu.darkbot.api.API;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
 public interface FrozenLabyrinthAPI extends API.Singleton {
@@ -98,6 +100,8 @@ public interface FrozenLabyrinthAPI extends API.Singleton {
     /**
      * One of the 4 zones in the maps
      */
+    @Getter
+    @AllArgsConstructor
     enum Zone {
         TOP_LEFT("TL"),
         TOP_RIGHT("TR"),
@@ -105,19 +109,12 @@ public interface FrozenLabyrinthAPI extends API.Singleton {
         BOTTOM_RIGHT("BR");
 
         private final String tinyName;
-
-        Zone(String tinyName) {
-            this.tinyName = tinyName;
-        }
-
-        public String getTinyName() {
-            return tinyName;
-        }
     }
 
     /**
      * The quadrant or zone for a specific map
      */
+    @Getter
     class MapZone {
         private final LabMap map;
         private final Zone zone;
@@ -130,14 +127,6 @@ public interface FrozenLabyrinthAPI extends API.Singleton {
         private MapZone(LabMap map, Zone zone) {
             this.map = map;
             this.zone = zone;
-        }
-
-        public LabMap getMap() {
-            return map;
-        }
-
-        public Zone getZone() {
-            return zone;
         }
 
         @Override

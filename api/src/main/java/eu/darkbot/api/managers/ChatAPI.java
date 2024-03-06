@@ -72,15 +72,14 @@ public interface ChatAPI extends API.Singleton {
          *         The exact format of the message isn't guaranteed and shouldn't be relied upon.
          */
         default String formatted() {
-            int clan = MAX_CLAN_LEN.updateAndGet(curr -> Math.max(curr, getClanTag().length() + 2));
-            int name = MAX_NAME_LEN.updateAndGet(curr -> Math.max(curr, getUsername().length()));
+            int clan = MAX_CLAN_LEN.updateAndGet(curr -> Math.min(10, Math.max(curr, getClanTag().length() + 2)));
+            int name = MAX_NAME_LEN.updateAndGet(curr -> Math.min(40, Math.max(curr, getUsername().length())));
 
-            return String.format("[%s] |%-7s, %-9s| %-" + clan + "s%-" + name + "s: %s" + System.lineSeparator(),
+            return String.format("[%s] |%-7s, %-9s| %-" + (clan + name) + "s: %s" + System.lineSeparator(),
                     LocalDateTime.now().format(DATE_FORMAT),
                     getType(),
                     getUserId(),
-                    "[" + getClanTag() + "]",
-                    getUsername(),
+                    "[" + getClanTag() + "]" + getUsername(),
                     getMessage());
         }
     }
