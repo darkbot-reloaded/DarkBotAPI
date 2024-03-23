@@ -7,6 +7,9 @@ import org.jetbrains.annotations.Nullable;
 import eu.darkbot.api.API;
 import eu.darkbot.api.managers.QuestAPI.Quest;
 
+/**
+ * Provides information about the current seasson pass In-game
+ */
 public interface SeassonPassAPI extends API.Singleton {
 
     /**
@@ -71,9 +74,13 @@ public interface SeassonPassAPI extends API.Singleton {
         /**
          * @return Returns if the quest is blocked
          */
-        boolean goldLocked();
+        boolean isGoldLocked();
 
-        boolean oncePreMission();
+        /**
+         * 
+         * @return ??
+         */
+        boolean isOncePreMission();
 
         /**
          * @return Returns the value of the status
