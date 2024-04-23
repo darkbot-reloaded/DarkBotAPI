@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import eu.darkbot.api.API;
 import eu.darkbot.api.managers.QuestAPI.Quest;
+import lombok.AllArgsConstructor;
 
 /**
  * Provides information about the current seasson pass In-game
@@ -41,6 +42,11 @@ public interface SeassonPassAPI extends API.Singleton {
      * @return Returns a list of the seasson quests
      */
     @Nullable List<? extends SeassonPassQuest> getSeassonQuests();
+
+    /**
+     * @return Returns a list of the all quests
+     */
+    @Nullable List<? extends SeassonPassQuest> getAllQuests();
 
     /**
      * CurrentLevelProgress Object
@@ -99,6 +105,7 @@ public interface SeassonPassAPI extends API.Singleton {
             return QuestStatus.of(getStatus());
         }
 
+        @AllArgsConstructor
         enum QuestStatus {
             UNKNOWN(-1),
             COMPLETED(0),
@@ -106,10 +113,6 @@ public interface SeassonPassAPI extends API.Singleton {
             NOT_COMPLETED(3);
 
             private final int value;
-
-            QuestStatus(int value) {
-                this.value = value;
-            }
 
             private static final QuestStatus[] VALUES = values();
 
