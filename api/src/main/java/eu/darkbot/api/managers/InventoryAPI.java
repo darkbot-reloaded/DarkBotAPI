@@ -1,12 +1,14 @@
 package eu.darkbot.api.managers;
 
+import eu.darkbot.api.API;
+
 import java.util.List;
 
 /**
  * Provides Inventory Data
  */
 
-public interface InventoryAPI {
+public interface InventoryAPI extends API.Singleton {
     /**
      * @return list of items in inventory
      */
