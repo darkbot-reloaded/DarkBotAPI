@@ -1,12 +1,11 @@
 package eu.darkbot.api.managers;
 
-import java.util.List;
-
-import org.jetbrains.annotations.Nullable;
-
 import eu.darkbot.api.API;
 import eu.darkbot.api.managers.QuestAPI.Quest;
 import lombok.AllArgsConstructor;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 /**
  * Provides information about the current seasson pass In-game
@@ -83,7 +82,7 @@ public interface SeassonPassAPI extends API.Singleton {
         boolean isGoldLocked();
 
         /**
-         * 
+         *
          * @return ??
          */
         boolean isOncePreMission();
