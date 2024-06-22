@@ -107,9 +107,12 @@ public interface SeassonPassAPI extends API.Singleton {
         @AllArgsConstructor
         enum QuestStatus {
             UNKNOWN(-1),
-            COMPLETED(0),
-            GOLD_LOCKED(2),
-            NOT_COMPLETED(3);
+            INCOMPLETE(0),
+            INCOMPLETE_UNLOCKED(1),
+            INCOMPLETE_LOCKED(2),
+            COMPLETED(3),
+            COMPLETED_UNLOCKED(4),
+            COMPLETED_LOCKED(5);
 
             private final int value;
 
