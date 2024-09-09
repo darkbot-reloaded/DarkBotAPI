@@ -84,14 +84,20 @@ public class SafetyFinder implements Listener {
     public enum Escaping {
         ENEMY, SIGHT, REPAIR, REFRESH, WAITING, NONE;
         boolean canUse(SafetyInfo safety) {
-            if (safety.getType() == SafetyInfo.Type.CBS) {
-                BattleStation.Hull cbs = ((BattleStation.Hull) safety.getEntity().orElse(null));
-                if (cbs == null) return false;
-                // Ignore enemy CBS, and if set to ALLY only, ignore empty meteorites (hull = 0)
-                if (cbs.getEntityInfo().isEnemy() || (cbs.getHullId() == 0 && safety.getCbsMode() == SafetyInfo.CbsMode.ALLY)) return false;
-            }
-            return safety.getRunMode().ordinal() <= this.ordinal();
+
+            if(safety.getType() != SafetyInfo.Type.CBS)
+                return safety.getRunMode().ordinal() <= this.ordinal();
+
+            if(!(safety.getEntity().orElse(null) instanceof BattleStation.Hull))
+                return false;
+
+            BattleStation.Hull hull = (BattleStation.Hull) safety.getEntity().get();
+
+            // Ignore enemy CBS, and if set to ALLY only, ignore empty meteorites (hull = 0)
+            return !(hull.getEntityInfo().isEnemy() ||
+                    (hull.getHullId() == 0 && safety.getCbsMode() == SafetyInfo.CbsMode.ALLY));
         }
+
         boolean shouldJump(SafetyInfo safety) {
             SafetyInfo.JumpMode jm = safety.getJumpMode();
             if (safety.getType() != SafetyInfo.Type.PORTAL || jm == null) return false;
