@@ -41,7 +41,7 @@ public interface PetGearSupplier extends PrioritizedSupplier<PetGear> {
                 .min(Comparator.comparing(this::getNpcPickPriority, Comparator.nullsLast(Comparator.naturalOrder())))
                 .orElse(null);
 
-        return pick != null && getNpcPickPriority(pick) != null ? pick : null;
+        return pick == null || getNpcPickPriority(pick) == null ? null : pick;
     }
 
     /**
