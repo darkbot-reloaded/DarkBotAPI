@@ -3,6 +3,7 @@ package eu.darkbot.api.config.types;
 import eu.darkbot.api.events.Event;
 import eu.darkbot.api.game.entities.Npc;
 import eu.darkbot.api.game.items.SelectableItem;
+import eu.darkbot.util.StringUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.jetbrains.annotations.UnmodifiableView;
@@ -84,6 +85,18 @@ public interface NpcInfo {
      * @param mapId map id where npc can be seen
      */
     void addMapId(int mapId);
+
+    /**
+     * @return the name of the NPC
+     */
+    String getName();
+
+    /**
+     * @return a fuzzy version of the NPC's name, useful for matching similar names
+     */
+    default String getFuzzyName() {
+        return StringUtils.fuzzyNpcName(getName());
+    }
 
     /**
      * Event will be created only if new unknown npc appear in-game

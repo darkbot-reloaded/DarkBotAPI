@@ -167,6 +167,14 @@ public interface PetAPI extends Pet, API.Singleton {
      */
     interface LocatorPick {
         /**
+         * Retrieves the associated {@link NpcInfo} object for the locator pick, if available.
+         * This method returns {@code null} if the locator pick does not correspond to an NPC.
+         *
+         * @return An {@link NpcInfo} object representing the NPC associated with the locator pick, or {@code null} if not applicable.
+         */
+        @Nullable NpcInfo getNpcInfo();
+
+        /**
          * Retrieves the name of the locator pick of npc or ore
          *
          * @return A string representing the name of the locator pick.
