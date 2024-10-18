@@ -116,11 +116,11 @@ public interface ConfigAPI extends API.Singleton {
      * @throws IllegalArgumentException if the config path doesn't exist
      */
     default <T> @NotNull ConfigSetting<T> requireConfig(@NotNull ConfigSetting<?> root, String path) {
-        String[] paths = path.isEmpty() ? new String[]{} : path.split("\\.");
+        String[] paths = path.isEmpty() ? new String[]{} : path.split("(?<!\\\\)\\.");
         for (String s : paths) {
             boolean isParent = root instanceof ConfigSetting.Parent;
             if (isParent)
-                root = ((ConfigSetting.Parent<?>) root).getChildren().get(s);
+                root = ((ConfigSetting.Parent<?>) root).getChildren().get(s.replaceAll("\\\\.", "."));
 
             if (!isParent || root == null)
                 throw new IllegalArgumentException("Configuration not found: " + s + " in " + path);
