@@ -1,6 +1,7 @@
 package eu.darkbot.api.extensions;
 
 import eu.darkbot.api.utils.Version;
+import org.jetbrains.annotations.Nullable;
 
 import java.net.URL;
 
@@ -60,4 +61,8 @@ public interface PluginInfo extends IssueHandler {
      */
     URL getDownloadURL();
 
+    /**
+     * @return The {@link DescriptionBuilder} for this plugin
+     */
+    @Nullable DescriptionBuilder getDescriptionBuilder();
 }

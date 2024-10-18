@@ -3,11 +3,14 @@ package eu.darkbot.impl.managers;
 import eu.darkbot.api.PluginAPI;
 import eu.darkbot.api.events.EventHandler;
 import eu.darkbot.api.events.Listener;
+import eu.darkbot.api.extensions.DescriptionBuilder;
 import eu.darkbot.api.extensions.PluginInfo;
 import eu.darkbot.api.managers.ExtensionsAPI;
 import eu.darkbot.api.managers.I18nAPI;
+import lombok.Getter;
 import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,7 +34,9 @@ public class I18n implements I18nAPI, Listener {
     private final Map<PluginInfo, PropertyContainer> pluginProps = new HashMap<>();
     private final Map<String, MessageFormat> formatCache = new HashMap<>();
 
-    private Locale locale;
+    private final DescriptionBuilder defaultBuilder = new DescriptionBuilder.Default(this);
+
+    @Getter private Locale locale;
 
     public I18n(PluginAPI pluginAPI) {
         // Due to I18n being such an integral part, we cannot afford a direct dependency here.
@@ -45,10 +50,6 @@ public class I18n implements I18nAPI, Listener {
         this.locale = locale;
         reloadResources();
         formatCache.clear();
-    }
-
-    public Locale getLocale() {
-        return locale;
     }
 
     public void reloadResources() {
@@ -98,6 +99,12 @@ public class I18n implements I18nAPI, Listener {
         return res == null ? fallback : res;
     }
 
+    private DescriptionBuilder getDescriptionBuilder(@Nullable PluginInfo namespace) {
+        if (namespace == null) return defaultBuilder;
+        DescriptionBuilder descriptionBuilder = namespace.getDescriptionBuilder();
+        return descriptionBuilder == null ? defaultBuilder : descriptionBuilder;
+    }
+
     @Override
     public String get(PluginInfo namespace, @NotNull String key, Object... arguments) {
         return format(getInternal(namespace, key), arguments);
@@ -107,6 +114,16 @@ public class I18n implements I18nAPI, Listener {
     public String getOrDefault(PluginInfo namespace, String key, String fallback, Object... arguments) {
         String text = getOrDefaultInternal(namespace, key, fallback);
         return format(text, arguments);
+    }
+
+    @Override
+    public String getDescription(@Nullable PluginInfo namespace, @NotNull String key, @NotNull Object... arguments) {
+        return getDescriptionBuilder(namespace).getDescription(namespace, key, arguments);
+    }
+
+    @Override
+    public String getOrDefaultDescription(@Nullable PluginInfo namespace, @Nullable String key, @Nullable String fallback, @NotNull Object... arguments) {
+        return getDescriptionBuilder(namespace).getOrDefaultDescription(namespace, key, fallback, arguments);
     }
 
     private static class PropertyContainer {
