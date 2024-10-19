@@ -20,6 +20,7 @@ import eu.darkbot.api.game.entities.SpaceBall;
 import eu.darkbot.api.game.entities.StaticEntity;
 import eu.darkbot.api.game.entities.Station;
 import eu.darkbot.api.game.other.Obstacle;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.Collection;
@@ -168,6 +169,7 @@ public interface EntitiesAPI extends API.Singleton {
     /**
      * @return a builder to create fake entities
      */
+    @ApiStatus.AvailableSince("0.9.6")
     FakeEntity.Builder fakeEntityBuilder();
 
     /**
