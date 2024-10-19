@@ -138,6 +138,13 @@ public interface PetAPI extends Pet, API.Singleton {
     PetStat getStat(Stat stat);
 
     /**
+     * The available pet stats for search
+     */
+    enum Stat {
+        HP, SHIELD, FUEL, XP, HEAT
+    }
+
+    /**
      * Represents a stat in the pet, like health, shield, fuel, etc
      */
     interface PetStat {
@@ -153,10 +160,43 @@ public interface PetAPI extends Pet, API.Singleton {
     }
 
     /**
-     * The available pet stats for search
+     * Interface representing a locator pick of an NPC or ore.
+     * This interface provides methods to retrieve the name, fuzzy name, and ID of the locator pick.
+     * The name and fuzzy name are strings representing the name of the NPC or ore, with the fuzzy name being a more relaxed version that may include typos or variations.
+     * The ID is an integer representing the unique identifier of the locator pick, which can be used to reference the specific NPC or ore in the game.
      */
-    enum Stat {
-        HP, SHIELD, FUEL, XP, HEAT
+    interface LocatorPick {
+        /**
+         * Retrieves the associated {@link NpcInfo} object for the locator pick, if available.
+         * This method returns {@code null} if the locator pick does not correspond to an NPC.
+         *
+         * @return An {@link NpcInfo} object representing the NPC associated with the locator pick, or {@code null} if not applicable.
+         */
+        @Nullable NpcInfo getNpcInfo();
+
+        /**
+         * Retrieves the name of the locator pick of npc or ore
+         *
+         * @return A string representing the name of the locator pick.
+         */
+        String getName();
+
+        /**
+         * Retrieves the fuzzy name of the locator pick of npc or ore.
+         * The fuzzy name is a more relaxed version of the name, which may include typos or variations.
+         * This method is useful when the exact name of the npc or ore is not known, but a close match can still be found.
+         *
+         * @return A string representing the fuzzy name of the locator pick.
+         */
+        String getFuzzyName();
+
+        /**
+         * Retrieves the ID of the locator pick of npc or ore.
+         * This identifier can be used to reference the specific npc or ore in the game.
+         *
+         * @return An integer representing the unique ID of the locator pick.
+         */
+        int getId();
     }
 
     /**

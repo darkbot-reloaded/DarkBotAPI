@@ -1,11 +1,13 @@
 package eu.darkbot.api.game.enums;
 
 import eu.darkbot.api.utils.EquippableItem;
+import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents pet gears which can be used by {@link eu.darkbot.api.managers.PetAPI}
  */
+@AllArgsConstructor
 public enum PetGear implements EquippableItem {
     PASSIVE("Passive mode"),
     GUARD("Guard mode"),
@@ -29,26 +31,24 @@ public enum PetGear implements EquippableItem {
     HEAT_RELEASE("Heat Release Gear", Cooldown.HEAT_RELEASE),
     UNKNOWN("Unknown Gear");
 
+    private static final PetGear[] VALUES = values();
+
     private final String name;
-    private final Cooldown cooldown;
+    private final @Nullable Cooldown cooldown;
 
     PetGear(String name) {
         this(name, null);
     }
 
-    PetGear(String name, Cooldown cooldown) {
-        this.name = name;
-        this.cooldown = cooldown;
-    }
-
     /**
      * Get a gear by its ID
+     *
      * @param gearId the in-game id of the gear
      * @return The gear with the corresponding id, or null if not found
      */
     public static PetGear of(int gearId) {
-        if (gearId < 1 || gearId > values().length) return null;
-        return values()[gearId - 1];
+        if (gearId < 1 || gearId > VALUES.length) return null;
+        return VALUES[gearId - 1];
     }
 
     /**

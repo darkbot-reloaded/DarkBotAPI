@@ -8,6 +8,7 @@ import eu.darkbot.api.config.types.NpcInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -168,6 +169,24 @@ public interface ConfigAPI extends API.Singleton {
             return ((ConfigSetting.Parent<?>) setting).getChildren().keySet();
         return null;
     }
+
+    /**
+     * Gets a list of the available config profiles the user has
+     * @return a list with all the profiles
+     */
+    List<String> getConfigProfiles();
+
+    /**
+     * @return the currently running profile in the bot
+     */
+    String getCurrentProfile();
+
+    /**
+     * Sets the current running profile.
+     * Note there are no guarantees about it changing immediately, and may change on the next bot tick.
+     * @param profile The profile to switch to, if it exists
+     */
+    void setConfigProfile(String profile);
 
     /**
      * @deprecated Use {@link #getLegacy()}

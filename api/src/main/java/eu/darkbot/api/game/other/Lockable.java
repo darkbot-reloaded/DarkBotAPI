@@ -66,9 +66,11 @@ public interface Lockable extends Entity {
          */
         GRAY_DARK;
 
+        private static final Lock[] VALUES = values();
+
         public static Lock of(int lockId) {
-            if (lockId >= values().length || lockId < 0) return UNKNOWN;
-            return values()[lockId];
+            if (lockId >= VALUES.length || lockId < 0) return UNKNOWN;
+            return VALUES[lockId];
         }
     }
 

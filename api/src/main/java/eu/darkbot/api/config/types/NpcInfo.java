@@ -1,9 +1,15 @@
 package eu.darkbot.api.config.types;
 
+import eu.darkbot.api.events.Event;
 import eu.darkbot.api.game.entities.Npc;
 import eu.darkbot.api.game.items.SelectableItem;
+import eu.darkbot.util.StringUtils;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Predefined settings for {@link Npc} customized by user.
@@ -69,4 +75,36 @@ public interface NpcInfo {
      */
     void setExtraFlag(Enum<?> flag, boolean active);
 
+    /**
+     * @return {@link Set<Integer>} of maps where this type of npc was seen
+     */
+    @UnmodifiableView
+    Set<Integer> getMapIds();
+
+    /**
+     * @param mapId map id where npc can be seen
+     */
+    void addMapId(int mapId);
+
+    /**
+     * @return the name of the NPC
+     */
+    String getName();
+
+    /**
+     * @return a fuzzy version of the NPC's name, useful for matching similar names
+     */
+    default String getFuzzyName() {
+        return StringUtils.fuzzyNpcName(getName());
+    }
+
+    /**
+     * Event will be created only if new unknown npc appear in-game
+     */
+    @Getter
+    @AllArgsConstructor
+    class NpcInfoCreateEvent implements Event {
+        private final Npc npc;
+        private final NpcInfo npcInfo;
+    }
 }

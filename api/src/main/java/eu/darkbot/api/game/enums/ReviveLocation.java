@@ -13,6 +13,8 @@ public enum ReviveLocation {
     SPOT(3, 11),
     SPAWN_POINT(4, 7, 8, 10, 12);
 
+    private static final ReviveLocation[] VALUES = values();
+
     private final List<Integer> ids;
 
     ReviveLocation(Integer... ids) {
@@ -20,7 +22,7 @@ public enum ReviveLocation {
     }
 
     public static ReviveLocation of(int id) {
-        for (ReviveLocation loc : values()) {
+        for (ReviveLocation loc : VALUES) {
             if (loc.ids.contains(id))
                 return loc;
         }

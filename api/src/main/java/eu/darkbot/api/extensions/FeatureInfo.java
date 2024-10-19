@@ -1,5 +1,6 @@
 package eu.darkbot.api.extensions;
 
+import eu.darkbot.api.config.ConfigSetting;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -40,6 +41,11 @@ public interface FeatureInfo<T> extends IssueHandler {
      * @return The class of the feature
      */
     Class<T> getFeatureClass();
+
+    /**
+     * @return The config for this feature, if any
+     */
+    @Nullable ConfigSetting.Parent<?> getConfig();
 
     /**
      * @return The plugin this feature belongs to, or null for native feature

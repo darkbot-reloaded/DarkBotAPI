@@ -4,6 +4,7 @@ import eu.darkbot.api.API;
 import eu.darkbot.api.game.entities.Station;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,7 +17,7 @@ public interface OreAPI extends API.Singleton {
 
     /**
      * @param ore or to check
-     * @return amount of owned {@link Ore}
+     * @return amount of owned {@link Ore}, or -1 if unknown
      */
     int getAmount(@NotNull Ore ore);
 
@@ -49,6 +50,16 @@ public interface OreAPI extends API.Singleton {
     boolean showTrade(boolean show, @Nullable("if show == false") Station.Refinery tradePoint);
 
     /**
+     * Retrieves the upgrade information associated with {@link UpgradeSlot}
+     * Upgrade amount may be not always up-to-date
+     *
+     * @param upgradeSlot the place from where should read the amount of upgraded ore
+     * @return pair of {@link Ore} and upgrade amount of {@link UpgradeSlot}, or null when found nothing
+     */
+    @ApiStatus.AvailableSince("0.9.2")
+    @Nullable Upgrade getUpgrade(@NotNull OreAPI.UpgradeSlot upgradeSlot);
+
+    /**
      * Types of Ores visible in refinery window
      */
     @Getter
@@ -66,6 +77,8 @@ public interface OreAPI extends API.Singleton {
         // Must keep at the end, otherwise selling code leaves a gap for it.
         XENOMIT(3, false, false);
 
+        private static final Ore[] VALUES = values();
+
         private final int id;
         private final boolean upgradable;
         private final boolean sellable;
@@ -74,9 +87,35 @@ public interface OreAPI extends API.Singleton {
             this(id, upgradable, true);
         }
 
+        public static Ore of(int id) {
+            for (Ore ore : VALUES) {
+                if (ore.getId() == id)
+                    return ore;
+            }
+            return null;
+        }
+
         public String getName() {
             return name().toLowerCase(Locale.ROOT);
         }
+    }
 
+    interface Upgrade {
+        Ore getOre();
+        int getAmount();
+    }
+
+    enum UpgradeSlot {
+        LASERS,
+        ROCKETS,
+        SPEED_GENERATORS,
+        SHIELD_GENERATORS;
+
+        private static final UpgradeSlot[] VALUES = values();
+
+        public static UpgradeSlot of(int idx) {
+            if (idx >= VALUES.length || idx < 0) return null;
+            return VALUES[idx];
+        }
     }
 }

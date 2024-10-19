@@ -1,8 +1,11 @@
 package eu.darkbot.api.game.enums;
 
+import lombok.AllArgsConstructor;
+
 /**
  * In-game type of {@link eu.darkbot.api.game.entities.Portal}.
  */
+@AllArgsConstructor
 public enum PortalType {
     UNKNOWN(-1),
 
@@ -41,10 +44,21 @@ public enum PortalType {
     LOW_LEFT(77),
     HIGH_RIGHT(78);
 
+    private static final PortalType[] VALUES = values();
+
     private final int id;
 
-    PortalType(int id) {
-        this.id = id;
+    /**
+     * Get a portal type by its ID
+     *
+     * @param typeId the in-game id of the portal type
+     * @return The portal type with the corresponding id, or null if not found
+     */
+    public static PortalType of(int typeId) {
+        for (PortalType type : VALUES) {
+            if (type.id == typeId) return type;
+        }
+        return UNKNOWN;
     }
 
     /**
@@ -52,17 +66,5 @@ public enum PortalType {
      */
     public int getId() {
         return id;
-    }
-
-    /**
-     * Get a portal type by its ID
-     * @param typeId the in-game id of the portal type
-     * @return The portal type with the corresponding id, or null if not found
-     */
-    public static PortalType of(int typeId) {
-        for (PortalType type : values()) {
-            if (type.id == typeId) return type;
-        }
-        return UNKNOWN;
     }
 }

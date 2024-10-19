@@ -61,6 +61,8 @@ public interface BattleStation extends Obstacle, /*deprecated*/ Lockable {
             DAMAGE_BOOSTER("dama"),
             EXPERIENCE_BOOSTER("xp");
 
+            private static final Type[] VALUES = values();
+
             private final String id;
 
             Type(String id) {
@@ -72,7 +74,7 @@ public interface BattleStation extends Obstacle, /*deprecated*/ Lockable {
             }
 
             public static Type of(String moduleId) {
-                for (Type value : values()) {
+                for (Type value : VALUES) {
                     if (moduleId.contains(value.id))
                         return value;
                 }
