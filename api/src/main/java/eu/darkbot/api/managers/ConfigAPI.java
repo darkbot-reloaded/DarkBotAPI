@@ -177,6 +177,11 @@ public interface ConfigAPI extends API.Singleton {
     List<String> getConfigProfiles();
 
     /**
+     * @return the currently running profile in the bot
+     */
+    String getCurrentProfile();
+
+    /**
      * Sets the current running profile.
      * Note there are no guarantees about it changing immediately, and may change on the next bot tick.
      * @param profile The profile to switch to, if it exists
