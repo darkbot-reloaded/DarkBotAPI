@@ -19,7 +19,6 @@ import eu.darkbot.api.game.entities.Ship;
 import eu.darkbot.api.game.entities.SpaceBall;
 import eu.darkbot.api.game.entities.StaticEntity;
 import eu.darkbot.api.game.entities.Station;
-import eu.darkbot.api.game.other.Location;
 import eu.darkbot.api.game.other.Obstacle;
 import org.jetbrains.annotations.UnmodifiableView;
 
@@ -161,25 +160,15 @@ public interface EntitiesAPI extends API.Singleton {
      * <p>
      * For performance reasons it is not advised to use this method unless necessary.
      *
-     * @return A new collection with ALL of the entities provided by all the methods in this API, including unknown.
+     * @return A new collection with ALL the entities provided by all the methods in this API, including unknown.
      */
     @UnmodifiableView
     Collection<? extends Entity> getAll();
 
     /**
-     * Creating a fake mine on a map that will be counted by pathfinder
+     * @return a builder to create fake entities
      */
-    FakeEntity.FakeMine createFakeMine(int typeId, Location loc, long removeDistance, long keepAlive);
-
-    /**
-     * Creating a fake box on a map
-     */
-    FakeEntity.FakeBox createFakeBox(String boxName, Location loc, long removeDistance, long keepAlive, boolean removeIfAttemptSelect);
-
-    /**
-     * Creating a fake NPC on a map
-     */
-    FakeEntity.FakeShip createFakeNpc(String npcName, Location loc, long removeDistance, long keepAlive, boolean removeIfAttemptSelect);
+    FakeEntity.Builder fakeEntityBuilder();
 
     /**
      * Base entity event triggered whenever any entity is added or removed.
