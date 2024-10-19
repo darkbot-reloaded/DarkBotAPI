@@ -76,8 +76,8 @@ public interface FakeEntity extends Entity {
         FakeEntity.FakeNpc npc(NpcInfo npcInfo);
         FakeEntity.FakeNpc npc(String npcName);
 
-        FakeEntity.FakeNpc box(BoxInfo box);
-        FakeEntity.FakeNpc box(String boxName);
+        FakeEntity.FakeBox box(BoxInfo box);
+        FakeEntity.FakeBox box(String boxName);
 
         abstract class Impl implements Builder {
             private Long keepAlive;
@@ -109,11 +109,12 @@ public interface FakeEntity extends Entity {
                 return this;
             }
 
-            protected void apply(FakeEntity entity) {
+            protected <T extends FakeEntity> T apply(T entity) {
                 if (keepAlive != null) entity.setTimeout(keepAlive);
                 if (location != null) entity.setLocation(location);
                 if (removeDistance != null) entity.setRemoveDistance(removeDistance);
                 entity.setRemoveOnSelect(removeOnSelect);
+                return entity;
             }
         }
     }
