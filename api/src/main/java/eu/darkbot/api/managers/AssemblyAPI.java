@@ -66,6 +66,21 @@ public interface AssemblyAPI extends API.Singleton {
          * @return if the recipe is collectable
          */
         boolean isCollectable();
+
+        /**
+         * @return the visibility data of the recipe
+         */
+        String getVisibility();
+
+        /**
+         * @return the time left to complete recipe craft
+         */
+        int getCraftTimeLeft();
+
+        /**
+         * @return the time required to craft the recipe
+         */
+        int getCraftTimeRequired();
     }
 
     /**
@@ -106,6 +121,16 @@ public interface AssemblyAPI extends API.Singleton {
          * @return if the filter is applied
          */
         boolean isChecked();
+
+        /**
+         * @return the x offset location
+         */
+        int getX();
+
+        /**
+         * @return the y offset location
+         */
+        int getY();
     }
 
 }
