@@ -60,4 +60,9 @@ public interface PluginInfo extends IssueHandler {
      */
     URL getDownloadURL();
 
+    /**
+     * @return An array of all the defined feature ids
+     */
+    String[] getFeatureIds();
+
 }

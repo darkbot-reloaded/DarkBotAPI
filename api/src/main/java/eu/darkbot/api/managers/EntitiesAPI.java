@@ -6,6 +6,7 @@ import eu.darkbot.api.game.entities.Barrier;
 import eu.darkbot.api.game.entities.BattleStation;
 import eu.darkbot.api.game.entities.Box;
 import eu.darkbot.api.game.entities.Entity;
+import eu.darkbot.api.game.entities.FakeEntity;
 import eu.darkbot.api.game.entities.Mine;
 import eu.darkbot.api.game.entities.Mist;
 import eu.darkbot.api.game.entities.Npc;
@@ -19,6 +20,7 @@ import eu.darkbot.api.game.entities.SpaceBall;
 import eu.darkbot.api.game.entities.StaticEntity;
 import eu.darkbot.api.game.entities.Station;
 import eu.darkbot.api.game.other.Obstacle;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.Collection;
@@ -159,10 +161,16 @@ public interface EntitiesAPI extends API.Singleton {
      * <p>
      * For performance reasons it is not advised to use this method unless necessary.
      *
-     * @return A new collection with ALL of the entities provided by all the methods in this API, including unknown.
+     * @return A new collection with ALL the entities provided by all the methods in this API, including unknown.
      */
     @UnmodifiableView
     Collection<? extends Entity> getAll();
+
+    /**
+     * @return a builder to create fake entities
+     */
+    @ApiStatus.AvailableSince("0.9.6")
+    FakeEntity.Builder fakeEntityBuilder();
 
     /**
      * Base entity event triggered whenever any entity is added or removed.
