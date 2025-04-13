@@ -13,7 +13,7 @@ public interface BonusCalendarAPI extends API.Singleton {
     /**
      * @return The {@code List} of all rewards from rewards list
      */
-    List<? extends RewardList> getRewardList();
+    List<? extends Reward> getRewardList();
 
     /**
      * @return if reward is claimable for the day
@@ -24,7 +24,7 @@ public interface BonusCalendarAPI extends API.Singleton {
     /**
      * In game rewards loot representation, includes loot id, &amp; amount
      */
-    interface RewardList {
+    interface Reward {
 
         /**
          * @return in game variable name of reward
