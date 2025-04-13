@@ -49,6 +49,11 @@ public interface ShipWarpAPI extends API.Singleton{
         int getFavouriteIndex();
 
         /**
+         * @return the mapId of where ship is located
+         */
+        int getMapId();
+
+        /**
          * @return the ship type id
          */
         String getShipTypeId();
