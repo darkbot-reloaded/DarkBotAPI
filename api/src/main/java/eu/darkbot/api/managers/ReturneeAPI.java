@@ -17,12 +17,12 @@ public interface ReturneeAPI extends API.Singleton {
     /**
      * @return {@code List} of all Rewards for one time login claimable
      */
-    List<? extends LoginRewardList> getLoginRewardList();
+    List<? extends LoginReward> getLoginRewardList();
 
     /**
      * Provide access to one time Reward data in Retunee window containing loot id and amount of the item
      */
-    interface LoginRewardList {
+    interface LoginReward {
         String getLootId();
 
         double getAmount();
@@ -36,13 +36,13 @@ public interface ReturneeAPI extends API.Singleton {
     /**
      * @return {@code List} of all Daily calendar rewards
      */
-    List<? extends CalendarRewardList> getCalendarRewardList();
+    List<? extends CalendarReward> getCalendarRewardList();
 
     /**
      * Provide access to daily  calendar reward data in Retunee window containing
      *      loot id and amount of the item, and if claimed
      */
-    interface CalendarRewardList {
+    interface CalendarReward {
         String getLootId();
 
         int getAmount();
