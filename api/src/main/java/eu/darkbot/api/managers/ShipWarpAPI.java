@@ -11,8 +11,9 @@ public interface ShipWarpAPI extends API.Singleton {
 
     /**
      * Open's ship warp window to update proxy data
+     * @return true if done opening, false if more calls are required
      */
-    void updateShipList();
+    boolean updateShipList();
 
     /**
      * @return if Ship is near a station to warp for free
@@ -23,6 +24,26 @@ public interface ShipWarpAPI extends API.Singleton {
      * @return The {@code List} of all warp able ship that are favorite
      */
     List<? extends Ship> getShips();
+
+    /**
+     * Works towards selecting a ship for warp, may require multiple calls
+     * @param ship The ship to select for warping. Must be an instance obtained from {@link #getShips()}
+     * @return true if done, false if failed or more calls are required
+     */
+    boolean clickShip(Ship ship);
+
+    /**
+     * Works towards selecting a ship for warp, may require multiple calls
+     * @param index The index in {@link #getShips()} to warp to. Out of bounds return false.
+     * @return true if done, false if failed or more calls are required
+     */
+    boolean clickShip(int index);
+
+    /**
+     * Works towards warping to the selected ship, may require multiple calls
+     * @return true if done, false if more calls are required
+     */
+    boolean clickWarp();
 
     /**
      * In Game Ship representation to warp to
