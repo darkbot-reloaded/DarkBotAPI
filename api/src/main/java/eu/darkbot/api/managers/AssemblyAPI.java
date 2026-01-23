@@ -136,14 +136,19 @@ public interface AssemblyAPI extends API.Singleton {
         boolean isChecked();
 
         /**
-         * @return the x offset location
+         * @return position of x offset for filter
          */
         double getX();
 
         /**
-         * @return the y offset location
+         * @return position of y offset for filter
          */
         double getY();
+
+        /**
+         * @return returns if filter is valid
+         */
+        boolean isValid();
     }
 
 }
