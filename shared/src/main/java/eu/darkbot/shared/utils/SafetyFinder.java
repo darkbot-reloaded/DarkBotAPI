@@ -90,7 +90,9 @@ public class SafetyFinder implements Listener {
             if (safety.getType() == SafetyInfo.Type.CBS) {
                 return safety.getEntity()
                         .map(c -> c instanceof BattleStation.Hull ? (BattleStation.Hull) c : null)
-                        .map(cbs -> !(cbs.getEntityInfo().isEnemy() || (cbs.getHullId() == 0 && safety.getCbsMode() == SafetyInfo.CbsMode.ALLY)))
+                        .map(cbs -> !(safety.getRunMode() == SafetyInfo.RunMode.NEVER
+                                || cbs.getEntityInfo().isEnemy()
+                                || (cbs.getHullId() == 0 && safety.getCbsMode() == SafetyInfo.CbsMode.ALLY)))
                         .orElse(false);
             }
             return safety.getRunMode().ordinal() <= this.ordinal();
