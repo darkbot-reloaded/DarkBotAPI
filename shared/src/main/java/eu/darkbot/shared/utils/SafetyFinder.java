@@ -84,9 +84,6 @@ public class SafetyFinder implements Listener {
     public enum Escaping {
         ENEMY, SIGHT, REPAIR, REFRESH, WAITING, NONE;
         boolean canUse(SafetyInfo safety) {
-            if (safety.getRunMode() == SafetyInfo.RunMode.NEVER) {
-                return false;
-            }
             if (safety.getType() == SafetyInfo.Type.CBS) {
                 return safety.getEntity()
                         .map(c -> c instanceof BattleStation.Hull ? (BattleStation.Hull) c : null)
