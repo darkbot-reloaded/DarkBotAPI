@@ -340,7 +340,7 @@ public class SafetyFinder implements Listener {
                 || (movement.getDestination().distanceTo(safety) < safety.getRadius() && lastMoveTimer.isActive())) return;
 
         hero.setRunMode();
-        if (attacker.isAttacking()) {
+        if (attacker.isAttacking() && !(escape == Escaping.SIGHT && stopRunningNoSight.getValue())) {
             attacker.stopAttack();
         }
 
