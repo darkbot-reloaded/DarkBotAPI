@@ -340,6 +340,9 @@ public class SafetyFinder implements Listener {
                 || (movement.getDestination().distanceTo(safety) < safety.getRadius() && lastMoveTimer.isActive())) return;
 
         hero.setRunMode();
+        if (attacker.isAttacking() && !(escape == Escaping.SIGHT && stopRunningNoSight.getValue())) {
+            attacker.stopAttack();
+        }
 
         double angle = safety.angleTo(hero) + Math.random() * 0.2 - 0.1;
         movement.moveTo(Location.of(safety, angle, -safety.getRadius() * (0.3 + (0.60 * Math.random())))); // 30%-90% radius
