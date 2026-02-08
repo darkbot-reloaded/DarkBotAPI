@@ -85,10 +85,10 @@ public class SafetyFinder implements Listener {
         ENEMY, SIGHT, REPAIR, REFRESH, WAITING, NONE;
         boolean canUse(SafetyInfo safety) {
             if (safety.getType() == SafetyInfo.Type.CBS) {
-                return safety.getEntity()
-                        .map(c -> c instanceof BattleStation.Hull ? (BattleStation.Hull) c : null)
-                        .map(cbs -> !(cbs.getEntityInfo().isEnemy() || (cbs.getHullId() == 0 && safety.getCbsMode() == SafetyInfo.CbsMode.ALLY)))
-                        .orElse(false);
+                var cbs = (BattleStation) safety.getEntity().orElse(null);
+                if (cbs == null
+                    || cbs.getEntityInfo().isEnemy()
+                    || (cbs.isAsteroid() && safety.getCbsMode() == SafetyInfo.CbsMode.ALLY)) return false;
             }
             return safety.getRunMode().ordinal() <= this.ordinal();
         }

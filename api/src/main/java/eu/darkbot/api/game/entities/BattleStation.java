@@ -16,6 +16,10 @@ public interface BattleStation extends Obstacle, /*deprecated*/ Lockable {
      */
     @Deprecated int getHullId();
 
+    default boolean isAsteroid() {
+        return this instanceof Asteroid || this instanceof Hull && getHullId() == 0;
+    }
+
     /**
      * Asteroid station - empty, non built
      */
