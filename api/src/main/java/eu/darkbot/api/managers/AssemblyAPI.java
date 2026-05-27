@@ -34,6 +34,19 @@ public interface AssemblyAPI extends API.Singleton {
     List<? extends Filter> getFilters();
 
     /**
+     * Opens assembly GUI and selects a specific recipe by index, requires calling until true
+     * @param index index of the recipe to select
+     * @return false if operation has not completed, true if done
+     */
+    boolean clickRecipeIndex(int index);
+
+    /**
+     * Opens assembly GUI and clicks the craft/collect button, requires calling until true
+     * @return false if operation has not completed, true if done
+     */
+    boolean clickCraftCollect();
+
+    /**
      * Provide access to Recipe data in Assembly containing id, rewards and resources required to make the item
      */
     interface Recipe {
@@ -66,6 +79,21 @@ public interface AssemblyAPI extends API.Singleton {
          * @return if the recipe is collectable
          */
         boolean isCollectable();
+
+        /**
+         * @return the visibility data of the recipe
+         */
+        String getVisibility();
+
+        /**
+         * @return the time left to complete recipe craft
+         */
+        int getCraftTimeLeft();
+
+        /**
+         * @return the time required to craft the recipe
+         */
+        int getCraftTimeRequired();
     }
 
     /**
@@ -106,6 +134,16 @@ public interface AssemblyAPI extends API.Singleton {
          * @return if the filter is applied
          */
         boolean isChecked();
+
+        /**
+         * @return the x offset location
+         */
+        double getX();
+
+        /**
+         * @return the y offset location
+         */
+        double getY();
     }
 
 }
