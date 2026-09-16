@@ -6,6 +6,7 @@ import eu.darkbot.util.function.ThrowingFunction;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,6 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.zip.GZIPInputStream;
 
 /**
  * Utility for HTTP connections.
@@ -291,7 +293,13 @@ public class Http {
      * @throws IOException of {@link Http#getConnection()}
      */
     public InputStream getInputStream() throws IOException {
-        return getConnection().getInputStream();
+        InputStream in = new BufferedInputStream(getConnection().getInputStream());
+        in.mark(2);
+        int b1 = in.read(), b2 = in.read();
+        in.reset();
+        // Response may be gzip-compressed even without a Content-Encoding header
+        if (b1 == 0x1f && b2 == 0x8b) return new GZIPInputStream(in);
+        return in;
     }
 
     /**
