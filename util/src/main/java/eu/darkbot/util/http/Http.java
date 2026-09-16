@@ -293,12 +293,16 @@ public class Http {
      * @throws IOException of {@link Http#getConnection()}
      */
     public InputStream getInputStream() throws IOException {
-        InputStream in = new BufferedInputStream(getConnection().getInputStream());
-        in.mark(2);
-        int b1 = in.read(), b2 = in.read();
-        in.reset();
+        PushbackInputStream in = new PushbackInputStream(getConnection().getInputStream(), 2);
+
+        byte[] header = new byte[2];
+        int count = in.read(header);
+        if (count > 0) in.unread(header, 0, count);
+
         // Response may be gzip-compressed even without a Content-Encoding header
-        if (b1 == 0x1f && b2 == 0x8b) return new GZIPInputStream(in);
+        if (count == 2 && header[0] == 0x1f && header[1] == 0x8b) {
+            return new GZIPInputStream(in);
+        }
         return in;
     }
 
