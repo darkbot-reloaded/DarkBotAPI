@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PushbackInputStream;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -22,6 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.zip.GZIPInputStream;
 
 /**
  * Utility for HTTP connections.
@@ -30,7 +32,8 @@ import java.util.function.Consumer;
 public class Http {
     private static final Gson GSON = new Gson();
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private static String defaultUserAgent = "BigpointClient/1.6.7";
 
     protected final String baseUrl;
@@ -291,7 +294,17 @@ public class Http {
      * @throws IOException of {@link Http#getConnection()}
      */
     public InputStream getInputStream() throws IOException {
-        return getConnection().getInputStream();
+        PushbackInputStream in = new PushbackInputStream(getConnection().getInputStream(), 2);
+
+        byte[] header = new byte[2];
+        int count = in.read(header);
+        if (count > 0) in.unread(header, 0, count);
+
+        // Response may be gzip-compressed even without a Content-Encoding header
+        if (count == 2 && header[0] == (byte) 0x1f && header[1] == (byte) 0x8b) {
+            return new GZIPInputStream(in);
+        }
+        return in;
     }
 
     /**
