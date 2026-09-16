@@ -300,7 +300,7 @@ public class Http {
         if (count > 0) in.unread(header, 0, count);
         
         // Response may be gzip-compressed even without a Content-Encoding header
-        if (count == 2 && header[0] == 0x1f && header[1] == 0x8b) {
+        if (count == 2 && header[0] == (byte) 0x1f && header[1] == (byte) 0x8b) {
             return new GZIPInputStream(in);
         }
         return in;
