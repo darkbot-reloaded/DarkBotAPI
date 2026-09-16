@@ -6,13 +6,13 @@ import eu.darkbot.util.function.ThrowingFunction;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PushbackInputStream;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -296,11 +296,16 @@ public class Http {
         PushbackInputStream in = new PushbackInputStream(getConnection().getInputStream(), 2);
 
         byte[] header = new byte[2];
-        int count = in.read(header);
+        int count = 0;
+        while (count < header.length) {
+            int read = in.read(header, count, header.length - count);
+            if (read == -1) break;
+            count += read;
+        }
         if (count > 0) in.unread(header, 0, count);
 
         // Response may be gzip-compressed even without a Content-Encoding header
-        if (count == 2 && header[0] == 0x1f && header[1] == 0x8b) {
+        if (count == 2 && (header[0] & 0xff) == 0x1f && (header[1] & 0xff) == 0x8b) {
             return new GZIPInputStream(in);
         }
         return in;
