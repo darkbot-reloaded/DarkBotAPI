@@ -21,9 +21,11 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.zip.GZIPInputStream;
+import java.util.zip.InflaterInputStream;
 
 /**
  * Utility for HTTP connections.
@@ -294,15 +296,35 @@ public class Http {
      * @throws IOException of {@link Http#getConnection()}
      */
     public InputStream getInputStream() throws IOException {
-        PushbackInputStream in = new PushbackInputStream(getConnection().getInputStream(), 2);
+        return decodeInputStream(getConnection());
+    }
 
-        byte[] header = new byte[2];
-        int count = in.read(header);
-        if (count > 0) in.unread(header, 0, count);
+    /**
+     * Gets InputStream of given connection, transparently decompressing gzip/deflate responses.
+     * Useful when working with {@link Http#getConnection()} directly,
+     * as {@link HttpURLConnection} does not decompress responses on its own.
+     *
+     * @param conn connection to read from
+     * @return decompressed InputStream of connection
+     * @throws IOException of {@link HttpURLConnection#getInputStream()}
+     */
+    public static InputStream decodeInputStream(HttpURLConnection conn) throws IOException {
+        String encoding = conn.getContentEncoding();
+        encoding = encoding == null ? "" : encoding.trim().toLowerCase(Locale.ROOT);
+
+        PushbackInputStream in = new PushbackInputStream(conn.getInputStream(), 2);
+
+        // readNBytes blocks until 2 bytes are read, a plain read() may return only 1
+        byte[] header = in.readNBytes(2);
+        if (header.length > 0) in.unread(header);
 
         // Response may be gzip-compressed even without a Content-Encoding header
-        if (count == 2 && header[0] == (byte) 0x1f && header[1] == (byte) 0x8b) {
+        boolean gzipMagic = header.length == 2 && header[0] == (byte) 0x1f && header[1] == (byte) 0x8b;
+        if (gzipMagic || (header.length > 0 && encoding.contains("gzip"))) {
             return new GZIPInputStream(in);
+        }
+        if (header.length > 0 && encoding.contains("deflate")) {
+            return new InflaterInputStream(in);
         }
         return in;
     }
