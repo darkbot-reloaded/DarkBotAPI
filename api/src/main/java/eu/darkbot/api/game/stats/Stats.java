@@ -14,7 +14,8 @@ public final class Stats {
         CARGO,
         MAX_CARGO,
         NOVA_ENERGY,
-        TELEPORT_BONUS_AMOUNT
+        TELEPORT_BONUS_AMOUNT,
+        JACKPOT
     }
 
     public enum Bot implements BotKey {
@@ -40,7 +41,13 @@ public final class Stats {
         ASTRAL_SUPREME,
         EMPYRIAN,
         LUCENT,
-        PERSEUS
+        PERSEUS,
+        LAUREL,
+        ECHO_BLUE,
+        ECHO_GREEN,
+        ECHO_PURPLE,
+        ECHO_RED,
+        BKAPO
     }
 
     private interface BotKey extends StatsAPI.Key {
